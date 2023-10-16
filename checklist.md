@@ -1,0 +1,7 @@
+- [ ] menu
+- [ ] spielfeld / singleplayer
+- [ ] spielfeld variabel
+- [ ] spielregeln implementieren
+- [ ] history
+- [ ] lokales scoreboard
+- [ ] mult scoreboard
