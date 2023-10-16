@@ -5,3 +5,4 @@
 - [ ] history
 - [ ] lokales scoreboard
 - [ ] mult scoreboard
+- [ ] max 4 Spieler
