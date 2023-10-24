@@ -1,0 +1,39 @@
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="300dp"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/textTitle2048"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2048"
+        android:textSize="120sp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="-50dp"
+        >
+
+        <TextView
+            android:id="@+id/textTitlePlus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+"
+            android:textSize="70sp"
+
+            />
+        <TextView
+            android:id="@+id/textTitle2048Multiplayer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" Multiplayer"
+            android:textSize="40sp" />
+    </LinearLayout>
+
+
+</LinearLayout>
