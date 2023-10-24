@@ -8,12 +8,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.a2048mult.databinding.FragmentStartBinding;
+
+
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link Start#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class Start extends Fragment {
+
+    private FragmentStartBinding binding;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -23,6 +29,8 @@ public class Start extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+
 
     public Start() {
         // Required empty public constructor
@@ -59,6 +67,9 @@ public class Start extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_start, container, false);
+        View view = inflater.inflate(R.layout.fragment_start, container, false);
+
+//        view.findViewById()
+        return view;
     }
 }
