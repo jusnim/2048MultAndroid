@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mynav"
+    app:startDestination="@id/start2">
+
+    <fragment
+        android:id="@+id/start2"
+        android:name="com.example.a2048mult.Start"
+        android:label="fragment_start"
+        tools:layout="@layout/fragment_start" >
+        <action
+            android:id="@+id/action_start2_to_singlePlayerMenu"
+            app:destination="@id/singlePlayerMenu" />
+        <action
+            android:id="@+id/action_start2_to_multiplayerMenu"
+            app:destination="@id/multiplayerMenu" />
+    </fragment>
+    <fragment
+        android:id="@+id/multiplayerMenu"
+        android:name="com.example.a2048mult.MultiplayerMenu"
+        android:label="fragment_multiplayer_menu"
+        tools:layout="@layout/fragment_multiplayer_menu" />
+    <fragment
+        android:id="@+id/singlePlayerMenu"
+        android:name="com.example.a2048mult.SinglePlayerMenu"
+        android:label="fragment_single_player_menu"
+        tools:layout="@layout/fragment_single_player_menu" />
+</navigation>

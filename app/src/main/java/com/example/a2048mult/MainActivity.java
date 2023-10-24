@@ -6,6 +6,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+    Button buttonSinglePlayer;
+    Button buttonMultiplayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -14,19 +16,19 @@ public class MainActivity extends AppCompatActivity {
 
 
         // create Function for buttonSingleplayer
-        final Button buttonSinglePlayer = findViewById(R.id.buttonSingleplayer);
+        buttonSinglePlayer = findViewById(R.id.buttonSingleplayer);
         buttonSinglePlayer.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Code here executes on main thread after user presses button
+                setContentView(R.layout.activity_singleplayer_choosing);
             }
         });
 
 
         // create Function for buttonMultiplayer
-        final Button buttonMultiplayer = findViewById(R.id.buttonMultiplayer);
+        buttonMultiplayer = findViewById(R.id.buttonMultiplayer);
         buttonMultiplayer.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Code here executes on main thread after user presses button
+                setContentView(R.layout.activity_multiplayer_choosing);
             }
         });
 
