@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.a2048mult.databinding.FragmentMultiplayerMenuBinding;
-import com.example.a2048mult.databinding.FragmentSinglePlayerMenuBinding;
+
 public class MultiplayerMenu extends Fragment {
 
     private FragmentMultiplayerMenuBinding binding;

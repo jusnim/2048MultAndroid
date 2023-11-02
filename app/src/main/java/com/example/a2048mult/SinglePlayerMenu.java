@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.a2048mult.databinding.FragmentMultiplayerMenuBinding;
 import com.example.a2048mult.databinding.FragmentSinglePlayerMenuBinding;
 public class SinglePlayerMenu extends Fragment {
     private FragmentSinglePlayerMenuBinding binding;
@@ -19,6 +18,10 @@ public class SinglePlayerMenu extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentSinglePlayerMenuBinding.inflate(getLayoutInflater());
+
+
+
+
         return binding.getRoot();
     }
     @Override
