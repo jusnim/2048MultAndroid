@@ -22,4 +22,10 @@ public class Start extends Fragment {
         binding = FragmentStartBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
 }
