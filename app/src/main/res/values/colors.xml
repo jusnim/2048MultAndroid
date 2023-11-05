@@ -9,4 +9,55 @@
     <color name="gray_600">#FF757575</color>
     <color name="brown_playfield_bg">#996655</color>
     <color name="brown_playfield_placeholder">#cc9977</color>
+
+    <color name="bright_pink">#eee4da</color>
+    <color name="red">#ede0c8</color>
+    <color name="orange">#f59563</color>
+    <color name="yellow">#f59563</color>
+    <color name="chartreuse">#f67c5f</color>
+    <color name="green">#f65e3b</color>
+    <color name="spring_green">#edcf72</color>
+    <color name="cyan">#edcc61</color>
+    <color name="azure">#ecc850</color>
+    <color name="blue">#ecc850</color>
+    <color name="violet">#edc22e</color>
+    <color name="saturated_yellow">#edc22e</color>
+    <color name="bright_purple">#b784ab</color>
+    <color name="mid_purple">#aa60a6</color>
+    <color name="dark_purple">#5d345b</color>
+    <color name="greyish_black">#3d3a33</color>
+
+    <array name="colorLevelSteps">
+        <item>@color/bright_pink</item>
+        <item>@color/red</item>
+        <item>@color/orange</item>
+        <item>@color/yellow</item>
+        <item>@color/chartreuse</item>
+        <item>@color/green</item>
+        <item>@color/spring_green</item>
+        <item>@color/cyan</item>
+        <item>@color/azure</item>
+        <item>@color/blue</item>
+        <item>@color/violet</item>
+        <item>@color/saturated_yellow</item>
+        <item>@color/bright_purple</item>
+        <item>@color/mid_purple</item>
+        <item>@color/mid_purple</item>
+        <item>@color/dark_purple</item>
+        <item>@color/greyish_black</item>
+    </array>
+    <array name="colorLevelTextSteps">
+        <item>@color/bright_pink</item>
+        <item>@color/red</item>
+        <item>@color/orange</item>
+        <item>@color/yellow</item>
+        <item>@color/chartreuse</item>
+        <item>@color/green</item>
+        <item>@color/spring_green</item>
+        <item>@color/cyan</item>
+        <item>@color/azure</item>
+        <item>@color/blue</item>
+        <item>@color/violet</item>
+    </array>
+
 </resources>

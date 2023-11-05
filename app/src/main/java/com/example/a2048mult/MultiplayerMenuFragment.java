@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.example.a2048mult.databinding.FragmentMultiplayerMenuBinding;
 
-public class MultiplayerMenu extends Fragment {
+public class MultiplayerMenuFragment extends Fragment {
 
     private FragmentMultiplayerMenuBinding binding;
 

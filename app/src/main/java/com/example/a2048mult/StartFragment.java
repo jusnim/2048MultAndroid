@@ -9,12 +9,11 @@ import androidx.navigation.fragment.NavHostFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.example.a2048mult.databinding.FragmentStartBinding;
 
 
-public class Start extends Fragment {
+public class StartFragment extends Fragment {
     private FragmentStartBinding binding;
 
     @Override

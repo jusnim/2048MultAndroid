@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.a2048mult.databinding.FragmentPlayfieldBinding;
-public class Playfield extends Fragment {
+public class PlayfieldFragment extends Fragment {
     private FragmentPlayfieldBinding binding;
     // keys for accessing values
     private static final String X_Count = "xCountKey";
@@ -19,7 +19,7 @@ public class Playfield extends Fragment {
     private int xCount;
     private int yCount;
 
-    public Playfield() {
+    public PlayfieldFragment() {
         // Required empty public constructor
     }
 
@@ -30,8 +30,8 @@ public class Playfield extends Fragment {
      * @param yCountIn
      * @return A new instance of fragment Playfield.
      */
-    public static Playfield newInstance(int xCountIn, int yCountIn) {
-        Playfield fragment = new Playfield();
+    public static PlayfieldFragment newInstance(int xCountIn, int yCountIn) {
+        PlayfieldFragment fragment = new PlayfieldFragment();
         Bundle args = new Bundle();
         args.putInt(X_Count,xCountIn);
         args.putInt(Y_Count,yCountIn);
@@ -60,4 +60,5 @@ public class Playfield extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
 }
