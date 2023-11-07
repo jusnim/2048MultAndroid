@@ -7,17 +7,6 @@ package com.example.a2048mult.GameLogic;
 public interface GameManagment {
 
     /**
-     * getter for TurnCount
-     * @return int, total TurnCount e.g. 46
-     */
-    int getTurnCount();
-
-    /**
-     * increments TurnCount, so 46 --> 47
-     */
-    void incrementTurnCount();
-
-    /**
      * applies move left on the GameState / allPlayfields and triggers events after each turn
      * @return GameState
      */

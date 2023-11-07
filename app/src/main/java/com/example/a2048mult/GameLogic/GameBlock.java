@@ -4,6 +4,9 @@ package com.example.a2048mult.GameLogic;
  * represents the data structure of a item on a playfield
  */
 public interface GameBlock {
+    int oldX=0;
+    int oldY=0;
+
     /**
      * updates coordinates, the new coordinates are saved as newX and newY and the ones before are saved in oldX and oldY
      * @param newX

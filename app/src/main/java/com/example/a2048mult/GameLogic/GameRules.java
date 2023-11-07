@@ -1,21 +1,24 @@
 package com.example.a2048mult.GameLogic;
 
+/**
+ * specification for rules for the game
+ */
 public interface GameRules {
 
     /**
      * applies the rules when moving left
      */
-    PlayfieldState applyMoveLeft(PlayfieldState playfieldState);
+    void applyMoveLeft();
     /**
      * applies the rules when moving right
      */
-    PlayfieldState applyMoveRight(PlayfieldState playfieldState);
+    void applyMoveRight();
     /**
      * applies the rules when moving up
      */
-    PlayfieldState applyMoveUp(PlayfieldState playfieldState);
+    void applyMoveUp();
     /**
      * applies the rules when moving down
      */
-    PlayfieldState applyMoveDown(PlayfieldState playfieldState);
+    void applyMoveDown();
 }

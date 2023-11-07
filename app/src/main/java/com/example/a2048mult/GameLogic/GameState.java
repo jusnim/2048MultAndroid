@@ -2,7 +2,7 @@ package com.example.a2048mult.GameLogic;
 
 /**
  * represents the data structure of a GameState
- * one GameState can be one or more playfields at once
+ * one GameState can be one or more PlayfieldStates at once
  */
 public interface GameState {
     /**
@@ -16,14 +16,38 @@ public interface GameState {
     void setGameState();
 
     /**
-     * gets the current Turn --> which player can do a move
+     * getter for TurnCount
+     * @return int, total TurnCount e.g. 46
+     */
+    int getTurnCount();
+
+    /**
+     * increments TurnCount, so 46 --> 47
+     */
+    void incrementTurnCount();
+
+    /**
+     * gets the current GameTurn
      * @return
      */
-    PlayfieldState getTurn();
+    PlayfieldTurn[] getGameTurn();
+
+    /**
+     * getter for the current User
+     * @return
+     */
+    Player getCurrentPlayer();
 
     /**
      * called after a turn --> next player can do a move
      * if only one player (so one PlayfieldState) --> nextTurn changes on itself, so doing nothing
      */
-    void nextTurn();
+    void nextPlayer();
+
+    /**
+     * get the list of quitted User
+     * @return
+     */
+    Player[] getQuittedPlayer();
+
 }
