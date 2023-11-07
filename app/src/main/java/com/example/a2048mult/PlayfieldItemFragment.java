@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,14 +58,24 @@ public class PlayfieldItemFragment extends Fragment {
         String valueForText = Integer.toString(value);
         binding.textView.setText(valueForText);
 
-        // use value to determine item color
+        // ---------- use value to determine BGcolor and TextColor ----------
+
+        // get color schemes
         int[] colorLevelSteps = getContext().getResources().getIntArray(R.array.colorLevelSteps);
+        int[] colorLevelSteps_Text = getContext().getResources().getIntArray(R.array.colorLevelSteps_Text);
+
         int colorIndex =this.itemLevel;
         if (this.itemLevel > colorLevelSteps.length){
-            colorIndex = colorLevelSteps.length - 1;
+            colorIndex = colorLevelSteps.length;
         }
+        colorIndex -= 1;
+
+
+        // set BGcolor
         binding.getRoot().setBackgroundColor(colorLevelSteps[colorIndex]);
 
-        // set textColor
+        // set Textcolor
+        binding.textView.setTextColor(colorLevelSteps_Text[colorIndex]);
+
     }
 }

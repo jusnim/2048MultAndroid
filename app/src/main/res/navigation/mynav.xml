@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mynav"
-    app:startDestination="@id/start2">
+    app:startDestination="@id/start">
 
     <fragment
-        android:id="@+id/start2"
+        android:id="@+id/start"
         android:name="com.example.a2048mult.StartFragment"
         android:label="fragment_start"
         tools:layout="@layout/fragment_start" >

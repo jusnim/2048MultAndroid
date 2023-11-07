@@ -7,57 +7,68 @@
     <color name="light_blue_600">#FF039BE5</color>
     <color name="gray_400">#FFBDBDBD</color>
     <color name="gray_600">#FF757575</color>
+
+
     <color name="brown_playfield_bg">#996655</color>
     <color name="brown_playfield_placeholder">#cc9977</color>
 
-    <color name="bright_pink">#eee4da</color>
-    <color name="red">#ede0c8</color>
-    <color name="orange">#f59563</color>
-    <color name="yellow">#f59563</color>
-    <color name="chartreuse">#f67c5f</color>
-    <color name="green">#f65e3b</color>
-    <color name="spring_green">#edcf72</color>
-    <color name="cyan">#edcc61</color>
-    <color name="azure">#ecc850</color>
-    <color name="blue">#ecc850</color>
-    <color name="violet">#edc22e</color>
-    <color name="saturated_yellow">#edc22e</color>
-    <color name="bright_purple">#b784ab</color>
-    <color name="mid_purple">#aa60a6</color>
-    <color name="dark_purple">#5d345b</color>
-    <color name="greyish_black">#3d3a33</color>
+
+    <color name="level1">#eee4da</color>
+    <color name="level2">#ede0c8</color>
+    <color name="level3">#f59563</color>
+    <color name="level4">#f59563</color>
+    <color name="level5">#f67c5f</color>
+    <color name="level6">#f65e3b</color>
+    <color name="level7">#edcf72</color>
+    <color name="level8">#edcc61</color>
+    <color name="level9">#ecc850</color>
+    <color name="level10">#ecc850</color>
+    <color name="level11">#edc22e</color>
+    <color name="level12">#b784ab</color>
+    <color name="level13">#A37398</color>
+    <color name="level14">#aa60a6</color>
+    <color name="level15">#5d345b</color>
+    <color name="level16">#3d3a33</color>
+
+    <color name="textBright">@color/level1</color>
+    <color name="textDark">@color/level16</color>
+
 
     <array name="colorLevelSteps">
-        <item>@color/bright_pink</item>
-        <item>@color/red</item>
-        <item>@color/orange</item>
-        <item>@color/yellow</item>
-        <item>@color/chartreuse</item>
-        <item>@color/green</item>
-        <item>@color/spring_green</item>
-        <item>@color/cyan</item>
-        <item>@color/azure</item>
-        <item>@color/blue</item>
-        <item>@color/violet</item>
-        <item>@color/saturated_yellow</item>
-        <item>@color/bright_purple</item>
-        <item>@color/mid_purple</item>
-        <item>@color/mid_purple</item>
-        <item>@color/dark_purple</item>
-        <item>@color/greyish_black</item>
+        <item>@color/level1</item>
+        <item>@color/level2</item>
+        <item>@color/level3</item>
+        <item>@color/level4</item>
+        <item>@color/level5</item>
+        <item>@color/level6</item>
+        <item>@color/level7</item>
+        <item>@color/level8</item>
+        <item>@color/level9</item>
+        <item>@color/level10</item>
+        <item>@color/level11</item>
+        <item>@color/level12</item>
+        <item>@color/level13</item>
+        <item>@color/level14</item>
+        <item>@color/level15</item>
+        <item>@color/level16</item>
     </array>
-    <array name="colorLevelTextSteps">
-        <item>@color/bright_pink</item>
-        <item>@color/red</item>
-        <item>@color/orange</item>
-        <item>@color/yellow</item>
-        <item>@color/chartreuse</item>
-        <item>@color/green</item>
-        <item>@color/spring_green</item>
-        <item>@color/cyan</item>
-        <item>@color/azure</item>
-        <item>@color/blue</item>
-        <item>@color/violet</item>
+    <array name="colorLevelSteps_Text">
+        <item>@color/textDark</item>
+        <item>@color/textDark</item>
+        <item>@color/textBright</item>
+        <item>@color/textBright</item>
+        <item>@color/textBright</item>
+        <item>@color/textBright</item>
+        <item>@color/textBright</item>
+        <item>@color/textBright</item>
+        <item>@color/textBright</item>
+        <item>@color/textBright</item>
+        <item>@color/textBright</item>
+        <item>@color/textBright</item>
+        <item>@color/textBright</item>
+        <item>@color/textBright</item>
+        <item>@color/textBright</item>
+        <item>@color/textBright</item>
     </array>
 
 </resources>

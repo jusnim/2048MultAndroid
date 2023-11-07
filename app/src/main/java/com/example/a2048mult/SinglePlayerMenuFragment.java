@@ -21,9 +21,11 @@ public class SinglePlayerMenuFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentSinglePlayerMenuBinding.inflate(getLayoutInflater());
 
-//        ItemFragment fragment = ItemFragment.newInstance(10);
-//        FragmentManager fragmentManager = getParentFragmentManager();
-//        fragmentManager.beginTransaction().add(R.id.fragmentContainerView,fragment).commit();
+        FragmentManager fragmentManager = getParentFragmentManager();
+
+        PlayfieldItemFragment fragment = PlayfieldItemFragment.newInstance(16);
+        fragmentManager.beginTransaction().add(binding.fragmentContainerView.getId(),fragment).commit();
+
 
         return binding.getRoot();
     }
