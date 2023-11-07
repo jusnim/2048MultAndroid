@@ -4,6 +4,11 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.SuperscriptSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,8 +64,17 @@ public class PlayfieldBlockFragment extends Fragment {
 
     private void setItemTextAndColor(){
         // get value for Text
-        int value = (int)Math.pow(2,this.itemLevel);
-        String valueForText = Integer.toString(value);
+        SpannableStringBuilder valueForText;
+
+        // if value is >= 20 --> simplify text to 2^itemlevel
+        if(this.itemLevel<20){
+            long value = (long)Math.pow(2,this.itemLevel);
+            valueForText= SpannableStringBuilder.valueOf(Long.toString(value));
+        } else{
+            valueForText = new SpannableStringBuilder("2"+this.itemLevel);
+            valueForText.setSpan(new SuperscriptSpan(), 1, valueForText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            valueForText.setSpan(new RelativeSizeSpan(0.30f), 1, valueForText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
         binding.textView.setText(valueForText);
 
         // ---------- use value to determine BGcolor and TextColor ----------

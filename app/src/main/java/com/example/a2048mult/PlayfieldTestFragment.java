@@ -31,7 +31,7 @@ public class PlayfieldTestFragment extends Fragment {
         binding = FragmentPlayfieldTestBinding.inflate(getLayoutInflater());
 
         FragmentManager fragmentManager = getParentFragmentManager();
-        PlayfieldFragment fragment = PlayfieldFragment.newInstance(5);
+        PlayfieldBlockFragment fragment = PlayfieldBlockFragment.newInstance(187);
         fragmentManager.beginTransaction().add(binding.fragmentContainerTest.getId(),fragment).commit();
 
         return binding.getRoot();
