@@ -34,8 +34,8 @@ public class PlayfieldRVAdapter extends RecyclerView.Adapter<PlayfieldRVAdapter.
 
     class PlayfieldViewHolder extends RecyclerView.ViewHolder{
 
-        public PlayfieldViewHolder(@NonNull View itemView) {
-            super(itemView);
+        public PlayfieldViewHolder(@NonNull View tileView) {
+            super(tileView);
         }
 
         //private void bind()

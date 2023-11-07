@@ -7,36 +7,36 @@ package com.example.a2048mult.GameLogic;
 public interface PlayfieldTurn {
 
     /**
-     * adds a spawned block to the object
-     * @param block
+     * adds a spawned tile to the object
+     * @param tile
      */
-    void addNewSpawned(GameBlock block);
+    void addNewSpawned(GameTile tile);
 
     /**
-     * adds a blockMove to the object
-     * @param block
+     * adds a tileMove to the object
+     * @param tile
      */
-    void addNewMove(GameBlock block);
+    void addNewMove(GameTile tile);
 
     /**
-     * adds a merging of two block to the object
-     * @param block1
-     * @param block2
-     * @param mergedBlock
+     * adds a merging of two tile to the object
+     * @param tile1
+     * @param tile2
+     * @param mergedTile
      */
-    default void addNewMerged(GameBlock block1, GameBlock block2, GameBlock mergedBlock){
-        addNewMove(block1);
-        addNewMove(block2);
-        addRemoved(block1);
-        addRemoved(block2);
-        addNewSpawned(mergedBlock);
+    default void addNewMerged(GameTile tile1, GameTile tile2, GameTile mergedTile){
+        addNewMove(tile1);
+        addNewMove(tile2);
+        addRemoved(tile1);
+        addRemoved(tile2);
+        addNewSpawned(mergedTile);
     };
 
     /**
      * adds a remove to the object
-     * @param block
+     * @param tile
      */
-    void addRemoved(GameBlock block);
+    void addRemoved(GameTile tile);
 
     /**
      * getter for the TurnInstructions, so the UI can animate properly

@@ -1,9 +1,9 @@
 package com.example.a2048mult.GameLogic;
 
 /**
- * represents the data structure of a item on a playfield
+ * represents the data structure of a tile on a playfield
  */
-public interface GameBlock {
+public interface GameTile {
     int oldX=0;
     int oldY=0;
 

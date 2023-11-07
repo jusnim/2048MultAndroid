@@ -17,9 +17,9 @@ public interface PlayfieldState extends GameRules{
     void setPlayfieldState();
 
     /**
-     * spawning a block on the playfield
+     * spawning a Tile on the playfield
      */
-    void spawnBlock();
+    void spawnTile();
 
     /**
      * setter for FieldSizeX

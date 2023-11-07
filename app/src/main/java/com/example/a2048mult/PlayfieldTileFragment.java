@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.RelativeSizeSpan;
@@ -13,28 +12,28 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.example.a2048mult.databinding.FragmentPlayfieldBlockBinding;
+import com.example.a2048mult.databinding.FragmentPlayfieldTileBinding;
 
-public class PlayfieldBlockFragment extends Fragment {
-    private FragmentPlayfieldBlockBinding binding;
+public class PlayfieldTileFragment extends Fragment {
+    private FragmentPlayfieldTileBinding binding;
 
-    private static final String ITEM_LEVEL = "itemLevel";
-    private int itemLevel = -1;
+    private static final String TILE_LEVEL = "tileLevel";
+    private int tileLevel = -1;
 
-    public PlayfieldBlockFragment() {
+    public PlayfieldTileFragment() {
         // Required empty public constructor
     }
 
     /**
      *  creates a new instance of this fragment using the provided parameters.
      *
-     * @param itemLevel
-     * @return A new instance of fragment Item.
+     * @param tileLevel
+     * @return A new instance of fragment Tile.
      */
-    public static PlayfieldBlockFragment newInstance(int itemLevel) {
-        PlayfieldBlockFragment fragment = new PlayfieldBlockFragment();
+    public static PlayfieldTileFragment newInstance(int tileLevel) {
+        PlayfieldTileFragment fragment = new PlayfieldTileFragment();
         Bundle args = new Bundle();
-        args.putInt(ITEM_LEVEL, itemLevel);
+        args.putInt(TILE_LEVEL, tileLevel);
         fragment.setArguments(args);
         return fragment;
     }
@@ -43,7 +42,7 @@ public class PlayfieldBlockFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            itemLevel = getArguments().getInt(ITEM_LEVEL);
+            tileLevel = getArguments().getInt(TILE_LEVEL);
         }
     }
 
@@ -51,27 +50,27 @@ public class PlayfieldBlockFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentPlayfieldBlockBinding.inflate(getLayoutInflater());
+        binding = FragmentPlayfieldTileBinding.inflate(getLayoutInflater());
 
-        if(itemLevel >= 0){
-            setItemTextAndColor();
+        if(tileLevel >= 0){
+            setTileTextAndColor();
         } else{
-            Log.w("! PlayfieldItem","no level value passed --> test item");
+            Log.w("! PlayfieldTile","no level value passed --> test tile");
         }
 
         return binding.getRoot();
     }
 
-    private void setItemTextAndColor(){
+    private void setTileTextAndColor(){
         // get value for Text
         SpannableStringBuilder valueForText;
 
-        // if value is >= 20 --> simplify text to 2^itemlevel
-        if(this.itemLevel<20){
-            long value = (long)Math.pow(2,this.itemLevel);
+        // if value is >= 20 --> simplify text to 2^tileLevel
+        if(this.tileLevel<20){
+            long value = (long)Math.pow(2,this.tileLevel);
             valueForText= SpannableStringBuilder.valueOf(Long.toString(value));
         } else{
-            valueForText = new SpannableStringBuilder("2"+this.itemLevel);
+            valueForText = new SpannableStringBuilder("2"+this.tileLevel);
             valueForText.setSpan(new SuperscriptSpan(), 1, valueForText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             valueForText.setSpan(new RelativeSizeSpan(0.30f), 1, valueForText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
@@ -83,8 +82,8 @@ public class PlayfieldBlockFragment extends Fragment {
         int[] colorLevelSteps = getContext().getResources().getIntArray(R.array.colorLevelSteps);
         int[] colorLevelSteps_Text = getContext().getResources().getIntArray(R.array.colorLevelSteps_Text);
 
-        int colorIndex =this.itemLevel;
-        if (this.itemLevel > colorLevelSteps.length){
+        int colorIndex =this.tileLevel;
+        if (this.tileLevel > colorLevelSteps.length){
             colorIndex = colorLevelSteps.length;
         }
         colorIndex -= 1;
