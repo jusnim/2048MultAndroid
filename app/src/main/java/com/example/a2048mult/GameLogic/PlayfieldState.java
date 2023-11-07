@@ -21,4 +21,14 @@ public interface PlayfieldState extends GameRules{
      */
     void spawnBlock();
 
+    /**
+     * setter for FieldSizeX
+     */
+    void setFieldSizeX();
+
+    /**
+     * setter for FieldSizeY
+     */
+    void setFieldSizeY();
+
 }
