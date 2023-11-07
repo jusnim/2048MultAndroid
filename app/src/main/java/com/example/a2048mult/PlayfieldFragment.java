@@ -39,6 +39,15 @@ public class PlayfieldFragment extends Fragment {
         return fragment;
     }
 
+    public static PlayfieldFragment newInstance(int CountIn) {
+        PlayfieldFragment fragment = new PlayfieldFragment();
+        Bundle args = new Bundle();
+        args.putInt(X_Count,CountIn);
+        args.putInt(Y_Count,CountIn);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

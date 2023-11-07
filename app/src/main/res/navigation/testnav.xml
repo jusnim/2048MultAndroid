@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/start2"
-        android:name="com.example.a2048mult.PlayfieldFragment"
-        android:label="fragment_playfield"
-        tools:layout="@layout/fragment_playfield" >
+        android:name="com.example.a2048mult.PlayfieldTestFragment"
+        android:label="fragment_playfield_test"
+        tools:layout="@layout/fragment_playfield_test" >
         <action
             android:id="@+id/action_start2_to_singlePlayerMenu"
             app:destination="@id/singlePlayerMenu"

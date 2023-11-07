@@ -4,8 +4,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,12 +18,6 @@ public class SinglePlayerMenuFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentSinglePlayerMenuBinding.inflate(getLayoutInflater());
-
-        FragmentManager fragmentManager = getParentFragmentManager();
-
-        PlayfieldItemFragment fragment = PlayfieldItemFragment.newInstance(16);
-        fragmentManager.beginTransaction().add(binding.fragmentContainerView.getId(),fragment).commit();
-
 
         return binding.getRoot();
     }

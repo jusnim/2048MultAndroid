@@ -14,7 +14,7 @@ public class PlayfieldItemFragment extends Fragment {
     private FragmentPlayfieldItemBinding binding;
 
     private static final String ITEM_LEVEL = "itemLevel";
-    private int itemLevel;
+    private int itemLevel = -1;
 
     public PlayfieldItemFragment() {
         // Required empty public constructor
@@ -47,7 +47,12 @@ public class PlayfieldItemFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentPlayfieldItemBinding.inflate(getLayoutInflater());
-        setItemTextAndColor();
+
+        if(itemLevel >= 0){
+            setItemTextAndColor();
+        } else{
+            Log.w("! PlayfieldItem","no level value passed --> test item");
+        }
 
         return binding.getRoot();
     }
@@ -70,12 +75,10 @@ public class PlayfieldItemFragment extends Fragment {
         }
         colorIndex -= 1;
 
-
         // set BGcolor
-        binding.getRoot().setBackgroundColor(colorLevelSteps[colorIndex]);
+        binding.getRoot().getBackground().setTint(colorLevelSteps[colorIndex]);
 
         // set Textcolor
         binding.textView.setTextColor(colorLevelSteps_Text[colorIndex]);
-
     }
 }
