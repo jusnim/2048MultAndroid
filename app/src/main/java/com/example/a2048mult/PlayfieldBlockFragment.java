@@ -8,15 +8,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.example.a2048mult.databinding.FragmentPlayfieldItemBinding;
+import com.example.a2048mult.databinding.FragmentPlayfieldBlockBinding;
 
-public class PlayfieldItemFragment extends Fragment {
-    private FragmentPlayfieldItemBinding binding;
+public class PlayfieldBlockFragment extends Fragment {
+    private FragmentPlayfieldBlockBinding binding;
 
     private static final String ITEM_LEVEL = "itemLevel";
     private int itemLevel = -1;
 
-    public PlayfieldItemFragment() {
+    public PlayfieldBlockFragment() {
         // Required empty public constructor
     }
 
@@ -26,8 +26,8 @@ public class PlayfieldItemFragment extends Fragment {
      * @param itemLevel
      * @return A new instance of fragment Item.
      */
-    public static PlayfieldItemFragment newInstance(int itemLevel) {
-        PlayfieldItemFragment fragment = new PlayfieldItemFragment();
+    public static PlayfieldBlockFragment newInstance(int itemLevel) {
+        PlayfieldBlockFragment fragment = new PlayfieldBlockFragment();
         Bundle args = new Bundle();
         args.putInt(ITEM_LEVEL, itemLevel);
         fragment.setArguments(args);
@@ -46,7 +46,7 @@ public class PlayfieldItemFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentPlayfieldItemBinding.inflate(getLayoutInflater());
+        binding = FragmentPlayfieldBlockBinding.inflate(getLayoutInflater());
 
         if(itemLevel >= 0){
             setItemTextAndColor();
