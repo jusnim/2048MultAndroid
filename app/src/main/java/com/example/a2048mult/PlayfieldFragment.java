@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.example.a2048mult.databinding.FragmentPlayfieldBinding;
 public class PlayfieldFragment extends Fragment {
@@ -55,6 +56,7 @@ public class PlayfieldFragment extends Fragment {
             xCount = getArguments().getInt(X_Count);
             yCount = getArguments().getInt(Y_Count);
         }
+
     }
 
     @Override
@@ -62,12 +64,32 @@ public class PlayfieldFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentPlayfieldBinding.inflate(getLayoutInflater());
+
+
+        int[] colorLevelSteps = getContext().getResources().getIntArray(R.array.colorLevelSteps);
+        binding.getRoot().getBackground().setTint(colorLevelSteps[15]);
+//        initPlayfieldSizing();
+//        binding.getRoot().getRowCount();
         return binding.getRoot();
     }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+    private void initPlayfieldSizing(){
+        for (int y=0; y<yCount;y++){
+            LinearLayout row = new LinearLayout(binding.getRoot().getContext());
+            row.setBackgroundColor(16);
+            binding.getRoot().addView(row);
+
+            for (int x=0; x<xCount;x++){
+                PlayfieldTileView tile = new PlayfieldTileView(binding.getRoot().getContext());
+                // TODO change tile level --> take level from GameState Object
+                tile.setLevel(1);
+                row.addView(tile);
+            }
+        }
     }
 
 }
