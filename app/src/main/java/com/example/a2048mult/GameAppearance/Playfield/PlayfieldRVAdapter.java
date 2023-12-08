@@ -1,4 +1,4 @@
-package com.example.a2048mult;
+package com.example.a2048mult.GameAppearance.Playfield;
 
 import android.view.View;
 import android.view.ViewGroup;

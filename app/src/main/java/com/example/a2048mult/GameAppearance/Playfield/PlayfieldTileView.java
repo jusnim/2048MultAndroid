@@ -1,4 +1,4 @@
-package com.example.a2048mult;
+package com.example.a2048mult.GameAppearance.Playfield;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -18,30 +18,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.a2048mult.R;
 import com.example.a2048mult.databinding.ViewPlayfieldTileBinding;
 
 public class PlayfieldTileView extends ConstraintLayout {
     private ViewPlayfieldTileBinding binding;
 
-
     public PlayfieldTileView(@NonNull Context context) {
         super(context);
-        binding = ViewPlayfieldTileBinding.inflate(LayoutInflater.from(context));
+        binding = ViewPlayfieldTileBinding.inflate(LayoutInflater.from(context), this, true);
     }
 
     public PlayfieldTileView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        binding = ViewPlayfieldTileBinding.inflate(LayoutInflater.from(context));
+        binding = ViewPlayfieldTileBinding.inflate(LayoutInflater.from(context), this, true);
     }
 
     public PlayfieldTileView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        binding = ViewPlayfieldTileBinding.inflate(LayoutInflater.from(context));
+        binding = ViewPlayfieldTileBinding.inflate(LayoutInflater.from(context), this, true);
     }
 
     public PlayfieldTileView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        binding = ViewPlayfieldTileBinding.inflate(LayoutInflater.from(context));
+        binding = ViewPlayfieldTileBinding.inflate(LayoutInflater.from(context), this, true);
+
     }
 
 

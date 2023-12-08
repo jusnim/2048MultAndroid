@@ -1,4 +1,4 @@
-package com.example.a2048mult;
+package com.example.a2048mult.GameAppearance.Menu;
 
 import android.os.Bundle;
 
@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.a2048mult.R;
 import com.example.a2048mult.databinding.FragmentStartBinding;
 
 

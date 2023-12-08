@@ -7,32 +7,18 @@
 
     <fragment
         android:id="@+id/start2"
-        android:name="com.example.a2048mult.PlayfieldTestFragment"
+        android:name="com.example.a2048mult.GameAppearance.Playfield.PlayfieldTestFragment"
         android:label="fragment_playfield_test"
         tools:layout="@layout/fragment_playfield_test" >
-        <action
-            android:id="@+id/action_start2_to_singlePlayerMenu"
-            app:destination="@id/singlePlayerMenu"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
-        <action
-            android:id="@+id/action_start2_to_multiplayerMenu"
-            app:destination="@id/multiplayerMenu"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/multiplayerMenu"
-        android:name="com.example.a2048mult.MultiplayerMenuFragment"
+        android:name="com.example.a2048mult.GameAppearance.Menu.MultiplayerMenuFragment"
         android:label="fragment_multiplayer_menu"
         tools:layout="@layout/fragment_multiplayer_menu" />
     <fragment
         android:id="@+id/singlePlayerMenu"
-        android:name="com.example.a2048mult.SinglePlayerMenuFragment"
+        android:name="com.example.a2048mult.GameAppearance.Menu.SinglePlayerMenuFragment"
         android:label="fragment_single_player_menu"
         tools:layout="@layout/fragment_single_player_menu" />
 </navigation>

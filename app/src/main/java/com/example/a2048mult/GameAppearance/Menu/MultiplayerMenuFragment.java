@@ -1,4 +1,4 @@
-package com.example.a2048mult;
+package com.example.a2048mult.GameAppearance.Menu;
 
 import android.os.Bundle;
 
@@ -9,16 +9,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.a2048mult.databinding.FragmentSinglePlayerMenuBinding;
-public class SinglePlayerMenuFragment extends Fragment {
-    private FragmentSinglePlayerMenuBinding binding;
+import com.example.a2048mult.databinding.FragmentMultiplayerMenuBinding;
+
+public class MultiplayerMenuFragment extends Fragment {
+
+    private FragmentMultiplayerMenuBinding binding;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentSinglePlayerMenuBinding.inflate(getLayoutInflater());
-
+        binding = FragmentMultiplayerMenuBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
     @Override

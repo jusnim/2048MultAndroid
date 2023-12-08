@@ -1,4 +1,4 @@
-package com.example.a2048mult;
+package com.example.a2048mult.GameAppearance.Menu;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
