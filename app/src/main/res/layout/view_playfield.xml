@@ -17,26 +17,6 @@
         app:layout_constraintEnd_toStartOf="@+id/testRight"
         app:layout_constraintStart_toStartOf="@+id/testLeft"
         app:layout_constraintTop_toTopOf="@+id/testTop">
-<!--EXAMPLE-->
-<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--            android:id="@+id/constraintLayout3"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="20dp"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent">-->
-
-<!--            <com.example.a2048mult.GameAppearance.Playfield.PlayfieldTileView-->
-
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="0dp"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent">-->
-
-<!--            </com.example.a2048mult.GameAppearance.Playfield.PlayfieldTileView>-->
-<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -6,7 +6,7 @@ package com.example.a2048mult.GameAppearance.Playfield;
  */
 public class PlayfieldConfig {
     // TODO
-    static float marginBorderFloat = 0.05f;
+    static float marginBorderFloat = 0.03f;
     static int marginTileInDP = 15;
 
     // TODO

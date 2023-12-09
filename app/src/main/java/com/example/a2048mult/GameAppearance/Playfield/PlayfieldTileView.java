@@ -1,14 +1,12 @@
 package com.example.a2048mult.GameAppearance.Playfield;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.core.content.ContextCompat;
 
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -59,6 +57,11 @@ public class PlayfieldTileView extends ConstraintLayout {
      * new color and text are representing the corresponding level
      */
     void setLevel(int level){
+        // background tile
+        if(level <1){
+            setTilePlaceholder();
+            return;
+        }
         // get value for Text
         SpannableStringBuilder valueForText;
 
@@ -79,10 +82,7 @@ public class PlayfieldTileView extends ConstraintLayout {
         int[] colorLevelSteps = getContext().getResources().getIntArray(R.array.colorLevelSteps);
         int[] colorLevelSteps_Text = getContext().getResources().getIntArray(R.array.colorLevelSteps_Text);
 
-        int colorIndex =level;
-        if (level > colorLevelSteps.length){
-            colorIndex = colorLevelSteps.length;
-        }
+        int colorIndex = Math.min(level, colorLevelSteps.length);
         colorIndex -= 1;
 
         // set BGcolor
@@ -90,5 +90,16 @@ public class PlayfieldTileView extends ConstraintLayout {
 
         // set Textcolor
         binding.textView.setTextColor(colorLevelSteps_Text[colorIndex]);
+    }
+
+    /**
+     * is called when leven < 1
+     * tile will be drawn as a Tile with TileBGColor
+     * will act as an placeholder
+     */
+    private void setTilePlaceholder(){
+        binding.getRoot().removeView(binding.textView);
+        int bgColor = ContextCompat.getColor(binding.getRoot().getContext(), R.color.brown_playfield_placeholder);
+        binding.getRoot().getBackground().setTint(bgColor);
     }
 }

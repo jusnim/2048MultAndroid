@@ -2,6 +2,7 @@ package com.example.a2048mult.GameAppearance.Playfield;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -27,7 +28,7 @@ public class PlayfieldTestFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
@@ -35,7 +36,7 @@ public class PlayfieldTestFragment extends Fragment {
         binding = FragmentPlayfieldTestBinding.inflate(getLayoutInflater());
         lm = new LinearLayout(binding.getRoot().getContext());
 
-        protoPlayfield(4,4);
+        protoPlayfield(5,5);
 
 //        lm = new LinearLayout(binding.getRoot().getContext());
 
@@ -72,22 +73,23 @@ public class PlayfieldTestFragment extends Fragment {
 //        });
 
 
-//        FragmentManager fragmentManager = getParentFragmentManager();
-//        PlayfieldTileFragment fragment = PlayfieldTileFragment.newInstance(20);
-//        fragmentManager.beginTransaction().add(binding.fragmentContainerTest.getId(),fragment).commit();
-//        View view = inflater.inflate(R.layout.view_playfield_tile, container,false);
         return binding.getRoot();
     }
 
-//    @Override
-//    public void onViewCreated(View view, Bundle savedInstanceState) {
-//        super.onViewCreated(view, savedInstanceState);
-//        protoPlayfield(4,4);
-//    }
-
     private void protoPlayfield(int width, int height) {
         PlayfieldView playfield = new PlayfieldView(lm.getContext());
-        playfield.setPlayfieldSizing(width, height);
+
+        int[][] showcaseData = new int[height][width];
+        int level=0;
+        for(int y = 0; y<height;  y++){
+            int[] row = new int[width];
+            for(int x = 0; x<width;  x++){
+                row[x]=level;
+                level++;
+            }
+            showcaseData[y] = row;
+        }
+        playfield.drawPlayfieldState(showcaseData);
 
         binding.getRoot().addView(playfield);
     }

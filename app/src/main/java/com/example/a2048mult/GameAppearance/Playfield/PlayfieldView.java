@@ -1,29 +1,20 @@
 package com.example.a2048mult.GameAppearance.Playfield;
 
 import android.content.Context;
-import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.constraintlayout.widget.Guideline;
-import androidx.fragment.app.Fragment;
+
 
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.Space;
-
-import com.example.a2048mult.R;
 import com.example.a2048mult.databinding.ViewPlayfieldBinding;
 
-import java.util.Arrays;
 
 public class PlayfieldView extends ConstraintLayout {
     private ViewPlayfieldBinding binding;
@@ -48,19 +39,32 @@ public class PlayfieldView extends ConstraintLayout {
         init(context);
     }
 
+    /**
+     * initialize view with margin given in Config
+     * @param context is passed down by constructor
+     * @see PlayfieldConfig#marginBorderFloat
+     */
     private void init(@NonNull Context context) {
         binding = ViewPlayfieldBinding.inflate(LayoutInflater.from(context), this, true);
 
-        // changing margin to borders
+        // changing marginToBorders
         binding.testTop.setGuidelinePercent(PlayfieldConfig.marginBorderFloat);
         binding.testBot.setGuidelinePercent(1f - PlayfieldConfig.marginBorderFloat);
         binding.testRight.setGuidelinePercent(1f - PlayfieldConfig.marginBorderFloat);
         binding.testLeft.setGuidelinePercent(PlayfieldConfig.marginBorderFloat);
-
     }
 
-
-    void setPlayfieldSizing(int width, int height) {
+    /**
+     * draws a Playfield with the given data of levels
+     * Playfield will be a View of type ConstraintLayout
+     * The inner connections and handling of their margin/distance is handled by the combination of other ConstraintLayouts and using of Constraints
+     * @see ConstraintLayout
+     * @param data , 2-dimensional array, with [y][x] representing each Tile with their level
+     * @implNote level < 1, represents a placeholder tile, used in the background
+     */
+    void drawPlayfieldState(int[][] data){
+        int width = data.length;
+        int height = data[0].length;
 
         View[] containerContent = new View[2 * height - 1];
         ConstraintSet containerConstraintSet = new ConstraintSet();
@@ -87,7 +91,7 @@ public class PlayfieldView extends ConstraintLayout {
                 // TODO change tile level --> take level from GameState Object
                 // add tile
 
-                lineContent = addNewTile(lineConstraintSet, line,lineContent, lineViewCount,5);
+                lineContent = addNewTile(lineConstraintSet, line,lineContent, lineViewCount,data[y][x]);
                 lineViewCount++;
 
                 // add space
@@ -99,22 +103,53 @@ public class PlayfieldView extends ConstraintLayout {
             }
 
             lineConstraintSet.clone(line);
-            lineConstraintSet.connect(lineContent[lineContent.length - 1].getId(), lineConstraintSet.END, lineConstraintSet.PARENT_ID, lineConstraintSet.END, 0);
+            lineConstraintSet.connect(lineContent[lineContent.length - 1].getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 0);
             lineConstraintSet.applyTo(line);
         }
 
         containerConstraintSet.clone(binding.playfieldContainer);
         containerConstraintSet.connect(containerContent[containerContent.length - 1].getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0);
         containerConstraintSet.applyTo(binding.playfieldContainer);
-
     }
 
+    /**
+     *  draws a playfield only consisting of placeholder-tiles
+     * @param width - defines width of playfield
+     * @param height - defines width of playfield
+     * @see this#drawPlayfieldState(int[][])
+     */
+    void drawPlayfieldSizing(int width, int height) {
+        int[][] bgData = new int[height][width];
+        drawPlayfieldState(bgData);
+    }
+
+    /**
+     * adds a new Line (ConstraintLayout) - acting as a container for Spaces and Tiles
+     * a part of drawing the playfield
+     * @see this#drawPlayfieldState(int[][])
+     * @param constraintSet - used to set constraints
+     * @param containerContent - used to save views and connecting them later on via constraints
+     * @param containerViewCount - used to give index of containerContent
+     * @return containerContent + 1 Element
+     */
     private View[] addNewRow(ConstraintSet constraintSet, View[] containerContent, int containerViewCount) {
         ConstraintLayout row = new ConstraintLayout(binding.playfieldContainer.getContext());
         row.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 0));
         return addNewLine(constraintSet, containerContent, containerViewCount, row);
     }
 
+
+    /**
+     * adds a new Tile (ConstraintLayout)
+     * a part of drawing the playfield
+     * @see this#drawPlayfieldState(int[][])
+     * @param constraintSet - used to set constraints
+     * @param line - the specific row/line, where the tile is going to be added
+     * @param lineContent - used to save views and connecting them later on via constraints
+     * @param lineViewCount - used to give index of containerContent
+     * @param level - for setting the level of the tile
+     * @return lineContent + 1 Element
+     */
     private View[] addNewTile(ConstraintSet constraintSet, ConstraintLayout line, View[] lineContent, int lineViewCount, int level) {
         PlayfieldTileView tile = new PlayfieldTileView(line.getContext());
         tile.setLevel(level);
@@ -122,18 +157,47 @@ public class PlayfieldView extends ConstraintLayout {
         return addNewItemInLine(constraintSet,line,lineContent,lineViewCount,tile);
     }
 
+    /**
+     * adds a new Space Line to seperate the Rows containing Views
+     * a part of drawing the playfield
+     * @see this#drawPlayfieldState(int[][])
+     * @param constraintSet - used to set constraints
+     * @param containerContent - used to save views and connecting them later on via constraints
+     * @param containerViewCount - used to give index of containerContent
+     * @return containerContent + 1 Element
+     */
     private View[] addNewLineSpace(ConstraintSet constraintSet, View[] containerContent, int containerViewCount) {
         Space space = new Space(binding.playfieldContainer.getContext());
         space.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, PlayfieldConfig.marginTileInDP));
         return addNewLine(constraintSet, containerContent, containerViewCount, space);
     }
 
+    /**
+     * adds Space between the Tiles
+     * a part of drawing the playfield
+     * @see this#drawPlayfieldState(int[][])
+     * @param constraintSet - used to set constraints
+     * @param line - the specific row/line, where the tile is going to be added
+     * @param lineContent - used to save views and connecting them later on via constraints
+     * @param lineViewCount - used to give index of containerContent
+     * @return lineContent + 1 Element
+     */
     private View[] addNewSpace(ConstraintSet constraintSet, ConstraintLayout line, View[] lineContent, int lineViewCount) {
         Space space = new Space(binding.playfieldContainer.getContext());
         space.setLayoutParams(new LayoutParams(PlayfieldConfig.marginTileInDP, LayoutParams.MATCH_PARENT));
         return addNewItemInLine(constraintSet,line,lineContent,lineViewCount,space);
     }
 
+    /**
+     * general Method for adding horizontalViews to the container of the Playfield
+     * a part of drawing the playfield
+     * @see this#drawPlayfieldState(int[][])
+     * @param constraintSet - used to set constraints
+     * @param containerContent - used to save views and connecting them later on via constraints
+     * @param containerViewCount - used to give index of containerContent
+     * @param itemToAdd - the Item, that should be added
+     * @return containerContent + 1 Element
+     */
     private View[] addNewLine(ConstraintSet constraintSet, View[] containerContent, int containerViewCount, View itemToAdd) {
         itemToAdd.setId(ConstraintLayout.generateViewId());
 
@@ -152,6 +216,17 @@ public class PlayfieldView extends ConstraintLayout {
         return containerContent;
     }
 
+    /**
+     * general Method for adding Views to the given line
+     * a part of drawing the playfield
+     * @see this#drawPlayfieldState(int[][])
+     * @param constraintSet - used to set constraints
+     * @param line - the specific row/line, where the tile is going to be added
+     * @param lineContent - used to save views and connecting them later on via constraints
+     * @param lineViewCount - used to give index of containerContent
+     * @param itemToAdd - the item, that should be added
+     * @return lineContent + 1 Element
+     */
     private View[] addNewItemInLine(ConstraintSet constraintSet, ConstraintLayout line, View[] lineContent, int lineViewCount, View itemToAdd) {
         itemToAdd.setId(ConstraintLayout.generateViewId());
 
@@ -170,6 +245,13 @@ public class PlayfieldView extends ConstraintLayout {
         return lineContent;
     }
 
+
+    /**
+     * method for creating constraints between each line and fixing them on the sides of the container
+     * @param constraintSet - used to set constraints
+     * @param viewBefore - the view located left of the second view
+     * @param view - the second view
+     */
     private void addConstraintsLine(ConstraintSet constraintSet, View viewBefore, View view) {
         // connect to sides
         constraintSet.connect(view.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 0);
@@ -184,6 +266,12 @@ public class PlayfieldView extends ConstraintLayout {
         }
     }
 
+    /**
+     * method for creating constraints between each View horizontally and fixing them on the Top and Bottom edge of the line
+     * @param constraintSet - used to set constraints
+     * @param viewBefore - the view located left of the second view
+     * @param view - the second view
+     */
     private void addConstraintsItem(ConstraintSet constraintSet, View viewBefore, View view) {
         // connect top and bttom
         constraintSet.connect(view.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
