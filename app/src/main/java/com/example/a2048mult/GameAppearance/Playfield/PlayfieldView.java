@@ -23,9 +23,10 @@ import android.widget.Space;
 import com.example.a2048mult.R;
 import com.example.a2048mult.databinding.ViewPlayfieldBinding;
 
-public class PlayfieldView extends LinearLayout {
+import java.util.Arrays;
+
+public class PlayfieldView extends ConstraintLayout {
     private ViewPlayfieldBinding binding;
-    private LinearLayout container;
 
     public PlayfieldView(@NonNull Context context) {
         super(context);
@@ -50,121 +51,151 @@ public class PlayfieldView extends LinearLayout {
     private void init(@NonNull Context context) {
         binding = ViewPlayfieldBinding.inflate(LayoutInflater.from(context), this, true);
 
+        // changing margin to borders
+        binding.testTop.setGuidelinePercent(PlayfieldConfig.marginBorderFloat);
+        binding.testBot.setGuidelinePercent(1f - PlayfieldConfig.marginBorderFloat);
+        binding.testRight.setGuidelinePercent(1f - PlayfieldConfig.marginBorderFloat);
+        binding.testLeft.setGuidelinePercent(PlayfieldConfig.marginBorderFloat);
 
-        //  creating margin for playfield border
-        float margin = 0.10f;
-        ConstraintLayout.LayoutParams vertical = new ConstraintLayout.LayoutParams(
-                ConstraintLayout.LayoutParams.WRAP_CONTENT,
-                ConstraintLayout.LayoutParams.WRAP_CONTENT);
-        vertical.orientation = LinearLayout.VERTICAL;
-
-        ConstraintLayout.LayoutParams vertical2 = new ConstraintLayout.LayoutParams(
-                ConstraintLayout.LayoutParams.WRAP_CONTENT,
-                ConstraintLayout.LayoutParams.WRAP_CONTENT);
-        vertical2.orientation = LinearLayout.VERTICAL;
-
-        ConstraintLayout.LayoutParams horizontal = new ConstraintLayout.LayoutParams(
-                ConstraintLayout.LayoutParams.WRAP_CONTENT,
-                ConstraintLayout.LayoutParams.WRAP_CONTENT);
-        horizontal.orientation = LinearLayout.HORIZONTAL;
-
-        ConstraintLayout.LayoutParams horizontal2 = new ConstraintLayout.LayoutParams(
-                ConstraintLayout.LayoutParams.WRAP_CONTENT,
-                ConstraintLayout.LayoutParams.WRAP_CONTENT);
-        horizontal2.orientation = LinearLayout.HORIZONTAL;
-
-
-        Guideline guidelineTop = new Guideline(binding.getRoot().getContext());
-        Guideline guidelineBottom = new Guideline(binding.getRoot().getContext());
-        Guideline guidelineLeft = new Guideline(binding.getRoot().getContext());
-        Guideline guidelineRight = new Guideline(binding.getRoot().getContext());
-
-        guidelineTop.setId(Guideline.generateViewId());
-        guidelineBottom.setId(Guideline.generateViewId());
-        guidelineLeft.setId(Guideline.generateViewId());
-        guidelineRight.setId(Guideline.generateViewId());
-
-        guidelineTop.setLayoutParams(horizontal);
-        guidelineBottom.setLayoutParams(horizontal2);
-        guidelineLeft.setLayoutParams(vertical);
-        guidelineRight.setLayoutParams(vertical2);
-
-
-        binding.getRoot().addView(guidelineTop);
-        binding.getRoot().addView(guidelineBottom);
-        binding.getRoot().addView(guidelineLeft);
-        binding.getRoot().addView(guidelineRight);
-
-        guidelineTop.setGuidelinePercent(margin);
-        guidelineBottom.setGuidelinePercent(1f - margin);
-        guidelineLeft.setGuidelinePercent(margin);
-        guidelineRight.setGuidelinePercent(1f - margin);
-
-
-        this.container = new LinearLayout(binding.getRoot().getContext());
-        binding.getRoot().addView(container);
-        container.setOrientation(LinearLayout.VERTICAL);
-        container.setId(LinearLayout.generateViewId());
-
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(binding.getRoot());
-
-        constraintSet.connect(container.getId(), ConstraintSet.TOP, guidelineTop.getId(), ConstraintSet.TOP, 0);
-        constraintSet.connect(container.getId(), ConstraintSet.BOTTOM, guidelineBottom.getId(), ConstraintSet.BOTTOM, 0);
-        constraintSet.connect(container.getId(), ConstraintSet.START, guidelineRight.getId(), ConstraintSet.START, 0);
-        constraintSet.connect(container.getId(), ConstraintSet.END, guidelineLeft.getId(), ConstraintSet.END, 0);
-
-        constraintSet.applyTo(binding.getRoot());
     }
 
 
     void setPlayfieldSizing(int width, int height) {
 
-
-//        float marginX = 100/width;
-//        float marginY = 100/height;
-
-        float marginX = (100 - PlayfieldConfig.marginInPercentage) / width;
-//        float marginX = (100 - PlayfieldConfig.marginInPercentage)/width;
+        View[] containerContent = new View[2 * height - 1];
+        ConstraintSet containerConstraintSet = new ConstraintSet();
+        int containerViewCount = 0;
 
         for (int y = 0; y < height; y++) {
-            LinearLayout row = new LinearLayout(container.getContext());
-            row.setBackgroundColor(12);
-            container.addView(row);
 
+            // add line
+            containerContent = addNewRow(containerConstraintSet, containerContent, containerViewCount);
+            containerViewCount++;
 
+            // adding space
+            if (containerViewCount < 2 * height - 1) {
+                containerContent = addNewLineSpace(containerConstraintSet, containerContent, containerViewCount);
+                containerViewCount++;
+            }
 
-            LinearLayout linearWrapper;
-            LinearLayout.LayoutParams linearWrParams;
+            ConstraintLayout line = (ConstraintLayout) containerContent[y*2];
+            View[] lineContent = new View[2 * width - 1];
+            ConstraintSet lineConstraintSet = new ConstraintSet();
+            int lineViewCount = 0;
 
             for (int x = 0; x < width; x++) {
                 // TODO change tile level --> take level from GameState Object
-                addNewSpace(row);
+                // add tile
 
-                linearWrapper = new LinearLayout(row.getContext());
-                linearWrParams = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                linearWrParams.weight = 1;
-                linearWrapper.setLayoutParams(linearWrParams);
+                lineContent = addNewTile(lineConstraintSet, line,lineContent, lineViewCount,5);
+                lineViewCount++;
 
-                // wrap into linearLayout
-                PlayfieldTileView tile = new PlayfieldTileView(row.getContext());
-                tile.setLevel(2);
-                linearWrapper.addView(tile);
-                row.addView(linearWrapper);
-
-
-                addNewSpace(row);
+                // add space
+                if (lineViewCount < 2 * width - 1) {
+                    Log.e("!","call");
+                    lineContent = addNewSpace(lineConstraintSet, line, lineContent, lineViewCount);
+                    lineViewCount++;
+                }
             }
+
+            lineConstraintSet.clone(line);
+            lineConstraintSet.connect(lineContent[lineContent.length - 1].getId(), lineConstraintSet.END, lineConstraintSet.PARENT_ID, lineConstraintSet.END, 0);
+            lineConstraintSet.applyTo(line);
         }
 
+        containerConstraintSet.clone(binding.playfieldContainer);
+        containerConstraintSet.connect(containerContent[containerContent.length - 1].getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0);
+        containerConstraintSet.applyTo(binding.playfieldContainer);
+
     }
-    private void addNewSpace(LinearLayout row){
-        Space space = new Space(container.getContext());
-        LinearLayout.LayoutParams spaceParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        spaceParams.weight = 1;
-        space.setLayoutParams(spaceParams);
-        row.addView(space);
+
+    private View[] addNewRow(ConstraintSet constraintSet, View[] containerContent, int containerViewCount) {
+        ConstraintLayout row = new ConstraintLayout(binding.playfieldContainer.getContext());
+        row.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 0));
+        return addNewLine(constraintSet, containerContent, containerViewCount, row);
     }
+
+    private View[] addNewTile(ConstraintSet constraintSet, ConstraintLayout line, View[] lineContent, int lineViewCount, int level) {
+        PlayfieldTileView tile = new PlayfieldTileView(line.getContext());
+        tile.setLevel(level);
+        tile.setLayoutParams(new LayoutParams(0, LayoutParams.MATCH_PARENT));
+        return addNewItemInLine(constraintSet,line,lineContent,lineViewCount,tile);
+    }
+
+    private View[] addNewLineSpace(ConstraintSet constraintSet, View[] containerContent, int containerViewCount) {
+        Space space = new Space(binding.playfieldContainer.getContext());
+        space.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, PlayfieldConfig.marginTileInDP));
+        return addNewLine(constraintSet, containerContent, containerViewCount, space);
+    }
+
+    private View[] addNewSpace(ConstraintSet constraintSet, ConstraintLayout line, View[] lineContent, int lineViewCount) {
+        Space space = new Space(binding.playfieldContainer.getContext());
+        space.setLayoutParams(new LayoutParams(PlayfieldConfig.marginTileInDP, LayoutParams.MATCH_PARENT));
+        return addNewItemInLine(constraintSet,line,lineContent,lineViewCount,space);
+    }
+
+    private View[] addNewLine(ConstraintSet constraintSet, View[] containerContent, int containerViewCount, View itemToAdd) {
+        itemToAdd.setId(ConstraintLayout.generateViewId());
+
+        binding.playfieldContainer.addView(itemToAdd);
+        containerContent[containerViewCount] = itemToAdd;
+
+        constraintSet.clone(binding.playfieldContainer);
+
+        if (containerViewCount < 1) {
+            addConstraintsLine(constraintSet, null, itemToAdd);
+        } else {
+            addConstraintsLine(constraintSet, containerContent[containerViewCount - 1], itemToAdd);
+        }
+        constraintSet.applyTo(binding.playfieldContainer);
+
+        return containerContent;
+    }
+
+    private View[] addNewItemInLine(ConstraintSet constraintSet, ConstraintLayout line, View[] lineContent, int lineViewCount, View itemToAdd) {
+        itemToAdd.setId(ConstraintLayout.generateViewId());
+
+        line.addView(itemToAdd);
+        lineContent[lineViewCount] = itemToAdd;
+
+        constraintSet.clone(line);
+
+        if (lineViewCount < 1) {
+            addConstraintsItem(constraintSet, null, itemToAdd);
+        } else {
+            addConstraintsItem(constraintSet, lineContent[lineViewCount - 1], itemToAdd);
+        }
+        constraintSet.applyTo(line);
+
+        return lineContent;
+    }
+
+    private void addConstraintsLine(ConstraintSet constraintSet, View viewBefore, View view) {
+        // connect to sides
+        constraintSet.connect(view.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 0);
+        constraintSet.connect(view.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 0);
+
+        if (viewBefore == null) {
+            // connect first line to parent
+            constraintSet.connect(view.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
+        } else {
+            constraintSet.connect(viewBefore.getId(), ConstraintSet.BOTTOM, view.getId(), ConstraintSet.TOP, 0);
+            constraintSet.connect(view.getId(), ConstraintSet.TOP, viewBefore.getId(), ConstraintSet.BOTTOM, 0);
+        }
+    }
+
+    private void addConstraintsItem(ConstraintSet constraintSet, View viewBefore, View view) {
+        // connect top and bttom
+        constraintSet.connect(view.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
+        constraintSet.connect(view.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0);
+
+        if (viewBefore == null) {
+            // connect first item to parent
+            constraintSet.connect(view.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 0);
+        } else {
+            constraintSet.connect(viewBefore.getId(), ConstraintSet.END, view.getId(), ConstraintSet.START, 0);
+            constraintSet.connect(view.getId(), ConstraintSet.START, viewBefore.getId(), ConstraintSet.END, 0);
+        }
+    }
+
 }

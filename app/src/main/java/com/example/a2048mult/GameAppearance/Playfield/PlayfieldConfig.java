@@ -6,16 +6,9 @@ package com.example.a2048mult.GameAppearance.Playfield;
  */
 public class PlayfieldConfig {
     // TODO
-    static int marginInPercentage = 10;
+    static float marginBorderFloat = 0.05f;
+    static int marginTileInDP = 15;
 
     // TODO
-    static int tileRoundEdgesInDP = 10;
-
-    public static int getMarginInPercentage() {
-        return marginInPercentage;
-    }
-
-    public static int getTileRoundEdgesInDP() {
-        return tileRoundEdgesInDP;
-    }
+    static int tileRoundEdgesInDP = 40;
 }
