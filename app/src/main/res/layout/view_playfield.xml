@@ -8,6 +8,18 @@
     android:backgroundTint="@color/brown_playfield_bg">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/backgroundContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+
+        app:layout_constraintBottom_toTopOf="@+id/testBot"
+        app:layout_constraintEnd_toStartOf="@+id/testRight"
+        app:layout_constraintStart_toStartOf="@+id/testLeft"
+        app:layout_constraintTop_toTopOf="@+id/testTop">
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/playfieldContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -17,8 +29,9 @@
         app:layout_constraintEnd_toStartOf="@+id/testRight"
         app:layout_constraintStart_toStartOf="@+id/testLeft"
         app:layout_constraintTop_toTopOf="@+id/testTop">
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/testTop"

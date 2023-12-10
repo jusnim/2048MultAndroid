@@ -4,20 +4,20 @@ package com.example.a2048mult.GameAppearance;
 import android.content.Context;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public abstract class GameInputListener implements View.OnTouchListener {
+public abstract class GameInputListener implements View.OnTouchListener { //, View.OnKeyListener {
 //    , View.OnKeyListene
     private final GestureDetector gestureDetector;
     private float velocityThreshold = 100;
     private float threshold = 100;
 
     public GameInputListener(Context context) {
-        Log.e("INPUT","right");
         gestureDetector = new GestureDetector(context, new GestureListener());
     }
     public GameInputListener(Context context, float threshold, float velocityThreshold) {
@@ -74,7 +74,6 @@ public abstract class GameInputListener implements View.OnTouchListener {
         @Override
         public boolean onFling(@Nullable MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {
             boolean result = false;
-            Log.i("INPUT","right");
             float diffX = e2.getX() - e1.getX();
             float diffY = e2.getY() - e1.getY();
 

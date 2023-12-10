@@ -11,18 +11,6 @@
         android:layout_height="match_parent"
         android:text="SINGLEPLAYER MENU" />
 
-    <include
-        layout="@layout/fragment_playfield_choose"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/fragmentContainerView"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:orientation="horizontal">
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </FrameLayout>

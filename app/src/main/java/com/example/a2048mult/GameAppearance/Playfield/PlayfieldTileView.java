@@ -13,6 +13,7 @@ import android.text.SpannableStringBuilder;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.SuperscriptSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 
 import com.example.a2048mult.R;
@@ -46,19 +47,22 @@ public class PlayfieldTileView extends ConstraintLayout {
 
         GradientDrawable shape = (GradientDrawable) binding.getRoot().getBackground();
         float r = PlayfieldConfig.tileRoundEdgesInDP;
-        shape.setCornerRadii(new float[] { r, r, r, r, r, r, r, r });
+        shape.setCornerRadii(new float[]{r, r, r, r, r, r, r, r});
         binding.getRoot().setBackground(shape);
     }
-
 
 
     /**
      * changing the tiles appearance
      * new color and text are representing the corresponding level
      */
-    void setLevel(int level){
+    void setLevel(int level) {
         // background tile
-        if(level <1){
+        if (level < 0) {
+            setInvisibleTile();
+            return;
+        }
+        if (level < 1) {
             setTilePlaceholder();
             return;
         }
@@ -66,11 +70,11 @@ public class PlayfieldTileView extends ConstraintLayout {
         SpannableStringBuilder valueForText;
 
         // if value is >= 20 --> simplify text to 2^tileLevel
-        if(level<20) {
-            long value = (long)Math.pow(2,level);
-            valueForText= SpannableStringBuilder.valueOf(Long.toString(value));
+        if (level < 20) {
+            long value = (long) Math.pow(2, level);
+            valueForText = SpannableStringBuilder.valueOf(Long.toString(value));
         } else {
-            valueForText = new SpannableStringBuilder("2"+level);
+            valueForText = new SpannableStringBuilder("2" + level);
             valueForText.setSpan(new SuperscriptSpan(), 1, valueForText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             valueForText.setSpan(new RelativeSizeSpan(0.30f), 1, valueForText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
@@ -93,11 +97,20 @@ public class PlayfieldTileView extends ConstraintLayout {
     }
 
     /**
-     * is called when leven < 1
+     * is called when level < -1
+     * tile will be drawn invisible
+     */
+    private void setInvisibleTile() {
+        binding.getRoot().removeView(binding.textView);
+        binding.getRoot().setBackgroundResource(0);
+    }
+
+    /**
+     * is called when level == 0
      * tile will be drawn as a Tile with TileBGColor
      * will act as an placeholder
      */
-    private void setTilePlaceholder(){
+    private void setTilePlaceholder() {
         binding.getRoot().removeView(binding.textView);
         int bgColor = ContextCompat.getColor(binding.getRoot().getContext(), R.color.brown_playfield_placeholder);
         binding.getRoot().getBackground().setTint(bgColor);
