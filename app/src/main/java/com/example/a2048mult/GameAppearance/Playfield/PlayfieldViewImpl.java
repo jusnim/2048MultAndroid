@@ -19,7 +19,7 @@ import android.widget.Space;
 import com.example.a2048mult.databinding.ViewPlayfieldBinding;
 
 
-public class PlayfieldViewImpl extends ConstraintLayout implements PlayfieldView {
+public class PlayfieldViewImpl extends ConstraintLayout implements PlayfieldUI {
     private ViewPlayfieldBinding binding;
     private ConstraintSet constraintSet;
     private View[] containerContent;
