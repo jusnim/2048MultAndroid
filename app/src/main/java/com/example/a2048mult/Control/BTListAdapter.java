@@ -1,6 +1,8 @@
 package com.example.a2048mult.Control;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.service.controls.Control;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +16,15 @@ import java.util.ArrayList;
 
 public class BTListAdapter extends BaseAdapter {
 
-
+    private final Activity app;
     public ArrayList<BluetoothDevice> btDevicesList;
     public BluetoothDevice clickedDevice;
 
-    public BTListAdapter() {
+    public BTListAdapter(Activity app) {
+        this.app = app;
         btDevicesList = new ArrayList<BluetoothDevice>();
         clickedDevice = null;
+
     }
 
     public void add(BluetoothDevice device) {
@@ -59,9 +63,9 @@ public class BTListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        /*BluetoothDevice btDevice = btDevicesList.get(position);
-        TextView textView = new TextView(this);
-        textView.setText(btDevice.getName() + ": " + btDevice.getAddress());*/
+        BluetoothDevice btDevice = btDevicesList.get(position);
+        TextView textView = new TextView(app.getApplicationContext());
+        textView.setText(btDevice.getName() + ": " + btDevice.getAddress());
         return null;
     }
 }
