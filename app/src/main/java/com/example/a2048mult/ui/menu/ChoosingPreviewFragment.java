@@ -1,4 +1,4 @@
-package com.example.a2048mult.GameAppearance.Menu;
+package com.example.a2048mult.ui.menu;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.example.a2048mult.GameAppearance.Playfield.PlayfieldViewImpl;
+import com.example.a2048mult.ui.game.playfield.PlayfieldViewImpl;
 import com.example.a2048mult.databinding.FragmentChoosingPreviewBinding;
 
 public class ChoosingPreviewFragment extends Fragment {

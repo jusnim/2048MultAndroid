@@ -13,7 +13,7 @@
         android:theme="@style/Theme._2048Mult"
         tools:targetApi="31">
     <activity
-        android:name=".GameAppearance.Menu.MainActivity"
+        android:name=".ui.menu.MainActivity"
         android:launchMode="singleTop"
         android:exported="true">
         <intent-filter>

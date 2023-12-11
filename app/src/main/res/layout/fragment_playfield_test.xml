@@ -4,6 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="400dp"
     android:layout_height="400dp"
-    tools:context=".GameAppearance.Playfield.PlayfieldTestFragment">
+    tools:context=".ui.game.playfield.PlayfieldTestFragment">
 
 </FrameLayout>

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/start"
-        android:name="com.example.a2048mult.GameAppearance.Menu.StartFragment"
+        android:name="com.example.a2048mult.ui.menu.StartFragment"
         android:label="fragment_start"
         tools:layout="@layout/fragment_start" >
         <action
@@ -27,12 +27,12 @@
     </fragment>
     <fragment
         android:id="@+id/multiplayerMenu"
-        android:name="com.example.a2048mult.GameAppearance.Menu.MultiplayerMenuFragment"
+        android:name="com.example.a2048mult.ui.menu.MultiplayerMenuFragment"
         android:label="fragment_multiplayer_menu"
         tools:layout="@layout/fragment_multiplayer_menu" />
     <fragment
         android:id="@+id/singlePlayerMenu"
-        android:name="com.example.a2048mult.GameAppearance.Menu.SinglePlayerMenuFragment"
+        android:name="com.example.a2048mult.ui.menu.SinglePlayerMenuFragment"
         android:label="fragment_single_player_menu"
         tools:layout="@layout/fragment_single_player_menu" />
 </navigation>
