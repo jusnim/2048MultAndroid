@@ -7,5 +7,5 @@ public interface ReceiveListener {
     /**
      * Methode zum Bemerkbarmachen von neuen Informationene in der 2048-Komponente
      */
-    void onRecivedPaket();
+    void onReceivedPaket();
 }
