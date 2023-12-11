@@ -6,7 +6,7 @@ public interface GameDraw {
      *  used when starting a new game
      *  important for setting playfields etc once
      */
-    public void initGameState( ;
+    public void initGameState();
 
     /**
      * draw current GameState
