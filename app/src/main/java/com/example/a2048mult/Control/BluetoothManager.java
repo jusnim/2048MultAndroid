@@ -3,8 +3,11 @@ package com.example.a2048mult.Control;
 
 import static androidx.core.app.ActivityCompat.startActivityForResult;
 import static androidx.core.content.ContextCompat.startActivity;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
@@ -23,7 +26,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Set;
 import java.util.UUID;
 
-public class BluetoothConnection {
+public class BluetoothManager {
 
         private final Activity app;
         private static final int REQUEST_ENABLE_BT = 1;
@@ -50,7 +53,7 @@ public class BluetoothConnection {
         private Handler msgHandler;
         private final String CHAR_SET = "UTF-8";
 
-        public BluetoothConnection(Activity app, /*HandlerMessageCallback hmc,*/ BTListAdapter btListAdapter) {
+        public BluetoothManager(Activity app, /*HandlerMessageCallback hmc,*/ BTListAdapter btListAdapter) {
             this.app = app;
             this.btListAdapter = btListAdapter;
 
@@ -62,11 +65,13 @@ public class BluetoothConnection {
             // app.registerReceiver(btBroadcastReceiver, filter);
 
             // Init Bluetooth and start server socket
-            BTinit(app);
+            BTinit();
+            BluetoothDevice btdevice;
             // btConnectAsServer();
+            btdevice.getAddress();
         }
 
-        public void BTinit(Activity activity) {
+        public void BTinit() {
             bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             if (bluetoothAdapter == null) {
                 //device doesnt support Bluetooth
@@ -74,7 +79,7 @@ public class BluetoothConnection {
                 if (!bluetoothAdapter.isEnabled()) {
                     //TODO
                     Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                    startActivityForResult(activity, enableIntent, REQUEST_ENABLE_BT,null);
+                    startActivityForResult(app, enableIntent, REQUEST_ENABLE_BT,null);
                 } else {
                     btOKCallback();
                 }
@@ -97,6 +102,7 @@ public class BluetoothConnection {
             bluetoothAdapter.startDiscovery();
         }
 
+        @SuppressLint("MissingPermission")
         public void btGetKnownDevices() {
             // Clear views
             btListAdapter.clear();
@@ -118,7 +124,7 @@ public class BluetoothConnection {
         //Make the device discoverable
         public void btMakeDiscoverable(Activity activity) {
             Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-            startActivity(activity,discoverableIntent,null);
+            startActivity(app,discoverableIntent,null);
         }
 
        private void btManageConnection(BluetoothSocket btSocket) {
