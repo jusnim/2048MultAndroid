@@ -1,13 +1,12 @@
-package com.example.a2048mult.ui.game;
-import com.example.a2048mult.game.logic.GameState;
+package com.example.a2048mult.game;
 
-public interface GameUI {
+public interface GameDraw {
     /**
      *  inits a GameState
      *  used when starting a new game
      *  important for setting playfields etc once
      */
-    public void initGameState(GameState gameState);
+    public void initGameState();
 
     /**
      * draw current GameState
@@ -15,5 +14,5 @@ public interface GameUI {
      * also used when going out of a game and going in again
      * basiaclly refreshes current GameState
      */
-    public void drawGameState(GameState gameState);
+    public void drawGameState();
 }
