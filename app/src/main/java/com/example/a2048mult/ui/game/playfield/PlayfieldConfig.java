@@ -11,4 +11,8 @@ public class PlayfieldConfig {
 
     // TODO
     static int tileRoundEdgesInDP = 40;
+    static int animationDurationInMs = 150;
+    static int animationSpawnDurationInMs = 110;
+    static int invisibleTile = -1;
+    static int backgroundTile = 0;
 }
