@@ -18,7 +18,7 @@ public class SinglePlayerMenuFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentSinglePlayerMenuBinding.inflate(getLayoutInflater());
-
+        binding.getRoot().addView(new ChooseView(getContext()));
         return binding.getRoot();
     }
     @Override

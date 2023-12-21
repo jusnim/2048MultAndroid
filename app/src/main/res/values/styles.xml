@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ButtonTheme">
+
+<!--        <item name="backgroundTint">@color/level4</item>-->
+        <item name="android:textColor">@color/level1</item>
+        <item name="android:paddingTop">15dp</item>
+<!--        <item name="android:paddingBottom">10dp</item>-->
+<!--        <item name="android:paddingLeft">50dp</item>-->
+<!--        <item name="android:paddingRight">50dp</item>-->
+        <item name="android:textSize">20dp</item>
+
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMaxTextSize">250dp</item>
+        <item name="autoSizeMinTextSize">1dp</item>
+        <item name="maxLines">1</item>
+
+        <item name="textAllCaps">false</item>
+        <item name="fontFamily">@font/poppins_semibold</item>
+
+<!--        <item name="colorAccent">@color/level16</item>-->
+    </style>
+</resources>

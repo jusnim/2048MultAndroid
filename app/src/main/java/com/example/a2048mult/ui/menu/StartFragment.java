@@ -21,27 +21,19 @@ public class StartFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentStartBinding.inflate(getLayoutInflater());
+        binding = FragmentStartBinding.inflate(getLayoutInflater(), container, false);
 
         // create click listener SinglePlayerbutton
         binding.buttonSingleplayer.setOnClickListener(
-              new View.OnClickListener(){
-                  @Override
-                  public void onClick(View v) {
-                      buttonSingleplayerClick();
-                  }
-              }
+                v -> buttonSingleplayerClick()
         );
 
         // create click listener SinglePlayerbutton
         binding.buttonMultiplayer.setOnClickListener(
-                new View.OnClickListener(){
-                    @Override
-                    public void onClick(View v) {
-                        buttonMultiplayerClick();
-                    }
-                }
+                v -> buttonMultiplayerClick()
         );
+
+
 
         return binding.getRoot();
     }
