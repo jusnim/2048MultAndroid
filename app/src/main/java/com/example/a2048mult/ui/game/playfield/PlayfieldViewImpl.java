@@ -4,18 +4,17 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
+import android.app.Activity;
 import android.content.Context;
+import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Space;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.Space;
 
 import com.example.a2048mult.databinding.ViewPlayfieldBinding;
 import com.example.a2048mult.game.logic.PlayfieldState;
@@ -23,6 +22,7 @@ import com.example.a2048mult.game.logic.PlayfieldState;
 
 public class PlayfieldViewImpl extends ConstraintLayout implements PlayfieldUI {
 
+    // TODO make each PLayfield a thread and playfieldtile a theraed
     private ViewPlayfieldBinding binding;
     private ConstraintSet constraintSet;
     private View[] containerContent;
@@ -63,6 +63,7 @@ public class PlayfieldViewImpl extends ConstraintLayout implements PlayfieldUI {
      * @see PlayfieldConfig#marginBorderFloat
      */
     private void init(@NonNull Context context) {
+
         binding = ViewPlayfieldBinding.inflate(LayoutInflater.from(context), this, true);
 
         // changing marginToBorders
@@ -70,6 +71,7 @@ public class PlayfieldViewImpl extends ConstraintLayout implements PlayfieldUI {
         binding.testBot.setGuidelinePercent(1f - PlayfieldConfig.marginBorderFloat);
         binding.testRight.setGuidelinePercent(1f - PlayfieldConfig.marginBorderFloat);
         binding.testLeft.setGuidelinePercent(PlayfieldConfig.marginBorderFloat);
+
     }
 
 
@@ -161,6 +163,7 @@ public class PlayfieldViewImpl extends ConstraintLayout implements PlayfieldUI {
 
     // TODO private
     public ObjectAnimator moveTile(int xFrom, int yFrom, int xTo, int yTo) {
+
         View fromTile = allViews[yFrom][xFrom * 2];
         View toTile = allViews[yTo][xTo * 2];
 
@@ -170,13 +173,12 @@ public class PlayfieldViewImpl extends ConstraintLayout implements PlayfieldUI {
             animation = ObjectAnimator.ofFloat(fromTile, "translationX", xDiff);
         } else {
             float yDiff = containerContent[yTo].getHeight() + containerContent[yTo].getY() - containerContent[yFrom].getY();
-            Log.e("!", String.valueOf(fromTile.getY()));
 
             animation = ObjectAnimator.ofFloat(fromTile, "translationY", yDiff);
         }
 
         animation.setDuration(PlayfieldConfig.animationDurationInMs);
-        animation.start();
+       animation.start();
         // TODO wenn zuende
 //        removeTile(xFrom,yFrom);
         return animation;
@@ -226,7 +228,9 @@ public class PlayfieldViewImpl extends ConstraintLayout implements PlayfieldUI {
                 PropertyValuesHolder.ofFloat("scaleX", 0.2f, 1f),
                 PropertyValuesHolder.ofFloat("scaleY", 0.2f, 1f));
         scaleUp.setDuration(animationDuration);
-        scaleUp.start();
+
+         scaleUp.start();
+
         return scaleUp;
     }
 

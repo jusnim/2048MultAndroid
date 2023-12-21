@@ -42,6 +42,7 @@ public class PlayfieldTileView extends ConstraintLayout {
     }
 
     private void init(@NonNull Context context) {
+
         binding = ViewPlayfieldTileBinding.inflate(LayoutInflater.from(context), this, true);
 
         GradientDrawable shape = (GradientDrawable) binding.getRoot().getBackground();

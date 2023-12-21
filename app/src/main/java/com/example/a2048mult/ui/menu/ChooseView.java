@@ -1,5 +1,6 @@
 package com.example.a2048mult.ui.menu;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
