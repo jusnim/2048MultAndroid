@@ -5,30 +5,35 @@ package com.example.a2048mult.game.logic;
  */
 public interface PlayfieldState{
 
-    /**
-     * getter for a Playfield
-     * @return PlayfieldState
-     */
-    PlayfieldState getPlayfieldState();
 
     /**
-     * setter for a Playfield
+     * getter for FieldSizeX
      */
-    void setPlayfieldState();
+    int getFieldSizeX();
 
     /**
-     * spawning a Tile on the playfield
+     * getter for FieldSizeY
      */
-    void spawnTile();
+    int getFieldSizeY();
 
     /**
-     * setter for FieldSizeX
+     * getter for one tile
      */
-    void setFieldSizeX();
+    int getTile(int x, int y);
 
     /**
-     * setter for FieldSizeY
+     * setter for one tile
      */
-    void setFieldSizeY();
+    boolean setTile(int x, int y, int value);
+
+    /**
+     * getter for field
+     */
+    int[][] getField();
+
+    /**
+     * setter for field
+     */
+    void setField(int[][] field);
 
 }
