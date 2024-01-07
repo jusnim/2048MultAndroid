@@ -1,6 +1,6 @@
 package com.example.a2048mult.ui.menu.multiplayer;
 
-import com.example.a2048mult.game.logic.LobbySettings;
+import com.example.a2048mult.game.currentlyNotUsed.LobbySettings;
 import com.example.a2048mult.game.logic.Player;
 
 public interface MultiplayerUI {

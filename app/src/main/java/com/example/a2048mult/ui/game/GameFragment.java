@@ -72,7 +72,6 @@ public class GameFragment extends Fragment implements GameUI {
         binding.getRoot().setOnTouchListener(new InputListener(binding.getRoot().getContext()) {
             @Override
             public void onLeft() {
-//                gameState.
             }
 
             @Override

@@ -1,5 +1,6 @@
 package com.example.a2048mult.ui.game;
 
+import com.example.a2048mult.GameDraw;
 import com.example.a2048mult.game.GameState;
 import com.example.a2048mult.game.logic.PlayfieldState;
 

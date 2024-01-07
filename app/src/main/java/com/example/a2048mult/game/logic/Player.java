@@ -30,6 +30,11 @@ public interface Player extends Serializable {
     PlayfieldState getPlayfieldState();
 
     /**
+     * setter for PlayfieldState
+     */
+    void setPlayfieldSize(int size);
+
+    /**
      * getter for PlayfieldTurn representing the change on Field - used for animation
      * @return
      */

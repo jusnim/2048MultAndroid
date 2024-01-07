@@ -6,7 +6,7 @@ import com.example.a2048mult.game.logic.PlayfieldTurn;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class GameStateImpl implements GameState {
+public class GameStateImpl implements GameState{
 
     private int turnCount = 0;
     private Player[] playerList;

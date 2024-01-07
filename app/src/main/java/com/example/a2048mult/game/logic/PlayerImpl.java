@@ -36,6 +36,11 @@ public class PlayerImpl implements Player {
     }
 
     @Override
+    public void setPlayfieldSize(int size) {
+        this.playfieldState = new PlayfieldStateImpl(size);
+    }
+
+    @Override
     public PlayfieldTurn getPlayfieldTurn() {
         return this.playfieldTurn;
     }

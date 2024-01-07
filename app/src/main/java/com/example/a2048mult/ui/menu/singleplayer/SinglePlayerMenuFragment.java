@@ -1,7 +1,6 @@
 package com.example.a2048mult.ui.menu.singleplayer;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,22 +9,18 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.a2048mult.ui.menu.MenuLobbyChangeListener;
 import com.example.a2048mult.R;
 import com.example.a2048mult.databinding.FragmentSinglePlayerMenuBinding;
-import com.example.a2048mult.game.GameState;
-import com.example.a2048mult.game.GameStateImpl;
+import com.example.a2048mult.game.logic.GameLogic;
 import com.example.a2048mult.game.logic.Player;
 import com.example.a2048mult.game.logic.PlayerImpl;
 import com.example.a2048mult.game.logic.PlayfieldState;
 import com.example.a2048mult.game.logic.PlayfieldStateImpl;
-import com.example.a2048mult.ui.game.GameFragment;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-
-public class SinglePlayerMenuFragment extends Fragment {
+public class SinglePlayerMenuFragment extends Fragment implements MenuLobbyChangeListener {
     private FragmentSinglePlayerMenuBinding binding;
+    private GameLogic gameLogic;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -48,27 +43,26 @@ public class SinglePlayerMenuFragment extends Fragment {
     }
 
     private void startSingleplayer() {
+        this.gameLogic = new GameLogic();
 
-        // init playfield
-        PlayfieldState playfieldState = new PlayfieldStateImpl(binding.chooseView.getSelectedPlayfieldSize());
-        Player[] players = {new PlayerImpl("test", 0, playfieldState)};
-        GameState gameState = new GameStateImpl(players);
+        gameLogic.setPlayFieldSize(binding.chooseView.getSelectedPlayfieldSize());
 
-        byte[] gamestateContent;
-        try {
-            // serialize object to byte Array
-            ByteArrayOutputStream osB = new ByteArrayOutputStream();
-            ObjectOutputStream osO = new ObjectOutputStream(osB);
-            osO.writeObject(gameState);
-            osB.flush();
-            gamestateContent = osB.toByteArray();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        PlayfieldState playfieldState = new PlayfieldStateImpl();
+        Player player = new PlayerImpl("username", 0, playfieldState);
 
-        Bundle bundle = new Bundle();
-        bundle.putByteArray(GameFragment.GAMESTATE, gamestateContent);
+        gameLogic.addPlayer(player);
+        gameLogic.setLeader(player);
 
-        NavHostFragment.findNavController(this).navigate(R.id.action_singlePlayerMenu_to_gameFragment, bundle);
+        gameLogic.startGame();
+
+        NavHostFragment.findNavController(this).navigate(R.id.action_singlePlayerMenu_to_gameFragment, gameLogic.getBundle());
+    }
+
+    @Override
+    public void notifyChangeInLobby() {
+        // update UI based on gameLogic-object
+        this.gameLogic.getAllPlayer();
+        this.gameLogic.getLeader();
+        this.gameLogic.getPlayFieldSize();
     }
 }

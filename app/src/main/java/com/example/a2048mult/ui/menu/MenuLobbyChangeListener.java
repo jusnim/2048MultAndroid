@@ -1,6 +1,6 @@
-package com.example.a2048mult;
+package com.example.a2048mult.ui.menu;
 
-public interface MenuChangeListener {
+public interface MenuLobbyChangeListener {
     /**
      * sends a signal, so MenuView can retrieve new Changes In Lobby
      */

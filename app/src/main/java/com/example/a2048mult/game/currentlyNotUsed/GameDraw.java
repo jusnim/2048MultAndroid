@@ -1,4 +1,4 @@
-package com.example.a2048mult.game;
+package com.example.a2048mult.game.currentlyNotUsed;
 
 public interface GameDraw {
     /**

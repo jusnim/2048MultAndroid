@@ -1,4 +1,4 @@
-package com.example.a2048mult.game.logic;
+package com.example.a2048mult.game.currentlyNotUsed;
 
 /**
  * Interface zum bemerken von neuen Paketen in der 2048-Komponente
