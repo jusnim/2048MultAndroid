@@ -2,6 +2,7 @@ package com.example.a2048mult.ui.game.playfield;
 
 import com.example.a2048mult.game.logic.Player;
 import com.example.a2048mult.game.logic.PlayfieldState;
+import com.example.a2048mult.game.logic.PlayfieldTurn;
 
 public interface PlayfieldUI  {
     /**
@@ -19,4 +20,7 @@ public interface PlayfieldUI  {
      */
     public void drawPlayer(Player player);
 
+    void drawPlayfieldBackground(int width, int height);
+
+    void drawPlayfieldTurn(PlayfieldTurn playfieldTurn);
 }

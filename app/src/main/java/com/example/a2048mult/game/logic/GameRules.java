@@ -1,5 +1,7 @@
 package com.example.a2048mult.game.logic;
 
+import android.util.Log;
+
 import java.util.Random;
 
 public class GameRules {
@@ -33,29 +35,33 @@ public class GameRules {
 
     public static boolean spawnTile(PlayfieldState game) {
         int[][] field = game.getField();
+        Log.e("!", String.valueOf(field[0][0]));
 
         boolean freeSpaceForNewTile = false;
-        for (int y = 0; y < field.length; y++) {
-            for (int x = 0; x < field[0].length; x++) {
-                if (field[y][x] == 0) {
+        int[][] freeSpaces = new int[field.length* field[0].length][2];
+        int freeSpacesIndex = 0;
+        for (int x = 0; x < field.length; x++) {
+            for (int y = 0; y < field[0].length; y++) {
+                if (field[x][y] == 0) {
                     freeSpaceForNewTile = true;
-                    break;
+                    freeSpaces[freeSpacesIndex] = new int[]{x, y};
+                    freeSpacesIndex++;
                 }
             }
         }
 
-        if (! freeSpaceForNewTile) {
+        if (!freeSpaceForNewTile) {
             return false; // spiel verloren
         }
+
         Random rd = new Random();
-        int rmdXPos = rd.nextInt(field.length);
-        int rmdYPos = rd.nextInt(field[0].length);
+        int rmdPos = rd.nextInt(freeSpacesIndex + 1);
 
         int tileValue = 1;
         if (Math.random() > 0.8)
             tileValue = 2;
-        game.setTile(rmdXPos, rmdYPos, tileValue);
 
+        game.setTile(freeSpaces[rmdPos][0], freeSpaces[rmdPos][1], tileValue);
         return true;
     }
 

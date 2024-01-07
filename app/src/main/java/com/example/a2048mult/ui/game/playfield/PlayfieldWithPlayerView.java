@@ -3,18 +3,20 @@ package com.example.a2048mult.ui.game.playfield;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.example.a2048mult.databinding.ViewPlayfieldBinding;
 import com.example.a2048mult.databinding.ViewPlayfieldWithPlayerBinding;
+import com.example.a2048mult.game.logic.Player;
+import com.example.a2048mult.game.logic.PlayfieldTurn;
 
-public class PlayfieldWithPlayerView extends PlayfieldView {
+public class PlayfieldWithPlayerView extends ConstraintLayout implements PlayfieldUI {
     private ViewPlayfieldWithPlayerBinding binding;
+
+    private PlayfieldView playfieldView;
 
     public PlayfieldWithPlayerView(@NonNull Context context) {
         super(context);
@@ -36,18 +38,39 @@ public class PlayfieldWithPlayerView extends PlayfieldView {
         init(context);
     }
 
+    // TODO score and username is not displaying
     private void init(@NonNull Context context) {
-        binding = ViewPlayfieldWithPlayerBinding.inflate(LayoutInflater.from(context));
+        binding = ViewPlayfieldWithPlayerBinding.inflate(LayoutInflater.from(context), this, true);
 
-        ViewGroup.LayoutParams playfieldparams = this.binding.playfield.getLayoutParams();
+        ViewGroup.LayoutParams playfieldParams = this.binding.playfield.getLayoutParams();
         this.binding.getRoot().removeView(binding.playfield);
+        PlayfieldView playfield = new PlayfieldView(context);
+        playfield.setLayoutParams(playfieldParams);
+        binding.getRoot().addView(playfield);
+        this.playfieldView = playfield;
+    }
 
-        super.getBinding().getRoot().setLayoutParams(playfieldparams);
-//
-//        ConstraintLayout playfield = super.getBinding().playfield;
-//        super.getBinding().getRoot().removeView(playfield);
-//
-//        playfield.setLayoutParams(playfieldparams);
-//        binding.getRoot().addView(playfield);
+    @Override
+    public void initPlayer(Player player) {
+        this.playfieldView.initPlayer(player);
+    }
+
+    private void updateScore(long score) {
+        binding.score.setText(Long.toString(score));
+    }
+
+    @Override
+    public void drawPlayer(Player player) {
+        this.playfieldView.drawPlayer(player);
+    }
+
+    @Override
+    public void drawPlayfieldBackground(int width, int height) {
+        this.playfieldView.drawPlayfieldBackground(width, height);
+    }
+
+    @Override
+    public void drawPlayfieldTurn(PlayfieldTurn playfieldTurn) {
+        this.playfieldView.drawPlayfieldTurn(playfieldTurn);
     }
 }

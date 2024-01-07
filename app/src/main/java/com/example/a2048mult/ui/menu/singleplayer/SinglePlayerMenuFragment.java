@@ -1,6 +1,7 @@
-package com.example.a2048mult.ui.menu;
+package com.example.a2048mult.ui.menu.singleplayer;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.a2048mult.ui.game.GameFragment;
 import com.example.a2048mult.R;
 import com.example.a2048mult.databinding.FragmentSinglePlayerMenuBinding;
 import com.example.a2048mult.game.GameState;
@@ -18,6 +18,7 @@ import com.example.a2048mult.game.logic.Player;
 import com.example.a2048mult.game.logic.PlayerImpl;
 import com.example.a2048mult.game.logic.PlayfieldState;
 import com.example.a2048mult.game.logic.PlayfieldStateImpl;
+import com.example.a2048mult.ui.game.GameFragment;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -60,7 +61,7 @@ public class SinglePlayerMenuFragment extends Fragment {
             ObjectOutputStream osO = new ObjectOutputStream(osB);
             osO.writeObject(gameState);
             osB.flush();
-            gamestateContent =osB.toByteArray();
+            gamestateContent = osB.toByteArray();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

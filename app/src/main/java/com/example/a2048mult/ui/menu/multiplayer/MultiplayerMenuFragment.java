@@ -1,4 +1,4 @@
-package com.example.a2048mult.ui.menu;
+package com.example.a2048mult.ui.menu.multiplayer;
 
 import android.os.Bundle;
 

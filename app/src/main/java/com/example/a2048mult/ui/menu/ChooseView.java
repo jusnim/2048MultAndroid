@@ -105,11 +105,6 @@ public class ChooseView extends ConstraintLayout {
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
                 levels[y][x] = rd.nextInt(12);
-//                try {
-//                    playfield.spawnTileAt(x,y,rd.nextInt(12));
-//                } catch (InterruptedException e) {
-//                    throw new RuntimeException(e);
-//                }
             }
         }
         playfield.drawPlayfieldState(levels);

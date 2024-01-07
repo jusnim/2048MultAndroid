@@ -13,7 +13,11 @@ import androidx.fragment.app.Fragment;
 import com.example.a2048mult.databinding.FragmentGameBinding;
 import com.example.a2048mult.game.GameState;
 import com.example.a2048mult.game.logic.GameRules;
+import com.example.a2048mult.game.logic.GameTile;
+import com.example.a2048mult.game.logic.GameTileImpl;
 import com.example.a2048mult.game.logic.Player;
+import com.example.a2048mult.game.logic.PlayfieldTurn;
+import com.example.a2048mult.game.logic.PlayfieldTurnImpl;
 import com.example.a2048mult.ui.game.GameUI;
 import com.example.a2048mult.ui.game.playfield.PlayfieldUI;
 import com.example.a2048mult.ui.game.playfield.PlayfieldWithPlayerView;
@@ -39,21 +43,11 @@ public class GameFragment extends Fragment implements GameUI {
         // Required empty public constructor
     }
 
-    //    public static GameFragment newInstance(String param1, String param2) {
-//        GameFragment fragment = new GameFragment();
-//        Bundle args = new Bundle();
-//        args.put(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-//
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             this.gameState = byteArrayToGameState(getArguments().getByteArray(GAMESTATE));
-//            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -74,6 +68,29 @@ public class GameFragment extends Fragment implements GameUI {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentGameBinding.inflate(getLayoutInflater());
         initGameState(this.gameState);
+
+        binding.getRoot().setOnTouchListener(new InputListener(binding.getRoot().getContext()) {
+            @Override
+            public void onLeft() {
+//                gameState.
+            }
+
+            @Override
+            public void onDown() {
+//                playfield.mergeTile(0,0,0,2,6);
+            }
+
+            @Override
+            public void onUp() {
+//                protoSpawnTilesPlayfield(4,4);
+            }
+
+            @Override
+            public void onRight() {
+//                protoRemovePlayfield(4,4);
+            }
+        });
+
         return binding.getRoot();
     }
 
@@ -89,9 +106,10 @@ public class GameFragment extends Fragment implements GameUI {
         this.players = gameState.getAllPlayer();
         this.playfieldUIs = new PlayfieldUI[players.length];
 
+
         for (int i = 0; i < this.players.length; i++) {
             playfieldUIs[i] = new PlayfieldWithPlayerView(getContext());
-            playfieldUIs[i].drawPlayer(players[i]);
+            playfieldUIs[i].initPlayer(players[i]);
         }
 
         switch (this.players.length) {
@@ -111,40 +129,41 @@ public class GameFragment extends Fragment implements GameUI {
                 throw new IllegalArgumentException("Invalid amount of players. It should be > 0 && < 4");
         }
 
-        binding.getRoot().setOnTouchListener(new InputListener(binding.getRoot().getContext()) {
-            @Override
-            public void onLeft() {
-//                playfield.mergeTile(3,0,1,0,3);
-            }
 
-            @Override
-            public void onDown() {
-//                playfield.mergeTile(0,0,0,2,6);
-            }
 
-            @Override
-            public void onUp() {
-//                protoSpawnTilesPlayfield(4,4);
-            }
-
-            @Override
-            public void onRight() {
-//                protoRemovePlayfield(4,4);
-            }
-        });
-
-        binding.getRoot().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                for (int i =0; i< players.length; i++){
-                    Log.e("!", Arrays.toString(players[i].getPlayfieldState().getField()));
-                    GameRules.spawnTile(players[i].getPlayfieldState());
-                    Log.e("!", Arrays.toString(players[i].getPlayfieldState().getField()));
-                    playfieldUIs[i].drawPlayer(players[i]);
-                }
-
-            }
-        });
+//        binding.getRoot().setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                for (int i =0; i< players.length; i++){
+//
+//                    PlayfieldTurn playfieldTurn = new PlayfieldTurnImpl();
+//                    GameTile newTile = new GameTileImpl();
+//
+//                    newTile.setNewX(1);
+//                    newTile.setNewY(0);;
+//                    newTile.setLevel(12);
+//                    playfieldTurn.addNewSpawned(newTile);
+//
+////                    newTile.updateCoordinates(1,1);
+////                    playfieldTurn.addNewMove(newTile);
+//
+//                    players[i].setPlayfieldTurn(playfieldTurn);
+//                    playfieldUIs[i].drawPlayfieldTurn(players[i].getPlayfieldTurn());
+//
+//
+////                    PlayfieldTurn playfieldTurn2 = new PlayfieldTurnImpl();
+////                    GameTile newTile2 = new GameTileImpl();
+////                    newTile2.setNewX(1);
+////                    newTile2.setNewY(0);;
+////                    newTile2.setLevel(12);
+////                    playfieldTurn2.addNewSpawned(newTile2);
+////                    players[i].setPlayfieldTurn(playfieldTurn2);
+////
+////                    playfieldUIs[i].drawPlayfieldTurn(players[i].getPlayfieldTurn());
+//                }
+//
+//            }
+//        });
     }
 
 
@@ -163,7 +182,6 @@ public class GameFragment extends Fragment implements GameUI {
         constraintSet.connect(playfield.getId(),ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP,0);
         constraintSet.connect(playfield.getId(),ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM,0);
         constraintSet.applyTo(binding.playfieldContainer);
-
     }
 
     private void drawMultiplayer2() {

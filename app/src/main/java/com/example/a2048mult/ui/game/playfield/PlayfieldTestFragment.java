@@ -1,17 +1,16 @@
 package com.example.a2048mult.ui.game.playfield;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.example.a2048mult.ui.game.InputListener;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import com.example.a2048mult.databinding.FragmentPlayfieldTestBinding;
+import com.example.a2048mult.ui.game.InputListener;
 
 public class PlayfieldTestFragment extends Fragment {
 
@@ -46,22 +45,22 @@ public class PlayfieldTestFragment extends Fragment {
         binding.getRoot().setOnTouchListener(new InputListener(binding.getRoot().getContext()) {
             @Override
             public void onLeft() {
-                playfield.mergeTile(3,0,1,0,3);
+                playfield.mergeTile(3, 0, 1, 0, 3);
             }
 
             @Override
             public void onDown() {
-                playfield.mergeTile(0,0,0,2,6);
+                playfield.mergeTile(0, 0, 0, 2, 6);
             }
 
             @Override
             public void onUp() {
-                protoSpawnTilesPlayfield(4,4);
+                protoSpawnTilesPlayfield(4, 4);
             }
 
             @Override
             public void onRight() {
-                protoRemovePlayfield(4,4);
+                protoRemovePlayfield(4, 4);
             }
         });
         binding.getRoot().setOnClickListener(new View.OnClickListener() {
@@ -78,40 +77,34 @@ public class PlayfieldTestFragment extends Fragment {
         PlayfieldView playfield = new PlayfieldView(binding.getRoot().getContext());
 ////
         int[][] showcaseData = new int[height][width];
-        int level=1;
-        for(int y = 0; y<height;  y++){
+        int level = 1;
+        for (int y = 0; y < height; y++) {
             int[] row = new int[width];
-            for(int x = 0; x<width;  x++){
-                row[x]=level;
+            for (int x = 0; x < width; x++) {
+                row[x] = level;
                 level++;
             }
             showcaseData[y] = row;
         }
         this.playfield = playfield;
-        playfield.drawPlayfieldBackground(width,height);
+        playfield.drawPlayfieldBackground(width, height);
         playfield.drawPlayfieldState(showcaseData);
         binding.getRoot().addView(playfield);
     }
+
     private void protoRemovePlayfield(int width, int height) {
-        for(int y = 0; y<height;  y++){
-            for(int x = 0; x<width;  x++){
-                try {
-                    this.playfield.removeTile(x,y);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                this.playfield.removeTile(x, y);
             }
         }
     }
+
     private void protoSpawnTilesPlayfield(int width, int height) {
-        int level=1;
-        for(int y = 0; y<height;  y++){
-            for(int x = 0; x<width;  x++){
-                try {
-                    this.playfield.spawnTileAt(x,y,level);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+        int level = 1;
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                this.playfield.spawnTileAt(x, y, level);
                 level++;
             }
         }
@@ -121,13 +114,13 @@ public class PlayfieldTestFragment extends Fragment {
         binding.getRoot().removeView(this.playfield);
         PlayfieldView playfield = new PlayfieldView(binding.getRoot().getContext());
         int[][] showcaseData = new int[4][4];
-        showcaseData[0] = new int[]{5,2,0,2};
-        showcaseData[1] = new int[]{0,0,0,0};
-        showcaseData[2] = new int[]{5,0,0,0};
-        showcaseData[3] = new int[]{0,0,0,0};
+        showcaseData[0] = new int[]{5, 2, 0, 2};
+        showcaseData[1] = new int[]{0, 0, 0, 0};
+        showcaseData[2] = new int[]{5, 0, 0, 0};
+        showcaseData[3] = new int[]{0, 0, 0, 0};
 
         this.playfield = playfield;
-        playfield.drawPlayfieldBackground(4,4);
+        playfield.drawPlayfieldBackground(4, 4);
         playfield.drawPlayfieldState(showcaseData);
         binding.getRoot().addView(playfield);
     }
