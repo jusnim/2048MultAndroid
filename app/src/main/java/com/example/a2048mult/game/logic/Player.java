@@ -29,4 +29,16 @@ public interface Player extends Serializable {
      */
     PlayfieldState getPlayfieldState();
 
+    /**
+     * getter for PlayfieldTurn representing the change on Field - used for animation
+     * @return
+     */
+    PlayfieldTurn getPlayfieldTurn();
+
+    /**
+     * setter for PlayfieldTurn
+     * @param playfieldTurn
+     */
+    void setPlayfieldTurn(PlayfieldTurn playfieldTurn);
+
 }

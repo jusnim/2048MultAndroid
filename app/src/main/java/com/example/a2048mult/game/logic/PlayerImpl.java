@@ -5,6 +5,8 @@ public class PlayerImpl implements Player {
     private String name;
     private long score;
 
+    private PlayfieldTurn playfieldTurn = new PlayfieldTurnImpl();
+
     private PlayfieldState playfieldState;
 
     public PlayerImpl(String name, long score, PlayfieldState playfieldState) {
@@ -31,5 +33,15 @@ public class PlayerImpl implements Player {
     @Override
     public PlayfieldState getPlayfieldState() {
         return this.playfieldState;
+    }
+
+    @Override
+    public PlayfieldTurn getPlayfieldTurn() {
+        return this.playfieldTurn;
+    }
+
+    @Override
+    public void setPlayfieldTurn(PlayfieldTurn playfieldTurn) {
+        this.playfieldTurn = playfieldTurn;
     }
 }

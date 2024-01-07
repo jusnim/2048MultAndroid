@@ -39,8 +39,10 @@ public interface PlayfieldTurn {
     void addRemoved(GameTile tile);
 
     /**
-     * getter for the TurnInstructions, so the UI can animate properly
+     * getter for next animation that shall be done
+     *
+     * @return
      */
-    PlayfieldTurn getTurnInstructions();
+    PlayfieldTurnAnimTuple<PlayfieldTurnAnimationTypes, GameTile> pollNextAnimation();
 
 }

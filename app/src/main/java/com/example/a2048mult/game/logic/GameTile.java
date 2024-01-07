@@ -71,5 +71,5 @@ public interface GameTile {
     /**
      * setter for level
      */
-    int setLevel();
+    void setLevel(int level);
 }
