@@ -1,6 +1,5 @@
 package com.example.a2048mult.ui.menu;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -12,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.a2048mult.databinding.ViewChooseBinding;
-import com.example.a2048mult.ui.game.playfield.PlayfieldViewImpl;
+import com.example.a2048mult.ui.game.playfield.PlayfieldView;
 
 import java.util.Random;
 
@@ -22,7 +21,7 @@ public class ChooseView extends ConstraintLayout {
     private ViewChooseBinding binding;
     private ViewGroup.LayoutParams playfieldParams;
     private int selectedPlayfieldIndex = 0;
-    private PlayfieldViewImpl currentPlayfield;
+    private PlayfieldView currentPlayfield;
 
     public ChooseView(@NonNull Context context) {
         super(context);
@@ -83,7 +82,7 @@ public class ChooseView extends ConstraintLayout {
         }
 
         binding.getRoot().removeView(this.currentPlayfield);
-        this.currentPlayfield = (PlayfieldViewImpl) playfields[selectedPlayfieldIndex];
+        this.currentPlayfield = (PlayfieldView) playfields[selectedPlayfieldIndex];
         this.currentPlayfield.setLayoutParams(this.playfieldParams);
         binding.getRoot().addView(this.currentPlayfield);
         binding.previewText.setText(getSelectedPlayfieldSize() + "x" + getSelectedPlayfieldSize());
@@ -99,13 +98,20 @@ public class ChooseView extends ConstraintLayout {
 
     private View createPlayfieldPreview(int size) {
         Random rd = new Random();
-        PlayfieldViewImpl playfield = new PlayfieldViewImpl(binding.getRoot().getContext());
+        PlayfieldView playfield = new PlayfieldView(binding.getRoot().getContext());
         playfield.drawPlayfieldBackground(size, size);
+//        int[][] level = new int[size][size];
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
-                playfield.spawnTileAt(x, y, rd.nextInt(12));
+//                level[y][x] =
+                try {
+                    playfield.spawnTileAt(x,y,rd.nextInt(12));
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
+//        playfield.drawPlayfieldState(level);
         return playfield;
     }
 }

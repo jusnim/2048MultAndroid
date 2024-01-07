@@ -1,19 +1,13 @@
-package com.example.a2048mult.game.logic;
+package com.example.a2048mult.game;
+
+import com.example.a2048mult.game.logic.Player;
+import com.example.a2048mult.game.logic.PlayfieldTurn;
 
 /**
  * represents the data structure of a GameState
  * one GameState can be one or more PlayfieldStates at once
  */
 public interface GameState {
-    /**
-     * getter for GameState
-     * @return GameState
-     */
-    GameState getGameState();
-    /**
-     * setter for GameState
-     */
-    void setGameState();
 
     /**
      * getter for TurnCount

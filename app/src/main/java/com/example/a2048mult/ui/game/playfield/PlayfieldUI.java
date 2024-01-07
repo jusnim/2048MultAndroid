@@ -1,20 +1,21 @@
 package com.example.a2048mult.ui.game.playfield;
 
+import com.example.a2048mult.game.logic.Player;
 import com.example.a2048mult.game.logic.PlayfieldState;
 
 public interface PlayfieldUI {
     /**
-     *  inits a Playfield
+     *  inits a Player (also Playfield)
      *  used when starting a new game
      *  important for setting playfield once
      */
-    public void initGameState(PlayfieldState playfieldState);
+    public void initPlayer(Player player);
 
     /**
-     * draw current Playfield
+     * draw current Player (also Playfield)
      * used when a new turn was done
      * also used when going out of a game and going in again
      * basically refreshes current playfield
      */
-    public void drawGameState(PlayfieldState playfieldState);
+    public void drawPlayer(Player player);
 }

@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
-import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -17,10 +16,10 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.example.a2048mult.databinding.ViewPlayfieldBinding;
-import com.example.a2048mult.game.logic.PlayfieldState;
+import com.example.a2048mult.game.logic.Player;
 
 
-public class PlayfieldViewImpl extends ConstraintLayout implements PlayfieldUI {
+public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
 
     // TODO make each PLayfield a thread and playfieldtile a theraed
     private ViewPlayfieldBinding binding;
@@ -36,22 +35,22 @@ public class PlayfieldViewImpl extends ConstraintLayout implements PlayfieldUI {
      */
     private View[][] allViews;
 
-    public PlayfieldViewImpl(@NonNull Context context) {
+    public PlayfieldView(@NonNull Context context) {
         super(context);
         init(context);
     }
 
-    public PlayfieldViewImpl(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public PlayfieldView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public PlayfieldViewImpl(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public PlayfieldView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
 
-    public PlayfieldViewImpl(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public PlayfieldView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context);
     }
@@ -75,16 +74,6 @@ public class PlayfieldViewImpl extends ConstraintLayout implements PlayfieldUI {
     }
 
 
-    @Override
-    public void initGameState(PlayfieldState playfieldState) {
-        // TODO method body
-    }
-
-    @Override
-    public void drawGameState(PlayfieldState playfieldState) {
-        // TODO method body
-    }
-
     /**
      * draws a Playfield with the given data of levels
      * Playfield will be a View of type ConstraintLayout
@@ -96,6 +85,7 @@ public class PlayfieldViewImpl extends ConstraintLayout implements PlayfieldUI {
      * @see ConstraintLayout
      */
     private void drawPlayfieldStateInContainer(int[][] data, ConstraintLayout container) {
+//        Runnable r = () -> {
         int width = data.length;
         int height = data[0].length;
 
@@ -140,13 +130,16 @@ public class PlayfieldViewImpl extends ConstraintLayout implements PlayfieldUI {
         constraintSet.clone(container);
         constraintSet.connect(containerContent[containerContent.length - 1].getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0);
         constraintSet.applyTo(container);
+
+//        };
+//        this.post(r);
     }
 
-    public ObjectAnimator spawnTileAt(int x, int y, int level) {
+    public ObjectAnimator spawnTileAt(int x, int y, int level) throws InterruptedException {
         return replaceTile(x, y, level, PlayfieldConfig.animationSpawnDurationInMs);
     }
 
-    public ObjectAnimator removeTile(int x, int y) {
+    public ObjectAnimator removeTile(int x, int y) throws InterruptedException {
         return replaceTile(x, y, PlayfieldConfig.invisibleTile, PlayfieldConfig.animationDurationInMs);
     }
 
@@ -154,9 +147,13 @@ public class PlayfieldViewImpl extends ConstraintLayout implements PlayfieldUI {
         moveTile(x1, y1, x2, y2).addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                removeTile(x1, y1);
-                removeTile(x2, y2);
-                spawnTileAt(x2, y2, level);
+                try {
+                    removeTile(x1, y1);
+                    removeTile(x2, y2);
+                    spawnTileAt(x2, y2, level);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
     }
@@ -178,14 +175,18 @@ public class PlayfieldViewImpl extends ConstraintLayout implements PlayfieldUI {
         }
 
         animation.setDuration(PlayfieldConfig.animationDurationInMs);
-       animation.start();
+        animation.start();
         // TODO wenn zuende
 //        removeTile(xFrom,yFrom);
         return animation;
     }
 
 
-    private ObjectAnimator replaceTile(int x, int y, int level, long animationDuration) {
+    private ObjectAnimator replaceTile(int x, int y, int level, long animationDuration) throws InterruptedException {
+
+//        while(allViews == null){
+//            Thread.sleep(100);
+//        }
 
         ConstraintLayout line = ((ConstraintLayout) containerContent[2 * y]);
         constraintSet.clone(line);
@@ -229,7 +230,7 @@ public class PlayfieldViewImpl extends ConstraintLayout implements PlayfieldUI {
                 PropertyValuesHolder.ofFloat("scaleY", 0.2f, 1f));
         scaleUp.setDuration(animationDuration);
 
-         scaleUp.start();
+        scaleUp.start();
 
         return scaleUp;
     }
@@ -421,5 +422,15 @@ public class PlayfieldViewImpl extends ConstraintLayout implements PlayfieldUI {
             constraintSet.connect(viewBefore.getId(), ConstraintSet.END, view.getId(), ConstraintSet.START, 0);
             constraintSet.connect(view.getId(), ConstraintSet.START, viewBefore.getId(), ConstraintSet.END, 0);
         }
+    }
+
+    @Override
+    public void initPlayer(Player player) {
+        // TODO body method
+    }
+
+    @Override
+    public void drawPlayer(Player player) {
+        // TODO body method
     }
 }
