@@ -8,7 +8,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Space;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,7 +23,6 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
     // TODO make each PLayfield a thread and playfieldtile a theraed
     private ViewPlayfieldBinding binding;
     private ConstraintSet constraintSet;
-    private View[] containerContent;
 
 
     /**
@@ -72,7 +70,7 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
         binding.testLeft.setGuidelinePercent(PlayfieldConfig.marginBorderFloat);
     }
 
-    public ViewPlayfieldBinding getBinding(){
+    public ViewPlayfieldBinding getBinding() {
         return binding;
     }
 
@@ -89,55 +87,75 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
      */
     private void drawPlayfieldStateInContainer(int[][] data, ConstraintLayout container) {
         // TODO remove lines in implementation, so less nesting, so faster
-//        Runnable r = () -> {
+
         int width = data.length;
         int height = data[0].length;
 
-        allViews = new View[height][];
-        containerContent = new View[2 * height - 1];
+        allViews = new View[height][width];
         constraintSet = new ConstraintSet();
-        int containerViewCount = 0;
-
+        PlayfieldTileView newTile;
         for (int y = 0; y < height; y++) {
-
-            // add line
-            containerContent = addNewRow(containerContent, containerViewCount, container);
-            containerViewCount++;
-
-            // adding space
-            if (containerViewCount < 2 * height - 1) {
-                containerContent = addNewLineSpace(containerContent, containerViewCount, container);
-                containerViewCount++;
-            }
-
-            ConstraintLayout line = (ConstraintLayout) containerContent[y * 2];
-            View[] lineContent = new View[2 * width - 1];
-            int lineViewCount = 0;
-
             for (int x = 0; x < width; x++) {
-                // add tile
-                lineContent = addNewTile(line, lineContent, lineViewCount, data[y][x]);
-                lineViewCount++;
-
-                // add space
-                if (lineViewCount < 2 * width - 1) {
-                    lineContent = addNewSpace(line, lineContent, lineViewCount);
-                    lineViewCount++;
-                }
+                newTile = new PlayfieldTileView(container.getContext());
+                newTile.setLevel(data[y][x]);
+                newTile.setLayoutParams(new LayoutParams(0, 0));
+                newTile.setId(ConstraintLayout.generateViewId());
+                container.addView(newTile);
+                allViews[y][x] = newTile;
             }
-            allViews[y] = lineContent;
-            constraintSet.clone(line);
-            constraintSet.connect(lineContent[lineContent.length - 1].getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 0);
-            constraintSet.applyTo(line);
         }
 
         constraintSet.clone(container);
-        constraintSet.connect(containerContent[containerContent.length - 1].getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0);
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                doConstraintsBasedOnPosition(x,y,width,height);
+            }
+        }
         constraintSet.applyTo(container);
-
-//        };
-//        this.post(r);
     }
+
+    private void doConstraintsBasedOnPosition(int x,int y, int width, int height){
+        if (x == 0) {
+            constraintSet.connect(allViews[y][x].getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, PlayfieldConfig.marginTileInDP);
+            constraintSet.connect(allViews[y][x].getId(), ConstraintSet.END, allViews[y][x+1].getId(), ConstraintSet.START, PlayfieldConfig.marginTileInDP);
+        }  else if (x == width - 1) {
+            constraintSet.connect(allViews[y][x].getId(), ConstraintSet.START, allViews[y][x-1].getId(), ConstraintSet.END, PlayfieldConfig.marginTileInDP);
+            constraintSet.connect(allViews[y][x].getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, PlayfieldConfig.marginTileInDP);
+        } else {
+            constraintSet.connect(allViews[y][x].getId(), ConstraintSet.START, allViews[y][x-1].getId(), ConstraintSet.END, PlayfieldConfig.marginTileInDP);
+            constraintSet.connect(allViews[y][x].getId(), ConstraintSet.END, allViews[y][x+1].getId(), ConstraintSet.START, PlayfieldConfig.marginTileInDP);
+        }
+
+        if (y == 0) {
+            constraintSet.connect(allViews[y][x].getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, PlayfieldConfig.marginTileInDP);
+            constraintSet.connect(allViews[y][x].getId(), ConstraintSet.BOTTOM, allViews[y+1][x].getId(), ConstraintSet.TOP, PlayfieldConfig.marginTileInDP);
+        } else if (y == height - 1) {
+            constraintSet.connect(allViews[y][x].getId(), ConstraintSet.TOP, allViews[y-1][x].getId(), ConstraintSet.BOTTOM, PlayfieldConfig.marginTileInDP);
+            constraintSet.connect(allViews[y][x].getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, PlayfieldConfig.marginTileInDP);
+        } else {
+            constraintSet.connect(allViews[y][x].getId(), ConstraintSet.TOP, allViews[y-1][x].getId(), ConstraintSet.BOTTOM, PlayfieldConfig.marginTileInDP);
+            constraintSet.connect(allViews[y][x].getId(), ConstraintSet.BOTTOM, allViews[y+1][x].getId(), ConstraintSet.TOP, PlayfieldConfig.marginTileInDP);
+        }
+    }
+
+    // TODO private
+    public void drawPlayfieldBackground(int width, int height) {
+        int[][] bgData = new int[height][width];
+        drawPlayfieldStateInContainer(bgData, binding.backgroundContainer);
+    }
+
+    // TODO private
+    public void drawPlayfieldState(int[][] data) {
+        for (int y = 0; y < data.length; y++) {
+            for (int x = 0; x < data[0].length; x++) {
+                if (data[y][x] == 0) {
+                    data[y][x] = -1;
+                }
+            }
+        }
+        drawPlayfieldStateInContainer(data, binding.playfieldContainer);
+    }
+
 
     public ObjectAnimator spawnTileAt(int x, int y, int level) throws InterruptedException {
         return replaceTile(x, y, level, PlayfieldConfig.animationSpawnDurationInMs);
@@ -165,19 +183,17 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
     // TODO private
     public ObjectAnimator moveTile(int xFrom, int yFrom, int xTo, int yTo) {
 
-        View fromTile = allViews[yFrom][xFrom * 2];
-        View toTile = allViews[yTo][xTo * 2];
+        View fromTile = allViews[yFrom][xFrom];
+        View toTile = allViews[yTo][xTo];
 
         ObjectAnimator animation;
         float xDiff = toTile.getX() - fromTile.getX();
         if (xDiff != 0) {
             animation = ObjectAnimator.ofFloat(fromTile, "translationX", xDiff);
         } else {
-            float yDiff = containerContent[yTo].getHeight() + containerContent[yTo].getY() - containerContent[yFrom].getY();
-
+            float yDiff = toTile.getY() - fromTile.getY();
             animation = ObjectAnimator.ofFloat(fromTile, "translationY", yDiff);
         }
-
         animation.setDuration(PlayfieldConfig.animationDurationInMs);
         animation.start();
         // TODO wenn zuende
@@ -187,49 +203,26 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
 
 
     private ObjectAnimator replaceTile(int x, int y, int level, long animationDuration) throws InterruptedException {
+        constraintSet.clone(binding.playfieldContainer);
 
-//        while(allViews == null){
-//            Thread.sleep(100);
-//        }
+        View tileToRemove = allViews[y][x];
 
-        ConstraintLayout line = ((ConstraintLayout) containerContent[2 * y]);
-        constraintSet.clone(line);
-
-        View tileToRemove = allViews[y][x * 2];
-
+        int id = tileToRemove.getId();
         constraintSet.clear(tileToRemove.getId());
-        int index = line.indexOfChild(tileToRemove);
-        line.removeView(tileToRemove);
+        int index = binding.playfieldContainer.indexOfChild(tileToRemove);
+        binding.playfieldContainer.removeView(tileToRemove);
 
-        PlayfieldTileView tile = new PlayfieldTileView(line.getContext());
-        tile.setLevel(level);
-        tile.setId(generateViewId());
-        line.addView(tile, index);
+        PlayfieldTileView newTile = new PlayfieldTileView(binding.playfieldContainer.getContext());
+        newTile.setLevel(level);
+        newTile.setId(id);
+        binding.playfieldContainer.addView(newTile, index);
 
+        doConstraintsBasedOnPosition(x,y,allViews.length,allViews[0].length);
 
-        if (x > 0) {
-            View spaceBefore = allViews[y][x * 2 - 1];
-            // TODO reset constraint one pointer to rmovedtile not removed
-//            constraintSet.clear(spaceBefore.getId());
-//            constraintSet.connect(spaceBefore.getId(),ConstraintSet.START, allViews[y][x * 2 - 2].getId(), ConstraintSet.END,0);
-            addConstraintsItem(spaceBefore, tile);
-        } else {
-            addConstraintsItem(null, tile);
-        }
+        constraintSet.applyTo(binding.playfieldContainer);
+        allViews[y][x] = newTile;
 
-        if (x == (allViews[y].length + 1) / 2 - 1) {
-            constraintSet.connect(tile.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 0);
-        } else {
-            View spaceAfter = allViews[y][x * 2 + 1];
-            // TODO reset constraint one pointer to rmovedtile not removed
-//            constraintSet.clear(spaceAfter.getId());
-            addConstraintsItem(tile, spaceAfter);
-//            addConstraintsItem(spaceAfter, allViews[y][x * 2 + 2]);
-        }
-        constraintSet.applyTo(line);
-        allViews[y][x * 2] = tile;
-
-        ObjectAnimator scaleUp = ObjectAnimator.ofPropertyValuesHolder(tile,
+        ObjectAnimator scaleUp = ObjectAnimator.ofPropertyValuesHolder(newTile,
                 PropertyValuesHolder.ofFloat("scaleX", 0.2f, 1f),
                 PropertyValuesHolder.ofFloat("scaleY", 0.2f, 1f));
         scaleUp.setDuration(animationDuration);
@@ -237,195 +230,6 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
         scaleUp.start();
 
         return scaleUp;
-    }
-
-
-    /**
-     * draws a playfield only consisting of placeholder-tiles
-     *
-     * @param width  - defines width of playfield
-     * @param height - defines width of playfield
-     * @see this#drawPlayfieldState(int[][])
-     */
-    // TODO private
-    public void drawPlayfieldBackground(int width, int height) {
-        int[][] bgData = new int[height][width];
-        drawPlayfieldStateInContainer(bgData, binding.backgroundContainer);
-    }
-
-    // TODO private
-    public void drawPlayfieldState(int[][] data) {
-        for (int y = 0; y < data.length; y++) {
-            for (int x = 0; x < data[0].length; x++) {
-                if (data[y][x] == 0) {
-                    data[y][x] = -1;
-                }
-            }
-        }
-        drawPlayfieldStateInContainer(data, binding.playfieldContainer);
-    }
-
-    /**
-     * adds a new Line (ConstraintLayout) - acting as a container for Spaces and Tiles
-     * a part of drawing the playfield
-     *
-     * @param containerContent   - used to save views and connecting them later on via constraints
-     * @param containerViewCount - used to give index of containerContent
-     * @return containerContent + 1 Element
-     * @see this#drawPlayfieldState(int[][])
-     */
-    private View[] addNewRow(View[] containerContent, int containerViewCount, ConstraintLayout container) {
-        ConstraintLayout row = new ConstraintLayout(container.getContext());
-        row.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 0));
-        return addNewLine(containerContent, containerViewCount, row, container);
-    }
-
-
-    /**
-     * adds a new Tile (ConstraintLayout)
-     * a part of drawing the playfield
-     *
-     * @param line          - the specific row/line, where the tile is going to be added
-     * @param lineContent   - used to save views and connecting them later on via constraints
-     * @param lineViewCount - used to give index of containerContent
-     * @param level         - for setting the level of the tile
-     * @return lineContent + 1 Element
-     * @see this#drawPlayfieldState(int[][])
-     */
-    private View[] addNewTile(ConstraintLayout line, View[] lineContent, int lineViewCount, int level) {
-        PlayfieldTileView tile = new PlayfieldTileView(line.getContext());
-        tile.setLevel(level);
-        tile.setLayoutParams(new LayoutParams(0, LayoutParams.MATCH_PARENT));
-        return addNewItemInLine(line, lineContent, lineViewCount, tile);
-    }
-
-    /**
-     * adds a new Space Line to seperate the Rows containing Views
-     * a part of drawing the playfield
-     *
-     * @param containerContent   - used to save views and connecting them later on via constraints
-     * @param containerViewCount - used to give index of containerContent
-     * @return containerContent + 1 Element
-     * @see this#drawPlayfieldState(int[][])
-     */
-    private View[] addNewLineSpace(View[] containerContent, int containerViewCount, ConstraintLayout container) {
-        Space space = new Space(container.getContext());
-        space.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, PlayfieldConfig.marginTileInDP));
-        return addNewLine(containerContent, containerViewCount, space, container);
-    }
-
-    /**
-     * adds Space between the Tiles
-     * a part of drawing the playfield
-     *
-     * @param line          - the specific row/line, where the tile is going to be added
-     * @param lineContent   - used to save views and connecting them later on via constraints
-     * @param lineViewCount - used to give index of containerContent
-     * @return lineContent + 1 Element
-     * @see this#drawPlayfieldState(int[][])
-     */
-    private View[] addNewSpace(ConstraintLayout line, View[] lineContent, int lineViewCount) {
-        Space space = new Space(line.getContext());
-        space.setLayoutParams(new LayoutParams(PlayfieldConfig.marginTileInDP, LayoutParams.MATCH_PARENT));
-        return addNewItemInLine(line, lineContent, lineViewCount, space);
-    }
-
-    /**
-     * general Method for adding horizontalViews to the container of the Playfield
-     * a part of drawing the playfield
-     *
-     * @param containerContent   - used to save views and connecting them later on via constraints
-     * @param containerViewCount - used to give index of containerContent
-     * @param itemToAdd          - the Item, that should be added
-     * @return containerContent + 1 Element
-     * @see this#drawPlayfieldState(int[][])
-     */
-    private View[] addNewLine(View[] containerContent, int containerViewCount, View itemToAdd, ConstraintLayout container) {
-        itemToAdd.setId(ConstraintLayout.generateViewId());
-
-        container.addView(itemToAdd);
-        containerContent[containerViewCount] = itemToAdd;
-
-        constraintSet.clone(container);
-
-        if (containerViewCount < 1) {
-            addConstraintsLine(null, itemToAdd);
-        } else {
-            addConstraintsLine(containerContent[containerViewCount - 1], itemToAdd);
-        }
-        constraintSet.applyTo(container);
-
-        return containerContent;
-    }
-
-    /**
-     * general Method for adding Views to the given line
-     * a part of drawing the playfield
-     *
-     * @param line          - the specific row/line, where the tile is going to be added
-     * @param lineContent   - used to save views and connecting them later on via constraints
-     * @param lineViewCount - used to give index of containerContent
-     * @param itemToAdd     - the item, that should be added
-     * @return lineContent + 1 Element
-     * @see this#drawPlayfieldState(int[][])
-     */
-    private View[] addNewItemInLine(ConstraintLayout line, View[] lineContent, int lineViewCount, View itemToAdd) {
-        itemToAdd.setId(ConstraintLayout.generateViewId());
-
-        line.addView(itemToAdd);
-        lineContent[lineViewCount] = itemToAdd;
-
-        constraintSet.clone(line);
-
-        if (lineViewCount < 1) {
-            addConstraintsItem(null, itemToAdd);
-        } else {
-            addConstraintsItem(lineContent[lineViewCount - 1], itemToAdd);
-        }
-        constraintSet.applyTo(line);
-
-        return lineContent;
-    }
-
-
-    /**
-     * method for creating constraints between each line and fixing them on the sides of the container
-     *
-     * @param viewBefore - the view located left of the second view
-     * @param view       - the second view
-     */
-    private void addConstraintsLine(View viewBefore, View view) {
-        // connect to sides
-        constraintSet.connect(view.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 0);
-        constraintSet.connect(view.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 0);
-
-        if (viewBefore == null) {
-            // connect first line to parent
-            constraintSet.connect(view.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
-        } else {
-            constraintSet.connect(viewBefore.getId(), ConstraintSet.BOTTOM, view.getId(), ConstraintSet.TOP, 0);
-            constraintSet.connect(view.getId(), ConstraintSet.TOP, viewBefore.getId(), ConstraintSet.BOTTOM, 0);
-        }
-    }
-
-    /**
-     * method for creating constraints between each View horizontally and fixing them on the Top and Bottom edge of the line
-     *
-     * @param viewBefore - the view located left of the second view
-     * @param view       - the second view
-     */
-    private void addConstraintsItem(View viewBefore, View view) {
-        // connect top and bttom
-        constraintSet.connect(view.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
-        constraintSet.connect(view.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0);
-
-        if (viewBefore == null) {
-            // connect first item to parent
-            constraintSet.connect(view.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 0);
-        } else {
-            constraintSet.connect(viewBefore.getId(), ConstraintSet.END, view.getId(), ConstraintSet.START, 0);
-            constraintSet.connect(view.getId(), ConstraintSet.START, viewBefore.getId(), ConstraintSet.END, 0);
-        }
     }
 
     @Override
@@ -436,10 +240,7 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
     @Override
     public void drawPlayer(Player player) {
         // TODO body method
-
-        drawPlayfieldBackground(player.getPlayfieldState().getField().length,player.getPlayfieldState().getField().length);
-
+        drawPlayfieldBackground(player.getPlayfieldState().getField().length, player.getPlayfieldState().getField().length);
         this.drawPlayfieldState(player.getPlayfieldState().getField());
-
     }
 }

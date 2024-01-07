@@ -12,7 +12,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.a2048mult.databinding.ViewChooseBinding;
 import com.example.a2048mult.ui.game.playfield.PlayfieldView;
-import com.example.a2048mult.ui.game.playfield.PlayfieldView2;
 
 import java.util.Random;
 
@@ -118,7 +117,7 @@ public class ChooseView extends ConstraintLayout {
 
     private View createPlayfieldPreview(int size) {
         Random rd = new Random();
-        PlayfieldView2 playfield = new PlayfieldView2(binding.getRoot().getContext());
+        PlayfieldView playfield = new PlayfieldView(binding.getRoot().getContext());
         playfield.drawPlayfieldBackground(size, size);
         int[][] levels = new int[size][size];
         for (int y = 0; y < size; y++) {

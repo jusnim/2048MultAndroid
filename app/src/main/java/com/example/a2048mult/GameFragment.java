@@ -1,11 +1,9 @@
 package com.example.a2048mult;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -16,9 +14,7 @@ import com.example.a2048mult.game.GameState;
 import com.example.a2048mult.game.logic.Player;
 import com.example.a2048mult.ui.game.GameUI;
 import com.example.a2048mult.ui.game.playfield.PlayfieldUI;
-import com.example.a2048mult.ui.game.playfield.PlayfieldView;
 import com.example.a2048mult.ui.game.playfield.PlayfieldWithPlayerView;
-import com.example.a2048mult.ui.menu.ChooseView;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

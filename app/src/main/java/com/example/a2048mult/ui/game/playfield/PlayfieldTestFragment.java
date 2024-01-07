@@ -56,20 +56,21 @@ public class PlayfieldTestFragment extends Fragment {
             @Override
             public void onDown() {
 //                Toast.makeText(binding.getRoot().getContext(), "down", Toast.LENGTH_SHORT).show();
-//                playfield.mergeTile(0,0,0,2,6);
+                playfield.mergeTile(0,0,0,2,6);
+//                playfield.moveTile(0,0,0,2);
             }
 
             @Override
             public void onUp() {
 
 //                Toast.makeText(binding.getRoot().getContext(), "top", Toast.LENGTH_SHORT).show();
-//                protoSpawnTilesPlayfield(4,4);
+                protoSpawnTilesPlayfield(4,4);
             }
 
             @Override
             public void onRight() {
 //                Toast.makeText(binding.getRoot().getContext(), "rigth", Toast.LENGTH_SHORT).show();
-//                protoRemovePlayfield(4,4);
+                protoRemovePlayfield(4,4);
             }
         });
         binding.getRoot().setOnClickListener(new View.OnClickListener() {
@@ -100,18 +101,26 @@ public class PlayfieldTestFragment extends Fragment {
         playfield.drawPlayfieldState(showcaseData);
         binding.getRoot().addView(playfield);
     }
-    private void protoRemovePlayfield(int width, int height) throws InterruptedException {
+    private void protoRemovePlayfield(int width, int height) {
         for(int y = 0; y<height;  y++){
             for(int x = 0; x<width;  x++){
-                this.playfield.removeTile(x,y);
+                try {
+                    this.playfield.removeTile(x,y);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
-    private void protoSpawnTilesPlayfield(int width, int height) throws InterruptedException {
+    private void protoSpawnTilesPlayfield(int width, int height) {
         int level=1;
         for(int y = 0; y<height;  y++){
             for(int x = 0; x<width;  x++){
-                this.playfield.spawnTileAt(x,y,level);
+                try {
+                    this.playfield.spawnTileAt(x,y,level);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 level++;
             }
         }
