@@ -18,4 +18,5 @@ public interface PlayfieldUI  {
      * basically refreshes current playfield
      */
     public void drawPlayer(Player player);
+
 }

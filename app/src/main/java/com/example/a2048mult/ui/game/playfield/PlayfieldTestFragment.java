@@ -47,29 +47,20 @@ public class PlayfieldTestFragment extends Fragment {
             @Override
             public void onLeft() {
                 playfield.mergeTile(3,0,1,0,3);
-//                playfield.moveTile(3,0,1,0);
-//                playfield.removeTile(1,0);
-////                playfield.removeTile(3,0);
-//                playfield.spawnTileAt(1,0,3);
             }
 
             @Override
             public void onDown() {
-//                Toast.makeText(binding.getRoot().getContext(), "down", Toast.LENGTH_SHORT).show();
                 playfield.mergeTile(0,0,0,2,6);
-//                playfield.moveTile(0,0,0,2);
             }
 
             @Override
             public void onUp() {
-
-//                Toast.makeText(binding.getRoot().getContext(), "top", Toast.LENGTH_SHORT).show();
                 protoSpawnTilesPlayfield(4,4);
             }
 
             @Override
             public void onRight() {
-//                Toast.makeText(binding.getRoot().getContext(), "rigth", Toast.LENGTH_SHORT).show();
                 protoRemovePlayfield(4,4);
             }
         });

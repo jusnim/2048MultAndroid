@@ -45,6 +45,6 @@
     </fragment>
     <fragment
         android:id="@+id/gameFragment"
-        android:name="com.example.a2048mult.GameFragment"
+        android:name="com.example.a2048mult.ui.game.GameFragment"
         android:label="GameFragment" />
 </navigation>

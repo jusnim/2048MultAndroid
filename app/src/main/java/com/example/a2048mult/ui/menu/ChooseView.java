@@ -96,24 +96,6 @@ public class ChooseView extends ConstraintLayout {
         playfields[0] = createPlayfieldPreview(playfieldsSizes[0]);
     }
 
-//    private View createPlayfieldPreview(int size) {
-//        Random rd = new Random();
-//        PlayfieldView playfield = new PlayfieldView(binding.getRoot().getContext());
-//        playfield.drawPlayfieldBackground(size, size);
-////        int[][] level = new int[size][size];
-//        for (int y = 0; y < size; y++) {
-//            for (int x = 0; x < size; x++) {
-////                level[y][x] =
-//                try {
-//                    playfield.spawnTileAt(x,y,rd.nextInt(12));
-//                } catch (InterruptedException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-//        }
-////        playfield.drawPlayfieldState(level);
-//        return playfield;
-//    }
 
     private View createPlayfieldPreview(int size) {
         Random rd = new Random();

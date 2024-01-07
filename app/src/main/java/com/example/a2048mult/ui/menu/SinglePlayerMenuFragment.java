@@ -1,7 +1,6 @@
 package com.example.a2048mult.ui.menu;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.a2048mult.GameFragment;
+import com.example.a2048mult.ui.game.GameFragment;
 import com.example.a2048mult.R;
 import com.example.a2048mult.databinding.FragmentSinglePlayerMenuBinding;
 import com.example.a2048mult.game.GameState;
@@ -50,7 +49,7 @@ public class SinglePlayerMenuFragment extends Fragment {
     private void startSingleplayer() {
 
         // init playfield
-        PlayfieldState playfieldState = new PlayfieldStateImpl(4);
+        PlayfieldState playfieldState = new PlayfieldStateImpl(binding.chooseView.getSelectedPlayfieldSize());
         Player[] players = {new PlayerImpl("test", 0, playfieldState)};
         GameState gameState = new GameStateImpl(players);
 
