@@ -8,8 +8,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/playfieldInfos"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
 
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/playfield"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -37,23 +38,23 @@
 
             android:textSize="40sp"
             app:layout_constraintBottom_toBottomOf="parent"
-
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.example.a2048mult.ui.game.playfield.PlayfieldView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/playfield"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/shape_rounded_rectangle"
         android:backgroundTint="@color/brown_playfield_bg"
-        app:layout_constraintBottom_toBottomOf="parent"
 
         app:layout_constraintDimensionRatio="1:1"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/playfieldInfos"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

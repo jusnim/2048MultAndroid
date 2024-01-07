@@ -13,12 +13,12 @@
     </fragment>
     <fragment
         android:id="@+id/multiplayerMenu"
-        android:name="com.example.a2048mult.ui.menu.MultiplayerMenuFragment"
+        android:name="com.example.a2048mult.ui.menu.multiplayer.MultiplayerMenuFragment"
         android:label="fragment_multiplayer_menu"
         tools:layout="@layout/fragment_multiplayer_menu" />
     <fragment
         android:id="@+id/singlePlayerMenu"
-        android:name="com.example.a2048mult.ui.menu.SinglePlayerMenuFragment"
+        android:name="com.example.a2048mult.ui.menu.singleplayer.SinglePlayerMenuFragment"
         android:label="fragment_single_player_menu"
         tools:layout="@layout/fragment_single_player_menu" />
 </navigation>
