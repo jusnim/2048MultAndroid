@@ -3,11 +3,13 @@ package com.example.a2048mult.game;
 import com.example.a2048mult.game.logic.Player;
 import com.example.a2048mult.game.logic.PlayfieldTurn;
 
+import java.io.Serializable;
+
 /**
  * represents the data structure of a GameState
  * one GameState can be one or more PlayfieldStates at once
  */
-public interface GameState {
+public interface GameState extends Serializable {
 
     /**
      * getter for TurnCount

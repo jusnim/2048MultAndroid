@@ -12,16 +12,17 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.a2048mult.databinding.ViewChooseBinding;
 import com.example.a2048mult.ui.game.playfield.PlayfieldView;
+import com.example.a2048mult.ui.game.playfield.PlayfieldView2;
 
 import java.util.Random;
 
 public class ChooseView extends ConstraintLayout {
-    private final int[] playfieldsSizes = new int[]{3, 4, 5, 6, 8};
+    private final int[] playfieldsSizes = new int[]{2,3, 4, 5, 6, 8};
     private final View[] playfields = new View[playfieldsSizes.length];
     private ViewChooseBinding binding;
     private ViewGroup.LayoutParams playfieldParams;
     private int selectedPlayfieldIndex = 0;
-    private PlayfieldView currentPlayfield;
+    private View currentPlayfield;
 
     public ChooseView(@NonNull Context context) {
         super(context);
@@ -82,7 +83,7 @@ public class ChooseView extends ConstraintLayout {
         }
 
         binding.getRoot().removeView(this.currentPlayfield);
-        this.currentPlayfield = (PlayfieldView) playfields[selectedPlayfieldIndex];
+        this.currentPlayfield =  playfields[selectedPlayfieldIndex];
         this.currentPlayfield.setLayoutParams(this.playfieldParams);
         binding.getRoot().addView(this.currentPlayfield);
         binding.previewText.setText(getSelectedPlayfieldSize() + "x" + getSelectedPlayfieldSize());
@@ -96,22 +97,41 @@ public class ChooseView extends ConstraintLayout {
         playfields[0] = createPlayfieldPreview(playfieldsSizes[0]);
     }
 
+//    private View createPlayfieldPreview(int size) {
+//        Random rd = new Random();
+//        PlayfieldView playfield = new PlayfieldView(binding.getRoot().getContext());
+//        playfield.drawPlayfieldBackground(size, size);
+////        int[][] level = new int[size][size];
+//        for (int y = 0; y < size; y++) {
+//            for (int x = 0; x < size; x++) {
+////                level[y][x] =
+//                try {
+//                    playfield.spawnTileAt(x,y,rd.nextInt(12));
+//                } catch (InterruptedException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }
+//        }
+////        playfield.drawPlayfieldState(level);
+//        return playfield;
+//    }
+
     private View createPlayfieldPreview(int size) {
         Random rd = new Random();
-        PlayfieldView playfield = new PlayfieldView(binding.getRoot().getContext());
+        PlayfieldView2 playfield = new PlayfieldView2(binding.getRoot().getContext());
         playfield.drawPlayfieldBackground(size, size);
-//        int[][] level = new int[size][size];
+        int[][] levels = new int[size][size];
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
-//                level[y][x] =
-                try {
-                    playfield.spawnTileAt(x,y,rd.nextInt(12));
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+                levels[y][x] = rd.nextInt(12);
+//                try {
+//                    playfield.spawnTileAt(x,y,rd.nextInt(12));
+//                } catch (InterruptedException e) {
+//                    throw new RuntimeException(e);
+//                }
             }
         }
-//        playfield.drawPlayfieldState(level);
+        playfield.drawPlayfieldState(levels);
         return playfield;
     }
 }

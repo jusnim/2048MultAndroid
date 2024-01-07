@@ -24,6 +24,7 @@ public class PlayfieldStateImpl implements PlayfieldState{
     public PlayfieldStateImpl(int fieldSize){
         this(fieldSize,fieldSize);
     }
+
     public PlayfieldStateImpl(){
         this(4);
     }

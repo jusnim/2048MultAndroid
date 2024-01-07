@@ -14,7 +14,7 @@ public class GameStateImpl implements GameState {
     // if value false --> the player with this index  quitted
     private boolean[] onlineStatusPlayer;
 
-    GameStateImpl(Player[] playerList){
+    public GameStateImpl(Player[] playerList){
         this.playerList = playerList;
     }
 

@@ -70,7 +70,10 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
         binding.testBot.setGuidelinePercent(1f - PlayfieldConfig.marginBorderFloat);
         binding.testRight.setGuidelinePercent(1f - PlayfieldConfig.marginBorderFloat);
         binding.testLeft.setGuidelinePercent(PlayfieldConfig.marginBorderFloat);
+    }
 
+    public ViewPlayfieldBinding getBinding(){
+        return binding;
     }
 
 
@@ -85,6 +88,7 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
      * @see ConstraintLayout
      */
     private void drawPlayfieldStateInContainer(int[][] data, ConstraintLayout container) {
+        // TODO remove lines in implementation, so less nesting, so faster
 //        Runnable r = () -> {
         int width = data.length;
         int height = data[0].length;
@@ -432,5 +436,10 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
     @Override
     public void drawPlayer(Player player) {
         // TODO body method
+
+        drawPlayfieldBackground(player.getPlayfieldState().getField().length,player.getPlayfieldState().getField().length);
+
+        this.drawPlayfieldState(player.getPlayfieldState().getField());
+
     }
 }

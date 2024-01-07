@@ -3,7 +3,7 @@ package com.example.a2048mult.ui.game.playfield;
 import com.example.a2048mult.game.logic.Player;
 import com.example.a2048mult.game.logic.PlayfieldState;
 
-public interface PlayfieldUI {
+public interface PlayfieldUI  {
     /**
      *  inits a Player (also Playfield)
      *  used when starting a new game

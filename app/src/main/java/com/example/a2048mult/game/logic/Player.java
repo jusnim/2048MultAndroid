@@ -1,9 +1,11 @@
 package com.example.a2048mult.game.logic;
 
+import java.io.Serializable;
+
 /**
  * represents a player in the game
  */
-public interface Player {
+public interface Player extends Serializable {
     /**
      * getter for the username of the player
      * @return

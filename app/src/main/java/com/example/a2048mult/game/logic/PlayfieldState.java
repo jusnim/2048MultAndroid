@@ -1,9 +1,11 @@
 package com.example.a2048mult.game.logic;
 
+import java.io.Serializable;
+
 /**
  * Represents the data structure of one Playfield
  */
-public interface PlayfieldState{
+public interface PlayfieldState extends Serializable {
 
 
     /**
