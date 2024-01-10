@@ -102,7 +102,6 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
         PlayfieldTileView newTile;
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-
                 Looper looper;
                 Boolean addedTile = false;
                 while(! addedTile){
@@ -117,7 +116,6 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
                         allViews[y][x] = newTile;
                     }
                 }
-
             }
         }
 

@@ -45,34 +45,31 @@ public class GameLogic implements InGameControl, ReceiveListener, GameControlMen
 
     @Override
     public void swipe(MoveType move) {
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                switch (move) {
-                    case UP:
-                        for (Player player : gameState.getAllPlayer()) {
-                            GameRules.moveUp(player);
-                        }
-                        break;
-                    case DOWN:
-                        Log.e("!","logic");
-                        for (Player player : gameState.getAllPlayer()) {
-                            GameRules.moveDown(player);
-                        }
-                        break;
-                    case LEFT:
-                        for (Player player : gameState.getAllPlayer()) {
-                            GameRules.moveLeft(player);
-                        }
-                        break;
-                    case RIGHT:
-                        for (Player player : gameState.getAllPlayer()) {
-                            GameRules.moveRight(player);
-                        }
-                        break;
-                }
-                gameUI.drawGameState(GameLogic.this.gameState);
+        Runnable r = () -> {
+            switch (move) {
+                case UP:
+                    for (Player player : gameState.getAllPlayer()) {
+                        GameRules.moveUp(player);
+                    }
+                    break;
+                case DOWN:
+                    Log.e("!","logic");
+                    for (Player player : gameState.getAllPlayer()) {
+                        GameRules.moveDown(player);
+                    }
+                    break;
+                case LEFT:
+                    for (Player player : gameState.getAllPlayer()) {
+                        GameRules.moveLeft(player);
+                    }
+                    break;
+                case RIGHT:
+                    for (Player player : gameState.getAllPlayer()) {
+                        GameRules.moveRight(player);
+                    }
+                    break;
             }
+            gameUI.drawGameState(GameLogic.this.gameState);
         };
 
 
@@ -107,6 +104,17 @@ public class GameLogic implements InGameControl, ReceiveListener, GameControlMen
         this.gameStarted = true;
 
         NavHostFragment.findNavController(fragment).navigate(resID);
+
+        Runnable r = () -> {
+            for (Player player : gameState.getAllPlayer()) {
+                GameRules.spawnTile(player);
+                GameRules.spawnTile(player);
+            }
+        };
+        HandlerThread handlerThread = new HandlerThread("spawnFirstTiles",0);
+        handlerThread.start();
+        Handler handler = new Handler(handlerThread.getLooper());
+        handler.post(r);
     }
 
     @Override

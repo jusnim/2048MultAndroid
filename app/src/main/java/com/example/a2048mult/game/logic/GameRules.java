@@ -44,7 +44,7 @@ public class GameRules {
     public static boolean spawnTile(Player player) {
         // TODO add PLayfieldTurn Spawn
         int[][] field = player.getPlayfieldState().getField();
-        Log.e("!", String.valueOf(field[0][0]));
+//        Log.e("!", String.valueOf(field[0][0]));
 
         boolean freeSpaceForNewTile = false;
         int[][] freeSpaces = new int[field.length* field[0].length][2];
@@ -64,12 +64,14 @@ public class GameRules {
         }
 
         Random rd = new Random();
-        int rmdPos = rd.nextInt(freeSpacesIndex + 1);
+        int rmdPos = rd.nextInt(freeSpacesIndex );
 
         int tileValue = 1;
         if (Math.random() > 0.8)
             tileValue = 2;
 
+        Log.e("!", String.valueOf(freeSpaces[rmdPos][0]));
+        Log.e("!", String.valueOf(freeSpaces[rmdPos][1]));
         player.getPlayfieldState().setTile(freeSpaces[rmdPos][0], freeSpaces[rmdPos][1], tileValue);
         return true;
     }
