@@ -2,40 +2,48 @@ package com.example.a2048mult.game.logic;
 
 import android.util.Log;
 
+import com.example.a2048mult.game.states.GameTile;
+import com.example.a2048mult.game.states.GameTileImpl;
+import com.example.a2048mult.game.states.Player;
+import com.example.a2048mult.game.states.PlayfieldState;
+import com.example.a2048mult.game.states.PlayfieldTurn;
+import com.example.a2048mult.game.states.PlayfieldTurnImpl;
+
 import java.util.Random;
 
 public class GameRules {
-    public static void moveUp(PlayfieldState game) {
-        rotateAntiClockwise(game);
-        rotateAntiClockwise(game);
-        rotateAntiClockwise(game);
-        move(game);
-        rotateAntiClockwise(game);
+    public static void moveUp(Player player) {
+        rotateAntiClockwise(player.getPlayfieldState());
+        rotateAntiClockwise(player.getPlayfieldState());
+        rotateAntiClockwise(player.getPlayfieldState());
+        move(player);
+        rotateAntiClockwise(player.getPlayfieldState());
     }
 
-    public static void moveDown(PlayfieldState game) {
-        rotateAntiClockwise(game);
-        move(game);
-        rotateAntiClockwise(game);
-        rotateAntiClockwise(game);
-        rotateAntiClockwise(game);
+    public static void moveDown(Player player) {
+        Log.e("!","rules");
+        rotateAntiClockwise(player.getPlayfieldState());
+        move(player);
+        rotateAntiClockwise(player.getPlayfieldState());
+        rotateAntiClockwise(player.getPlayfieldState());
+        rotateAntiClockwise(player.getPlayfieldState());
     }
 
-    public static void moveLeft(PlayfieldState game) {
-        move(game);
+    public static void moveLeft(Player player) {
+        move(player);
     }
 
-    public static void moveRight(PlayfieldState game) {
-        rotateAntiClockwise(game);
-        rotateAntiClockwise(game);
-        move(game);
-        rotateAntiClockwise(game);
-        rotateAntiClockwise(game);
+    public static void moveRight(Player player) {
+        rotateAntiClockwise(player.getPlayfieldState());
+        rotateAntiClockwise(player.getPlayfieldState());
+        move(player);
+        rotateAntiClockwise(player.getPlayfieldState());
+        rotateAntiClockwise(player.getPlayfieldState());
     }
 
-    public static boolean spawnTile(PlayfieldState game) {
-        int[][] field = game.getField();
-        Log.e("!", String.valueOf(field[0][0]));
+    public static boolean spawnTile(Player player) {
+        // TODO add PLayfieldTurn Spawn
+        int[][] field = player.getPlayfieldState().getField();
 
         boolean freeSpaceForNewTile = false;
         int[][] freeSpaces = new int[field.length* field[0].length][2];
@@ -55,90 +63,96 @@ public class GameRules {
         }
 
         Random rd = new Random();
-        int rmdPos = rd.nextInt(freeSpacesIndex + 1);
+        int rmdPos = rd.nextInt(freeSpacesIndex );
 
         int tileValue = 1;
         if (Math.random() > 0.8)
             tileValue = 2;
 
-        game.setTile(freeSpaces[rmdPos][0], freeSpaces[rmdPos][1], tileValue);
+        player.getPlayfieldState().setTile(freeSpaces[rmdPos][0], freeSpaces[rmdPos][1], tileValue);
         return true;
     }
 
-    public static boolean spawnTile2(PlayfieldState game) {
-        //TODO: random
-        double[][] random = new double[game.getFieldSizeX()][game.getFieldSizeY()];
-        int[] highest = new int[2];
-        double highestValue = 0;
-        for (int i = 0; i < game.getFieldSizeX(); i++) {
-            for (int j = 0; j < game.getFieldSizeY(); j++) {
-                random[i][j] = Math.random();
-                if (random[i][j] > highestValue) {
-                    highestValue = random[i][j];
-                    highest[0] = i;
-                    highest[1] = j;
-                }
-            }
-        }
+//    public static boolean spawnTile2(Player player) {
+//        //TODO: random
+//        double[][] random = new double[game.getFieldSizeX()][game.getFieldSizeY()];
+//        int[] highest = new int[2];
+//        double highestValue = 0;
+//        for (int i = 0; i < game.getFieldSizeX(); i++) {
+//            for (int j = 0; j < game.getFieldSizeY(); j++) {
+//                random[i][j] = Math.random();
+//                if (random[i][j] > highestValue) {
+//                    highestValue = random[i][j];
+//                    highest[0] = i;
+//                    highest[1] = j;
+//                }
+//            }
+//        }
+//
+//        while (game.getTile(highest[0], highest[1]) != 0) {
+//            random[highest[0]][highest[1]] = 0;
+//            highestValue = 0;
+//            for (int i = 0; i < game.getFieldSizeX(); i++) {
+//                for (int j = 0; j < game.getFieldSizeY(); j++) {
+//                    if (random[i][j] > highestValue) {
+//                        highestValue = random[i][j];
+//                        highest[0] = i;
+//                        highest[1] = j;
+//                    }
+//                }
+//            }
+//        }
+//        if (highestValue == 0)
+//            return false; //spiel verloren
+//        int tileValue = 1;
+//        if (Math.random() > 0.8)
+//            tileValue = 2;
+//        game.setTile(highest[0], highest[1], tileValue);
+//        return true;
+//    }
 
-        while (game.getTile(highest[0], highest[1]) != 0) {
-            random[highest[0]][highest[1]] = 0;
-            highestValue = 0;
-            for (int i = 0; i < game.getFieldSizeX(); i++) {
-                for (int j = 0; j < game.getFieldSizeY(); j++) {
-                    if (random[i][j] > highestValue) {
-                        highestValue = random[i][j];
-                        highest[0] = i;
-                        highest[1] = j;
-                    }
-                }
-            }
-        }
-        if (highestValue == 0)
-            return false; //spiel verloren
-        int tileValue = 1;
-        if (Math.random() > 0.8)
-            tileValue = 2;
-        game.setTile(highest[0], highest[1], tileValue);
-        return true;
-    }
-
-    public static void move(PlayfieldState game) {    //move links als standard
-        int[][] neueListe = new int[game.getFieldSizeX()][game.getFieldSizeY()];
+    private static void move(Player player) {    //move links als standard
+        // TODO add PLayfieldTurn Move
+        int[][] neueListe = new int[player.getPlayfieldState().getFieldSizeX()][player.getPlayfieldState().getFieldSizeY()];
 
         //spielfeld nach move erstellen
-        for (int x = 0; x < game.getFieldSizeX(); x++) {
+        PlayfieldState playfieldState = player.getPlayfieldState();
+        for (int x = 0; x < playfieldState.getFieldSizeX(); x++) {
             int positionNeueListe = 0;
-            int zahl = game.getTile(x, 0);
-            for (int y = 1; y < game.getFieldSizeY(); y++) {
+            int zahl = playfieldState.getTile(x, 0);
+            for (int y = 1; y < playfieldState.getFieldSizeY(); y++) {
                 if (zahl == 0) {
-                    zahl = game.getTile(x, y);
-                } else if (zahl == game.getTile(x, y)) {
+                    zahl = playfieldState.getTile(x, y);
+                } else if (zahl == playfieldState.getTile(x, y)) {
                     neueListe[x][positionNeueListe] = zahl + 1;
                     zahl = 0;
                     positionNeueListe++;
-                } else if (game.getTile(x, y) != 0) {
+                } else if (playfieldState.getTile(x, y) != 0) {
                     neueListe[x][positionNeueListe] = zahl;
-                    zahl = game.getTile(x, y);
+                    zahl = playfieldState.getTile(x, y);
                     positionNeueListe++;
                 }
             }
             neueListe[x][positionNeueListe] = zahl;
         }
 
-        //spielfeld einfügen
-        game.setField(neueListe);
+//        PlayfieldTurn playfieldTurn = new PlayfieldTurnImpl();
+//        GameTile gameTile = new GameTileImpl(0,0,2,0,1);
+//        playfieldTurn.addNewMove(gameTile);
+//        player.setPlayfieldTurn(playfieldTurn);
+        // spielfeld einfügen
+        playfieldState.setField(neueListe);
     }
 
-    public static void rotateAntiClockwise(PlayfieldState game) {
-        int[][] field = game.getField();
-        int[][] output = new int[game.getFieldSizeX()][game.getFieldSizeY()];
-        for (int y = 0; y < game.getFieldSizeY(); y++) {
-            for (int x = 0; x < game.getFieldSizeX(); x++) {
-                output[x][y] = field[game.getFieldSizeY() - y - 1][x];
+    public static void rotateAntiClockwise(PlayfieldState playfieldState) {
+        int[][] field = playfieldState.getField();
+        int[][] output = new int[playfieldState.getFieldSizeX()][playfieldState.getFieldSizeY()];
+        for (int y = 0; y < playfieldState.getFieldSizeY(); y++) {
+            for (int x = 0; x < playfieldState.getFieldSizeX(); x++) {
+                output[x][y] = field[playfieldState.getFieldSizeY() - y - 1][x];
             }
         }
-        game.setField(output);
+        playfieldState.setField(output);
     }
 
 }

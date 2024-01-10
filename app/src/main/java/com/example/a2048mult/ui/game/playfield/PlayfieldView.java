@@ -4,11 +4,12 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,11 +17,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.example.a2048mult.databinding.ViewPlayfieldBinding;
-import com.example.a2048mult.game.logic.GameTile;
-import com.example.a2048mult.game.logic.Player;
-import com.example.a2048mult.game.logic.PlayfieldTurn;
-import com.example.a2048mult.game.logic.PlayfieldTurnAnimTuple;
-import com.example.a2048mult.game.logic.PlayfieldTurnAnimationTypes;
+import com.example.a2048mult.game.states.GameTile;
+import com.example.a2048mult.game.states.Player;
+import com.example.a2048mult.game.states.PlayfieldTurn;
+import com.example.a2048mult.game.states.PlayfieldTurnAnimTuple;
+import com.example.a2048mult.game.states.PlayfieldTurnAnimationType;
 
 
 public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
@@ -90,7 +91,7 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
      * @implNote level == -1, invisible tile
      * @see ConstraintLayout
      */
-    private void drawPlayfieldStateInContainer(int[][] data, ConstraintLayout container) {
+    private void drawPlayfieldState(int[][] data, Boolean inBackground) {
         // TODO remove lines in implementation, so less nesting, so faster
 
         int width = data.length;
@@ -99,6 +100,8 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
         allViews = new View[height][width];
         constraintSet = new ConstraintSet();
         PlayfieldTileView newTile;
+        ConstraintLayout container = new ConstraintLayout(getContext());
+
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 newTile = new PlayfieldTileView(container.getContext());
@@ -117,6 +120,21 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
             }
         }
         constraintSet.applyTo(container);
+
+        if (inBackground) {
+            ((Activity)this.binding.getRoot().getContext()).runOnUiThread(()->{
+                container.setLayoutParams(binding.backgroundContainer.getLayoutParams());
+                binding.getRoot().removeView(binding.backgroundContainer);
+
+                binding.getRoot().addView(container);
+            });
+        } else {
+            ((Activity)this.binding.getRoot().getContext()).runOnUiThread(()->{
+                container.setLayoutParams(binding.playfieldContainer.getLayoutParams());
+                binding.getRoot().removeView(binding.playfieldContainer);
+                binding.getRoot().addView(container);
+            });
+        }
     }
 
     private void doConstraintsBasedOnPosition(int x, int y, int width, int height) {
@@ -146,12 +164,12 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
     // TODO private
     public void drawPlayfieldBackground(int width, int height) {
         int[][] bgData = new int[height][width];
-        drawPlayfieldStateInContainer(bgData, binding.backgroundContainer);
+        drawPlayfieldState(bgData, true);
     }
 
     @Override
     public void drawPlayfieldTurn(PlayfieldTurn playfieldTurn) {
-        PlayfieldTurnAnimTuple<PlayfieldTurnAnimationTypes, GameTile> animation;
+        PlayfieldTurnAnimTuple<PlayfieldTurnAnimationType, GameTile> animation;
 
         animation = playfieldTurn.pollNextAnimation();
         while (animation != null) {
@@ -160,7 +178,7 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
         }
     }
 
-    private void doAnimation(PlayfieldTurnAnimTuple<PlayfieldTurnAnimationTypes, GameTile> animation) {
+    private void doAnimation(PlayfieldTurnAnimTuple<PlayfieldTurnAnimationType, GameTile> animation) {
         switch (animation.type) {
             case SPAWN:
                 spawnTileAt(animation.tile.getNewX(), animation.tile.getNewY(), animation.tile.getLevel());
@@ -189,7 +207,7 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
                 }
             }
         }
-        drawPlayfieldStateInContainer(copyData, binding.playfieldContainer);
+        drawPlayfieldState(copyData, false);
     }
 
     public ObjectAnimator spawnTileAt(int x, int y, int level) {
@@ -212,62 +230,73 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
     }
 
     private ObjectAnimator moveTile(int xFrom, int yFrom, int xTo, int yTo) {
+        final ObjectAnimator[] animation = new ObjectAnimator[1];
+        ((Activity) binding.getRoot().getContext()).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
 
-        View fromTile = allViews[yFrom][xFrom];
-        View toTile = allViews[yTo][xTo];
 
-        ObjectAnimator animation;
-        float xDiff = toTile.getX() - fromTile.getX();
-        if (xDiff != 0) {
-            animation = ObjectAnimator.ofFloat(fromTile, "translationX", xDiff);
-        } else {
-            float yDiff = toTile.getY() - fromTile.getY();
-            animation = ObjectAnimator.ofFloat(fromTile, "translationY", yDiff);
-        }
-        animation.setDuration(PlayfieldConfig.animationDurationInMs);
-        animation.start();
-        // TODO wenn zuende
+                View fromTile = allViews[yFrom][xFrom];
+                View toTile = allViews[yTo][xTo];
+
+
+                float xDiff = toTile.getX() - fromTile.getX();
+                if (xDiff != 0) {
+                    animation[0] = ObjectAnimator.ofFloat(fromTile, "translationX", xDiff);
+                } else {
+                    float yDiff = toTile.getY() - fromTile.getY();
+                    animation[0] = ObjectAnimator.ofFloat(fromTile, "translationY", yDiff);
+                }
+
+                animation[0].setDuration(PlayfieldConfig.animationDurationInMs);
+                animation[0].start();
+                // TODO wenn zuende
 //        removeTile(xFrom,yFrom);
-        return animation;
+            }
+        });
+        return animation[0];
     }
 
     private ObjectAnimator replaceTile(int x, int y, int level, long animationDuration) {
-        constraintSet.clone(binding.playfieldContainer);
+        final ObjectAnimator[] scaleUp = new ObjectAnimator[1];
+        ((Activity) binding.getRoot().getContext()).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
 
-        View tileToRemove = allViews[y][x];
-        int id = tileToRemove.getId();
-        constraintSet.clear(tileToRemove.getId());
-        int index = binding.playfieldContainer.indexOfChild(tileToRemove);
-        binding.playfieldContainer.removeView(tileToRemove);
 
-        PlayfieldTileView newTile = new PlayfieldTileView(binding.playfieldContainer.getContext());
-        newTile.setLevel(level);
-        newTile.setId(id);
-        binding.playfieldContainer.addView(newTile, index);
+                constraintSet.clone(binding.playfieldContainer);
 
-        doConstraintsBasedOnPosition(x, y, allViews.length, allViews[0].length);
-        constraintSet.applyTo(binding.playfieldContainer);
+                View tileToRemove = allViews[y][x];
+                int id = tileToRemove.getId();
+                constraintSet.clear(tileToRemove.getId());
+                int index = binding.playfieldContainer.indexOfChild(tileToRemove);
+                binding.playfieldContainer.removeView(tileToRemove);
 
-        allViews[y][x] = newTile;
+                PlayfieldTileView newTile = new PlayfieldTileView(binding.playfieldContainer.getContext());
+                newTile.setLevel(level);
+                newTile.setId(id);
+                binding.playfieldContainer.addView(newTile, index);
 
-        ObjectAnimator scaleUp = ObjectAnimator.ofPropertyValuesHolder(newTile,
-                PropertyValuesHolder.ofFloat("scaleX", 0.2f, 1f),
-                PropertyValuesHolder.ofFloat("scaleY", 0.2f, 1f));
-        scaleUp.setDuration(animationDuration);
-        scaleUp.start();
+                doConstraintsBasedOnPosition(x, y, allViews.length, allViews[0].length);
+                constraintSet.applyTo(binding.playfieldContainer);
 
-        return scaleUp;
+                allViews[y][x] = newTile;
+
+                scaleUp[0] = ObjectAnimator.ofPropertyValuesHolder(newTile,
+                        PropertyValuesHolder.ofFloat("scaleX", 0.2f, 1f),
+                        PropertyValuesHolder.ofFloat("scaleY", 0.2f, 1f));
+
+
+                scaleUp[0].setDuration(animationDuration);
+                scaleUp[0].start();
+            }
+        });
+        return scaleUp[0];
     }
 
     @Override
     public void initPlayer(Player player) {
         drawPlayfieldBackground(player.getPlayfieldState().getField().length, player.getPlayfieldState().getField().length);
         this.drawPlayfieldState(player.getPlayfieldState().getField());
-    }
-
-    @Override
-    public void drawPlayer(Player player) {
-//        player.
-//        this.drawPlayfieldState(player.getPlayfieldState().getField());
     }
 }

@@ -1,6 +1,4 @@
-package com.example.a2048mult.game.logic;
-
-import android.util.Log;
+package com.example.a2048mult.game.states;
 
 public class PlayfieldStateImpl implements PlayfieldState {
     /**

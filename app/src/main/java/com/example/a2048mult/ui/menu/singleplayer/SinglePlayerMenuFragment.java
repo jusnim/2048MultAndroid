@@ -7,32 +7,30 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.a2048mult.ui.menu.MenuLobbyChangeListener;
 import com.example.a2048mult.R;
 import com.example.a2048mult.databinding.FragmentSinglePlayerMenuBinding;
+import com.example.a2048mult.game.logic.GameControlMenu;
+import com.example.a2048mult.game.states.LobbySettingsImpl;
 import com.example.a2048mult.game.logic.GameLogic;
-import com.example.a2048mult.game.logic.Player;
-import com.example.a2048mult.game.logic.PlayerImpl;
-import com.example.a2048mult.game.logic.PlayfieldState;
-import com.example.a2048mult.game.logic.PlayfieldStateImpl;
+import com.example.a2048mult.game.states.Player;
+import com.example.a2048mult.game.states.PlayerImpl;
+import com.example.a2048mult.game.states.PlayfieldStateImpl;
+import com.example.a2048mult.ui.menu.MenuLobbyChangeListener;
 
 public class SinglePlayerMenuFragment extends Fragment implements MenuLobbyChangeListener {
     private FragmentSinglePlayerMenuBinding binding;
-    private GameLogic gameLogic;
+    private GameControlMenu gameControlMenu;
+    private LobbySettingsImpl lobbySettings;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         binding = FragmentSinglePlayerMenuBinding.inflate(getLayoutInflater());
 
         binding.buttonStartSingleplayer.setOnClickListener(
                 v -> startSingleplayer()
         );
-
-//        binding.getRoot().addView(new ChooseView(getContext()));
         return binding.getRoot();
     }
 
@@ -43,26 +41,24 @@ public class SinglePlayerMenuFragment extends Fragment implements MenuLobbyChang
     }
 
     private void startSingleplayer() {
-        this.gameLogic = new GameLogic();
+        this.lobbySettings = new LobbySettingsImpl();
 
-        gameLogic.setPlayFieldSize(binding.chooseView.getSelectedPlayfieldSize());
+        Player player = new PlayerImpl("username", 0, new PlayfieldStateImpl());
+        this.lobbySettings.setPlayFieldSize(binding.chooseView.getSelectedPlayfieldSize());
 
-        PlayfieldState playfieldState = new PlayfieldStateImpl();
-        Player player = new PlayerImpl("username", 0, playfieldState);
+        this.lobbySettings.addPlayer(player);
+        this.lobbySettings.setLeader(player);
 
-        gameLogic.addPlayer(player);
-        gameLogic.setLeader(player);
-
-        gameLogic.startGame();
-
-        NavHostFragment.findNavController(this).navigate(R.id.action_singlePlayerMenu_to_gameFragment, gameLogic.getBundle());
+        this.gameControlMenu = GameLogic.getInstance();
+        this.gameControlMenu.setLobbySettings(this.lobbySettings);
+        this.gameControlMenu.startGame(this, R.id.action_singlePlayerMenu_to_gameFragment);
     }
 
     @Override
     public void notifyChangeInLobby() {
-        // update UI based on gameLogic-object
-        this.gameLogic.getAllPlayer();
-        this.gameLogic.getLeader();
-        this.gameLogic.getPlayFieldSize();
+        // TODO update UI based on gameLogic-object
+        this.lobbySettings.getAllPlayer();
+        this.lobbySettings.getLeader();
+        this.lobbySettings.getPlayFieldSize();
     }
 }

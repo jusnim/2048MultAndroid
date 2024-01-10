@@ -1,4 +1,4 @@
-package com.example.a2048mult.game.logic;
+package com.example.a2048mult.game.states;
 
 public class GameTileImpl implements GameTile {
 
@@ -12,6 +12,20 @@ public class GameTileImpl implements GameTile {
     @Override
     public void updateCoordinates(int newX, int newY) {
         GameTile.super.updateCoordinates(newX, newY);
+    }
+
+    public GameTileImpl(int newX, int newY, int level){
+        this.newX = newX;
+        this.newY = newY;
+        this.level = level;
+    }
+
+    public GameTileImpl(int oldX, int oldY, int newX, int newY, int level){
+        this.oldX = oldX;
+        this.oldY = oldY;
+        this.newX = newX;
+        this.newY = newY;
+        this.level = level;
     }
 
     @Override

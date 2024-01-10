@@ -1,4 +1,4 @@
-package com.example.a2048mult.game.logic;
+package com.example.a2048mult.game.states;
 
 /**
  * represents the data structure that saves the change of a PlayfieldState after each turn
@@ -43,6 +43,6 @@ public interface PlayfieldTurn {
      *
      * @return
      */
-    PlayfieldTurnAnimTuple<PlayfieldTurnAnimationTypes, GameTile> pollNextAnimation();
+    PlayfieldTurnAnimTuple<PlayfieldTurnAnimationType, GameTile> pollNextAnimation();
 
 }

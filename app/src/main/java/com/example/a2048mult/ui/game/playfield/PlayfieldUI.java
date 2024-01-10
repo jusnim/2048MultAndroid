@@ -1,8 +1,7 @@
 package com.example.a2048mult.ui.game.playfield;
 
-import com.example.a2048mult.game.logic.Player;
-import com.example.a2048mult.game.logic.PlayfieldState;
-import com.example.a2048mult.game.logic.PlayfieldTurn;
+import com.example.a2048mult.game.states.Player;
+import com.example.a2048mult.game.states.PlayfieldTurn;
 
 public interface PlayfieldUI  {
     /**
@@ -12,15 +11,11 @@ public interface PlayfieldUI  {
      */
     public void initPlayer(Player player);
 
-    /**
-     * draw current Player (also Playfield)
-     * used when a new turn was done
-     * also used when going out of a game and going in again
-     * basically refreshes current playfield
-     */
-    public void drawPlayer(Player player);
-
     void drawPlayfieldBackground(int width, int height);
 
+    /**
+     * draws animations, after that UI represents PlayfieldState
+     * basically refreshes current playfield
+     */
     void drawPlayfieldTurn(PlayfieldTurn playfieldTurn);
 }

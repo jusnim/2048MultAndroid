@@ -1,128 +1,128 @@
 package com.example.a2048mult.game.logic;
 
-import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.util.Log;
 
+import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.a2048mult.R;
-import com.example.a2048mult.game.GameState;
-import com.example.a2048mult.game.GameStateImpl;
-import com.example.a2048mult.game.currentlyNotUsed.GameInputs;
-import com.example.a2048mult.game.currentlyNotUsed.LobbySettings;
 import com.example.a2048mult.game.currentlyNotUsed.ReceiveListener;
-import com.example.a2048mult.ui.game.GameFragment;
+import com.example.a2048mult.game.states.GameState;
+import com.example.a2048mult.game.states.GameStateImpl;
+import com.example.a2048mult.game.states.LobbySettings;
+import com.example.a2048mult.game.states.MoveType;
+import com.example.a2048mult.game.states.Player;
+import com.example.a2048mult.ui.game.GameUI;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.util.Arrays;
+import java.io.Serializable;
 
-public class GameLogic implements GameInputs, LobbySettings, ReceiveListener {
-    Player leader;
+/**
+ * singleton pattern
+ */
+public class GameLogic implements InGameControl, ReceiveListener, GameControlMenu, Serializable {
+    private static final GameLogic gameLogic = new GameLogic();
     boolean gameStarted = false;
+    private LobbySettings lobbySettings;
     private GameState gameState;
-    private Player[] playerForStarting = new Player[0];
-    private int sizeForStarting = 0;
+    private GameUI gameUI;
 
-    private Bundle bundle;
+    private GameLogic() {
+    }
+
+    ;
+
+    public static GameLogic getInstance() {
+        return gameLogic;
+    }
 
     @Override
-    public void swipe(Move move) {
-        switch (move) {
-            case UP:
-                break;
-            case DOWN:
-                break;
-            case LEFT:
-                break;
-            case RIGHT:
-                break;
-        }
+    public void swipe(MoveType move) {
+        int[][] field = this.gameState.getAllPlayer()[0].getPlayfieldState().getField();
+        Log.e("!",
+                String.valueOf(field[0][0] + "" + field[0][1] + "" + field[1][0] + "" + field[1][1])
+        );
+        Runnable r = () -> {
+            switch (move) {
+                case UP:
+                    for (Player player : gameState.getAllPlayer()) {
+                        GameRules.moveUp(player);
+                    }
+                    break;
+                case DOWN:
+                    Log.e("!", "logic");
+                    for (Player player : gameState.getAllPlayer()) {
+                        GameRules.moveDown(player);
+                    }
+                    break;
+                case LEFT:
+                    for (Player player : gameState.getAllPlayer()) {
+                        GameRules.moveLeft(player);
+                    }
+                    break;
+                case RIGHT:
+                    for (Player player : gameState.getAllPlayer()) {
+                        GameRules.moveRight(player);
+                    }
+                    break;
+            }
+            gameUI.drawGameState(GameLogic.this.gameState);
+        };
+        Log.e("!",
+                String.valueOf(field[0][0] + "" + field[0][1] + "" + field[1][0] + "" + field[1][1])
+        );
+
+        HandlerThread handlerThread = new HandlerThread("handleMove", 0);
+        handlerThread.start();
+        Handler handler = new Handler(handlerThread.getLooper());
+        handler.post(r);
+
     }
 
     @Override
     public void leaveGame() {
-
+        // TODO
     }
 
     @Override
-    public boolean getGameStarted() {
-        return this.gameStarted;
+    public void initDrawGameUI(GameUI gameUI) {
+        this.gameUI = gameUI;
+        this.gameUI.initDrawGameState(this.gameState);
     }
 
     @Override
-    public int getPlayerNum() {
-        return playerForStarting.length;
-    }
-
-    @Override
-    public Player[] getAllPlayer() {
-        return playerForStarting;
-    }
-
-    @Override
-    public void addPlayer(Player player) {
-        this.playerForStarting = Arrays.copyOf(this.playerForStarting, playerForStarting.length + 1);
-        this.playerForStarting[this.playerForStarting.length - 1] = player;
-    }
-
-    @Override
-    public Player getLeader() {
-        return this.leader;
-    }
-
-    @Override
-    public void setLeader(Player player) {
-        this.leader = player;
-    }
-
-    @Override
-    public int getPlayFieldSize() {
-        return sizeForStarting;
-    }
-
-    @Override
-    public void setPlayFieldSize(int size) {
-        for (int i = 0; i < this.getPlayerNum(); i++) {
-            this.getAllPlayer()[i].setPlayfieldSize(size);
-        }
-        this.sizeForStarting = size;
-    }
-
-    @Override
-    public void startGame() {
+    public void startGame(Fragment fragment, int resID) throws IllegalStateException {
         // TODO create GameState, sendGameState to other Devices
+        if (this.lobbySettings == null) {
+            throw new IllegalStateException("LobbySettings isnt set");
+        }
 
         // for updating all Players on given Playfieldsize
-        this.setPlayFieldSize(this.getPlayFieldSize());
-        this.gameState = new GameStateImpl(this.getAllPlayer());
+        this.lobbySettings.setPlayFieldSize(this.lobbySettings.getPlayFieldSize());
+        this.gameState = new GameStateImpl(this.lobbySettings.getAllPlayer());
         this.gameStarted = true;
 
+        NavHostFragment.findNavController(fragment).navigate(resID);
 
-        byte[] gamestateContent;
-        try {
-            // serialize object to byte Array
-            ByteArrayOutputStream osB = new ByteArrayOutputStream();
-            ObjectOutputStream osO = new ObjectOutputStream(osB);
-            osO.writeObject(this.gameState);
-            osB.flush();
-            gamestateContent = osB.toByteArray();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        this.bundle = new Bundle();
-        this.bundle.putByteArray(GameFragment.GAMESTATE, gamestateContent);
+        Runnable r = () -> {
+            for (Player player : gameState.getAllPlayer()) {
+                GameRules.spawnTile(player);
+                GameRules.spawnTile(player);
+            }
+        };
+        HandlerThread handlerThread = new HandlerThread("spawnFirstTiles", 0);
+        handlerThread.start();
+        Handler handler = new Handler(handlerThread.getLooper());
+        handler.post(r);
     }
 
     @Override
-    public Bundle getBundle() {
-        return this.bundle;
+    public void setLobbySettings(LobbySettings lobbySettings) {
+        this.lobbySettings = lobbySettings;
     }
-
 
     @Override
     public void onReceivedPaket() {
-
+        // TODO
     }
 }
