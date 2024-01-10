@@ -4,45 +4,55 @@ import android.util.Log;
 
 import com.example.a2048mult.game.states.GameTile;
 import com.example.a2048mult.game.states.GameTileImpl;
+import com.example.a2048mult.game.states.MoveType;
 import com.example.a2048mult.game.states.Player;
 import com.example.a2048mult.game.states.PlayfieldState;
 import com.example.a2048mult.game.states.PlayfieldTurn;
+import com.example.a2048mult.game.states.PlayfieldTurnAnimTuple;
 import com.example.a2048mult.game.states.PlayfieldTurnImpl;
 
+import java.util.List;
 import java.util.Random;
 
 public class GameRules {
     public static void moveUp(Player player) {
+        int[][] beforeField = copyFieldFromPlayer(player);
         rotateAntiClockwise(player.getPlayfieldState());
         rotateAntiClockwise(player.getPlayfieldState());
         rotateAntiClockwise(player.getPlayfieldState());
         move(player);
         rotateAntiClockwise(player.getPlayfieldState());
+        calculateMove(player,beforeField,copyFieldFromPlayer(player),MoveType.UP);
     }
 
     public static void moveDown(Player player) {
         Log.e("!","rules");
+        int[][] beforeField = copyFieldFromPlayer(player);
         rotateAntiClockwise(player.getPlayfieldState());
         move(player);
         rotateAntiClockwise(player.getPlayfieldState());
         rotateAntiClockwise(player.getPlayfieldState());
         rotateAntiClockwise(player.getPlayfieldState());
+        calculateMove(player,beforeField,copyFieldFromPlayer(player),MoveType.DOWN);
     }
 
     public static void moveLeft(Player player) {
+        int[][] beforeField = copyFieldFromPlayer(player);
         move(player);
+        calculateMove(player,beforeField,copyFieldFromPlayer(player),MoveType.LEFT);
     }
 
     public static void moveRight(Player player) {
+        int[][] beforeField = copyFieldFromPlayer(player);
         rotateAntiClockwise(player.getPlayfieldState());
         rotateAntiClockwise(player.getPlayfieldState());
         move(player);
         rotateAntiClockwise(player.getPlayfieldState());
         rotateAntiClockwise(player.getPlayfieldState());
+        calculateMove(player,beforeField,copyFieldFromPlayer(player),MoveType.RIGHT);
     }
 
     public static boolean spawnTile(Player player) {
-        // TODO add PLayfieldTurn Spawn
         int[][] field = player.getPlayfieldState().getField();
 
         boolean freeSpaceForNewTile = false;
@@ -59,6 +69,7 @@ public class GameRules {
         }
 
         if (!freeSpaceForNewTile) {
+            //TODO PLayer Variable verloren dafuer Methode wird void
             return false; // spiel verloren
         }
 
@@ -68,7 +79,7 @@ public class GameRules {
         int tileValue = 1;
         if (Math.random() > 0.8)
             tileValue = 2;
-
+        player.getPlayfieldTurn().addNewSpawned(new GameTileImpl(freeSpaces[rmdPos][0], freeSpaces[rmdPos][1], tileValue));
         player.getPlayfieldState().setTile(freeSpaces[rmdPos][0], freeSpaces[rmdPos][1], tileValue);
         return true;
     }
@@ -112,7 +123,6 @@ public class GameRules {
 //    }
 
     private static void move(Player player) {    //move links als standard
-        // TODO add PLayfieldTurn Move
         int[][] neueListe = new int[player.getPlayfieldState().getFieldSizeX()][player.getPlayfieldState().getFieldSizeY()];
 
         //spielfeld nach move erstellen
@@ -159,6 +169,121 @@ public class GameRules {
     public static void initGame(Player player){
         GameRules.spawnTile(player);
         GameRules.spawnTile(player);
+    }
+
+    public static void calculateMove(Player player, int[][] before, int[][] after, MoveType moveType) {
+        switch (moveType) {
+            case UP:
+                for (int x = 0; x < player.getPlayfieldState().getFieldSizeX(); x++) {
+                    int offset = 0;
+                    for (int y = 0; y < player.getPlayfieldState().getFieldSizeY(); y++) {
+                        if(after[x][y] != 0 && before[x][y + offset] != after[x][y]){   //find changed Tile
+                            int old1 = y+offset;                                               //find old coordinate from first tile
+                            while (before[x][old1] == 0){
+                                old1++;
+                                offset++;
+                            }
+                            before[x][old1] = 0;                                        //remove first coordinate to find second
+                            int old2 = old1 + 1;                                        //find old coordinate from second tile
+                            while (before[x][old2] == 0){
+                                old2++;
+                                offset++;
+                            }
+                            offset++;
+                            int oldValue =before[x][old2];
+                            before[x][old2] = 0;                                        //remove second coordinate to find possible next
+                            player.getPlayfieldTurn().addNewMerged(new GameTileImpl(x,old1,x,y,oldValue),new GameTileImpl(x,old2,x,y,oldValue),new GameTileImpl(x,y,after[x][y]));
+                            after[x][y] = 0;
+                        }
+                    }
+                }
+                break;
+            case DOWN:
+                for (int x = 0; x < player.getPlayfieldState().getFieldSizeX(); x++) {
+                    int offset = 0;                                                              //offset is always positive
+                    for (int y = player.getPlayfieldState().getFieldSizeY()-1; y >= 0; y--) {
+                        if(after[x][y] != 0 && before[x][y - offset] != after[x][y]){            //find changed Tile
+                            int old1 = y;                                               //find old coordinate from first tile
+                            while (before[x][old1] == 0){
+                                old1--;
+                                offset++;
+                            }
+                            before[x][old1] = 0;                                        //remove first coordinate to find second
+                            int old2 = old1 - 1;                                        //find old coordinate from second tile
+                            while (before[x][old2] == 0){
+                                old2--;
+                                offset++;
+                            }
+                            offset++;
+                            int oldValue =before[x][old2];
+                            before[x][old2] = 0;                                        //remove second coordinate to find possible next
+                            player.getPlayfieldTurn().addNewMerged(new GameTileImpl(x,old1,x,y,oldValue),new GameTileImpl(x,old2,x,y,oldValue),new GameTileImpl(x,y,after[x][y]));
+                            after[x][y] = 0;
+                        }
+                    }
+                }
+                break;
+            case LEFT:
+                for (int y = 0; y < player.getPlayfieldState().getFieldSizeY(); y++) {
+                    int offset = 0;
+                    for (int x = 0; x < player.getPlayfieldState().getFieldSizeX(); x++) {
+                        if(after[x][y] != 0 && before[x + offset][y] != after[x][y]){            //find changed Tile
+                            int old1 = x;                                               //find old coordinate from first tile
+                            while (before[old1][y] == 0){
+                                old1++;
+                                offset++;
+                            }
+                            before[old1][y] = 0;                                        //remove first coordinate to find second
+                            int old2 = old1 + 1;                                        //find old coordinate from second tile
+                            while (before[old2][y] == 0){
+                                old2++;
+                                offset++;
+                            }
+                            offset++;
+                            int oldValue =before[old2][y];
+                            before[old2][y] = 0;                                        //remove second coordinate to find possible next
+                            player.getPlayfieldTurn().addNewMerged(new GameTileImpl(old1,y,x,y,oldValue),new GameTileImpl(old2,y,x,y,oldValue),new GameTileImpl(x,y,after[x][y]));
+                            after[x][y] = 0;
+                        }
+                    }
+                }
+                break;
+            case RIGHT:
+                for (int y = 0; y < player.getPlayfieldState().getFieldSizeY(); y++) {
+                    int offset = 0;
+                    for (int x = player.getPlayfieldState().getFieldSizeX(); x >= 0 ; x--) {
+                        if(after[x][y] != 0 && before[x - offset][y] != after[x][y]){            //find changed Tile
+                            int old1 = x;                                               //find old coordinate from first tile
+                            while (before[old1][y] == 0){
+                                old1--;
+                                offset++;
+                            }
+                            before[old1][y] = 0;                                        //remove first coordinate to find second
+                            int old2 = old1 - 1;                                        //find old coordinate from second tile
+                            while (before[old2][y] == 0){
+                                old2--;
+                                offset++;
+                            }
+                            offset++;
+                            int oldValue = before[old2][y];
+                            before[old2][y] = 0;                                        //remove second coordinate to find possible next
+                            player.getPlayfieldTurn().addNewMerged(new GameTileImpl(old1,y,x,y,oldValue),new GameTileImpl(old2,y,x,y,oldValue),new GameTileImpl(x,y,after[x][y]));
+                            after[x][y] = 0;
+                        }
+                    }
+                }
+                break;
+        }
+    }
+
+    private static int[][] copyFieldFromPlayer(Player player){
+        int[][] field = player.getPlayfieldState().getField();
+        int[][] output = new int[player.getPlayfieldState().getFieldSizeX()][player.getPlayfieldState().getFieldSizeY()];
+        for (int x = 0; x < player.getPlayfieldState().getFieldSizeX(); x++) {
+            if (player.getPlayfieldState().getFieldSizeY() >= 0)
+                System.arraycopy(field[x], 0, output[x], 0, player.getPlayfieldState().getFieldSizeY());
+        }
+        return output;
     }
 
 }

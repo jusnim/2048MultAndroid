@@ -1,6 +1,6 @@
 package com.example.a2048mult.Control;
 
-import com.example.a2048mult.game.GameState;
+import com.example.a2048mult.game.states.GameState;
 
 public class GameStatePDU extends PDU{
     private static final PDUType pduType = PDUType.GameStatePDU;
