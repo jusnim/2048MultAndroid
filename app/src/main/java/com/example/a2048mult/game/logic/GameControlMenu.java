@@ -13,7 +13,7 @@ public interface GameControlMenu {
      * initlize GameState and open GameUI of GameView
      * @param fragment - fragment
      * @param resID - representation from navigation resID e.g. from singleplayerToGame
-     * @throws IllegalStateException - when LobbySettings isnt set
+     * @throws IllegalStateException - when LobbySettings isn't set
      */
     void startGame(Fragment fragment, int resID) throws IllegalStateException;
 

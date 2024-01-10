@@ -10,8 +10,10 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 
 import com.example.a2048mult.databinding.FragmentGameBinding;
-import com.example.a2048mult.game.states.GameState;
+import com.example.a2048mult.game.logic.GameLogic;
 import com.example.a2048mult.game.logic.InGameControl;
+import com.example.a2048mult.game.states.GameState;
+import com.example.a2048mult.game.states.MoveType;
 import com.example.a2048mult.game.states.Player;
 import com.example.a2048mult.ui.game.playfield.PlayfieldUI;
 import com.example.a2048mult.ui.game.playfield.PlayfieldWithPlayerView;
@@ -27,14 +29,13 @@ public class GameFragment extends Fragment implements GameUI {
 
     private FragmentGameBinding binding;
 
-    private PlayfieldUI[] playfieldUIs;
-    private Player[] players;
 
     private InGameControl inGameControl;
 
     public GameFragment() {
         // Required empty public constructor
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,9 +51,7 @@ public class GameFragment extends Fragment implements GameUI {
             ObjectInputStream isO = new ObjectInputStream(isB);
             return (InGameControl) isO.readObject();
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
@@ -60,29 +59,28 @@ public class GameFragment extends Fragment implements GameUI {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentGameBinding.inflate(getLayoutInflater());
-        initDrawGameState(this.inGameControl.getGameState());
-
+        GameLogic.getInstance().initDrawGameUI(this);
         binding.getRoot().setOnTouchListener(new InputListener(binding.getRoot().getContext()) {
             @Override
             public void onLeft() {
+                GameLogic.getInstance().swipe(MoveType.LEFT);
             }
 
             @Override
             public void onDown() {
-//                playfield.mergeTile(0,0,0,2,6);
+                GameLogic.getInstance().swipe(MoveType.DOWN);
             }
 
             @Override
             public void onUp() {
-//                protoSpawnTilesPlayfield(4,4);
+                GameLogic.getInstance().swipe(MoveType.UP);
             }
 
             @Override
             public void onRight() {
-//                protoRemovePlayfield(4,4);
+                GameLogic.getInstance().swipe(MoveType.RIGHT);
             }
         });
-
         return binding.getRoot();
     }
 
@@ -92,21 +90,20 @@ public class GameFragment extends Fragment implements GameUI {
         binding = null;
     }
 
-
     @Override
     public void initDrawGameState(GameState gameState) throws IllegalArgumentException {
-        this.players = gameState.getAllPlayer();
-        this.playfieldUIs = new PlayfieldUI[players.length];
+        Player[] players = gameState.getAllPlayer();
+        PlayfieldUI[] playfieldUIs = new PlayfieldUI[players.length];
 
 
-        for (int i = 0; i < this.players.length; i++) {
+        for (int i = 0; i < players.length; i++) {
             playfieldUIs[i] = new PlayfieldWithPlayerView(getContext());
             playfieldUIs[i].initPlayer(players[i]);
         }
 
-        switch (this.players.length) {
+        switch (players.length) {
             case 1:
-                drawSingleplayer();
+                drawSingleplayer(playfieldUIs[0],players[0]);
                 break;
             case 2:
                 drawMultiplayer2();
@@ -122,9 +119,9 @@ public class GameFragment extends Fragment implements GameUI {
         }
     }
 
-    private void drawSingleplayer() {
-        View playfield = (View) playfieldUIs[0];
-        ((PlayfieldUI) playfield).drawPlayer(players[0]);
+    private void drawSingleplayer(PlayfieldUI playfieldUI, Player player) {
+        View playfield = (View) playfieldUI;
+        playfieldUI.drawPlayer(player);
 
         playfield.setId(ConstraintLayout.generateViewId());
         binding.playfieldContainer.addView(playfield);
@@ -150,7 +147,10 @@ public class GameFragment extends Fragment implements GameUI {
 
     @Override
     public void drawGameState(GameState gameState) {
+        for (Player player:gameState.getAllPlayer()) {
 
+            player.getPlayfieldTurn();
+        }
     }
 
 }

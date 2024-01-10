@@ -1,8 +1,10 @@
 package com.example.a2048mult.game.logic;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.a2048mult.game.currentlyNotUsed.ReceiveListener;
@@ -12,6 +14,7 @@ import com.example.a2048mult.game.states.LobbySettings;
 import com.example.a2048mult.game.states.MoveType;
 import com.example.a2048mult.game.states.Player;
 import com.example.a2048mult.ui.game.GameFragment;
+import com.example.a2048mult.ui.game.GameUI;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -21,11 +24,12 @@ import java.io.Serializable;
 /**
  * singleton pattern
  */
-public class GameLogic implements InGameControl, ReceiveListener, GameControlMenu, GameDraw, Serializable {
+public class GameLogic implements InGameControl, ReceiveListener, GameControlMenu, Serializable {
     private static final GameLogic gameLogic = new GameLogic();
     boolean gameStarted = false;
     private LobbySettings lobbySettings;
     private GameState gameState;
+    private GameUI gameUI;
 
     private GameLogic() {
     }
@@ -60,7 +64,7 @@ public class GameLogic implements InGameControl, ReceiveListener, GameControlMen
                 }
                 break;
         }
-        drawGameState();
+        gameUI.drawGameState(this.gameState);
     }
 
     @Override
@@ -69,8 +73,9 @@ public class GameLogic implements InGameControl, ReceiveListener, GameControlMen
     }
 
     @Override
-    public GameState getGameState() {
-        return this.gameState;
+    public void initDrawGameUI(GameUI gameUI) {
+        this.gameUI = gameUI;
+        this.gameUI.initDrawGameState(this.gameState);
     }
 
     @Override
@@ -99,8 +104,8 @@ public class GameLogic implements InGameControl, ReceiveListener, GameControlMen
         Bundle bundle = new Bundle();
         bundle.putByteArray(GameFragment.GAMELOGIC, gamestateContent);
 
-        // navigate to GameView
-        NavHostFragment.findNavController(fragment).navigate(resID, bundle);
+        NavController navController = NavHostFragment.findNavController(fragment);
+        navController.navigate(resID, bundle);
     }
 
     @Override
@@ -110,11 +115,6 @@ public class GameLogic implements InGameControl, ReceiveListener, GameControlMen
 
     @Override
     public void onReceivedPaket() {
-        // TODO
-    }
-
-    @Override
-    public void drawGameState() {
         // TODO
     }
 }
