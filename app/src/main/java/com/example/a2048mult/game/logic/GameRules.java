@@ -2,8 +2,12 @@ package com.example.a2048mult.game.logic;
 
 import android.util.Log;
 
+import com.example.a2048mult.game.states.GameTile;
+import com.example.a2048mult.game.states.GameTileImpl;
 import com.example.a2048mult.game.states.Player;
 import com.example.a2048mult.game.states.PlayfieldState;
+import com.example.a2048mult.game.states.PlayfieldTurn;
+import com.example.a2048mult.game.states.PlayfieldTurnImpl;
 
 import java.util.Random;
 
@@ -17,6 +21,7 @@ public class GameRules {
     }
 
     public static void moveDown(Player player) {
+        Log.e("!","rules");
         rotateAntiClockwise(player.getPlayfieldState());
         move(player);
         rotateAntiClockwise(player.getPlayfieldState());
@@ -132,6 +137,10 @@ public class GameRules {
             neueListe[x][positionNeueListe] = zahl;
         }
 
+        PlayfieldTurn playfieldTurn = new PlayfieldTurnImpl();
+        GameTile gameTile = new GameTileImpl(0,0,1);
+        playfieldTurn.addNewSpawned(gameTile);
+        player.setPlayfieldTurn(playfieldTurn);
         // spielfeld einfügen
         playfieldState.setField(neueListe);
     }

@@ -1,6 +1,9 @@
 package com.example.a2048mult.game.logic;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.fragment.app.Fragment;
@@ -42,29 +45,42 @@ public class GameLogic implements InGameControl, ReceiveListener, GameControlMen
 
     @Override
     public void swipe(MoveType move) {
-        switch (move) {
-            case UP:
-                for (Player player : gameState.getAllPlayer()) {
-                    GameRules.moveUp(player);
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                switch (move) {
+                    case UP:
+                        for (Player player : gameState.getAllPlayer()) {
+                            GameRules.moveUp(player);
+                        }
+                        break;
+                    case DOWN:
+                        Log.e("!","logic");
+                        for (Player player : gameState.getAllPlayer()) {
+                            GameRules.moveDown(player);
+                        }
+                        break;
+                    case LEFT:
+                        for (Player player : gameState.getAllPlayer()) {
+                            GameRules.moveLeft(player);
+                        }
+                        break;
+                    case RIGHT:
+                        for (Player player : gameState.getAllPlayer()) {
+                            GameRules.moveRight(player);
+                        }
+                        break;
                 }
-                break;
-            case DOWN:
-                for (Player player : gameState.getAllPlayer()) {
-                    GameRules.moveDown(player);
-                }
-                break;
-            case LEFT:
-                for (Player player : gameState.getAllPlayer()) {
-                    GameRules.moveLeft(player);
-                }
-                break;
-            case RIGHT:
-                for (Player player : gameState.getAllPlayer()) {
-                    GameRules.moveRight(player);
-                }
-                break;
-        }
-        gameUI.drawGameState(this.gameState);
+                gameUI.drawGameState(GameLogic.this.gameState);
+            }
+        };
+
+
+        HandlerThread handlerThread = new HandlerThread("handleMove",0);
+        handlerThread.start();
+        Handler handler = new Handler(handlerThread.getLooper());
+        handler.post(r);
+
     }
 
     @Override

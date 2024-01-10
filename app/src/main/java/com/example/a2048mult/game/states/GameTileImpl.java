@@ -14,6 +14,20 @@ public class GameTileImpl implements GameTile {
         GameTile.super.updateCoordinates(newX, newY);
     }
 
+    public GameTileImpl(int newX, int newY, int level){
+        this.newX = newX;
+        this.newY = newY;
+        this.level = level;
+    }
+
+    public GameTileImpl(int oldX, int oldY, int newX, int newY, int level){
+        this.oldX = oldX;
+        this.oldY = oldY;
+        this.newX = newX;
+        this.newY = newY;
+        this.level = level;
+    }
+
     @Override
     public void changeNewToOld() {
         GameTile.super.changeNewToOld();

@@ -1,6 +1,7 @@
 package com.example.a2048mult.ui.game;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,33 +12,70 @@ import androidx.fragment.app.Fragment;
 
 import com.example.a2048mult.databinding.FragmentGameBinding;
 import com.example.a2048mult.game.logic.GameLogic;
-import com.example.a2048mult.game.logic.InGameControl;
 import com.example.a2048mult.game.states.GameState;
 import com.example.a2048mult.game.states.MoveType;
 import com.example.a2048mult.game.states.Player;
 import com.example.a2048mult.ui.game.playfield.PlayfieldUI;
 import com.example.a2048mult.ui.game.playfield.PlayfieldWithPlayerView;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-
 
 public class GameFragment extends Fragment implements GameUI {
-
-    public static final String GAMELOGIC = "gamelogic";
-
     private FragmentGameBinding binding;
-
+    private PlayfieldUI[] playfieldUIs;
 
     public GameFragment() {
         // Required empty public constructor
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentGameBinding.inflate(getLayoutInflater());
         GameLogic.getInstance().initDrawGameUI(this);
-        binding.getRoot().setOnTouchListener(new InputListener(binding.getRoot().getContext()) {
+
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    @Override
+    public void initDrawGameState(GameState gameState) throws IllegalArgumentException {
+        Player[] players = gameState.getAllPlayer();
+        this.playfieldUIs = new PlayfieldUI[players.length];
+
+
+        for (int i = 0; i < players.length; i++) {
+            playfieldUIs[i] = new PlayfieldWithPlayerView(getContext());
+            playfieldUIs[i].initPlayer(players[i]);
+        }
+
+        switch (players.length) {
+            case 1:
+                drawSingleplayer(playfieldUIs[0], players[0]);
+                break;
+            case 2:
+                drawMultiplayer2();
+                break;
+            case 3:
+                drawMultiplayer3();
+                break;
+            case 4:
+                drawMultiplayer4();
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid amount of players. It should be > 0 && < 4");
+
+        }
+        binding.inputObject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("!", "cllick");
+            }
+        });
+        binding.inputObject.setOnTouchListener(new InputListener(binding.getRoot().getContext()) {
             @Override
             public void onLeft() {
                 GameLogic.getInstance().swipe(MoveType.LEFT);
@@ -45,6 +83,7 @@ public class GameFragment extends Fragment implements GameUI {
 
             @Override
             public void onDown() {
+                Log.e("!", "Fragment");
                 GameLogic.getInstance().swipe(MoveType.DOWN);
             }
 
@@ -58,47 +97,10 @@ public class GameFragment extends Fragment implements GameUI {
                 GameLogic.getInstance().swipe(MoveType.RIGHT);
             }
         });
-        return binding.getRoot();
     }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-
-    @Override
-    public void initDrawGameState(GameState gameState) throws IllegalArgumentException {
-        Player[] players = gameState.getAllPlayer();
-        PlayfieldUI[] playfieldUIs = new PlayfieldUI[players.length];
-
-
-        for (int i = 0; i < players.length; i++) {
-            playfieldUIs[i] = new PlayfieldWithPlayerView(getContext());
-            playfieldUIs[i].initPlayer(players[i]);
-        }
-
-        switch (players.length) {
-            case 1:
-                drawSingleplayer(playfieldUIs[0],players[0]);
-                break;
-            case 2:
-                drawMultiplayer2();
-                break;
-            case 3:
-                drawMultiplayer3();
-                break;
-            case 4:
-                drawMultiplayer4();
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid amount of players. It should be > 0 && < 4");
-        }
-    }
-
     private void drawSingleplayer(PlayfieldUI playfieldUI, Player player) {
         View playfield = (View) playfieldUI;
-        playfieldUI.drawPlayer(player);
+        playfieldUI.initPlayer(player);
 
         playfield.setId(ConstraintLayout.generateViewId());
         binding.playfieldContainer.addView(playfield);
@@ -124,10 +126,10 @@ public class GameFragment extends Fragment implements GameUI {
 
     @Override
     public void drawGameState(GameState gameState) {
-        for (Player player:gameState.getAllPlayer()) {
-
-            player.getPlayfieldTurn();
+        for (int i = 0; i < gameState.getAllPlayer().length; i++) {
+            this.playfieldUIs[i].drawPlayfieldTurn(
+                    gameState.getAllPlayer()[i].getPlayfieldTurn()
+            );
         }
     }
-
 }

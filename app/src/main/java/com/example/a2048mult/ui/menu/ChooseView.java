@@ -1,6 +1,8 @@
 package com.example.a2048mult.ui.menu;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -98,16 +100,29 @@ public class ChooseView extends ConstraintLayout {
 
 
     private View createPlayfieldPreview(int size) {
-        Random rd = new Random();
-        PlayfieldView playfield = new PlayfieldView(binding.getRoot().getContext());
-        playfield.drawPlayfieldBackground(size, size);
-        int[][] levels = new int[size][size];
-        for (int y = 0; y < size; y++) {
-            for (int x = 0; x < size; x++) {
-                levels[y][x] = rd.nextInt(12);
+        PlayfieldView[] playfield = new PlayfieldView[1];
+        playfield[0] = new PlayfieldView(binding.getRoot().getContext());
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                Random rd = new Random();
+
+                playfield[0].drawPlayfieldBackground(size, size);
+                int[][] levels = new int[size][size];
+                for (int y = 0; y < size; y++) {
+                    for (int x = 0; x < size; x++) {
+                        levels[y][x] = rd.nextInt(12);
+                    }
+                }
+                playfield[0].drawPlayfieldState(levels);
             }
-        }
-        playfield.drawPlayfieldState(levels);
-        return playfield;
+        };
+
+        HandlerThread handlerThread = new HandlerThread("createChoose",0);
+        handlerThread.start();
+        Handler handler = new Handler(handlerThread.getLooper());
+        handler.post(r);
+
+        return playfield[0];
     }
 }

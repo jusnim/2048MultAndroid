@@ -60,11 +60,6 @@ public class PlayfieldWithPlayerView extends ConstraintLayout implements Playfie
     }
 
     @Override
-    public void drawPlayer(Player player) {
-        this.playfieldView.drawPlayer(player);
-    }
-
-    @Override
     public void drawPlayfieldBackground(int width, int height) {
         this.playfieldView.drawPlayfieldBackground(width, height);
     }
