@@ -142,6 +142,7 @@ public class GameRules {
 //        player.setPlayfieldTurn(playfieldTurn);
         // spielfeld einfügen
         playfieldState.setField(neueListe);
+        GameRules.spawnTile(player);
     }
 
     public static void rotateAntiClockwise(PlayfieldState playfieldState) {
@@ -153,6 +154,11 @@ public class GameRules {
             }
         }
         playfieldState.setField(output);
+    }
+
+    public static void initGame(Player player){
+        GameRules.spawnTile(player);
+        GameRules.spawnTile(player);
     }
 
 }

@@ -25,8 +25,6 @@ import com.example.a2048mult.game.states.PlayfieldTurnAnimationType;
 
 
 public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
-
-    // TODO make each PLayfield a thread and playfieldtile a theraed
     private ViewPlayfieldBinding binding;
     private ConstraintSet constraintSet;
 
@@ -92,8 +90,6 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
      * @see ConstraintLayout
      */
     private void drawPlayfieldState(int[][] data, Boolean inBackground) {
-        // TODO remove lines in implementation, so less nesting, so faster
-
         int width = data.length;
         int height = data[0].length;
 
@@ -161,7 +157,7 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
         }
     }
 
-    // TODO private
+
     public void drawPlayfieldBackground(int width, int height) {
         int[][] bgData = new int[height][width];
         drawPlayfieldState(bgData, true);
@@ -192,7 +188,6 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
         }
     }
 
-    // TODO private
     public void drawPlayfieldState(int[][] data) {
 
         int[][] copyData = data.clone();
@@ -259,37 +254,32 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
 
     private ObjectAnimator replaceTile(int x, int y, int level, long animationDuration) {
         final ObjectAnimator[] scaleUp = new ObjectAnimator[1];
-        ((Activity) binding.getRoot().getContext()).runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        ((Activity) binding.getRoot().getContext()).runOnUiThread(() -> {
+            constraintSet.clone(binding.playfieldContainer);
+
+            View tileToRemove = allViews[y][x];
+            int id = tileToRemove.getId();
+            constraintSet.clear(tileToRemove.getId());
+            int index = binding.playfieldContainer.indexOfChild(tileToRemove);
+            binding.playfieldContainer.removeView(tileToRemove);
+
+            PlayfieldTileView newTile = new PlayfieldTileView(binding.playfieldContainer.getContext());
+            newTile.setLevel(level);
+            newTile.setId(id);
+            binding.playfieldContainer.addView(newTile, index);
+
+            doConstraintsBasedOnPosition(x, y, allViews.length, allViews[0].length);
+            constraintSet.applyTo(binding.playfieldContainer);
+
+            allViews[y][x] = newTile;
+
+            scaleUp[0] = ObjectAnimator.ofPropertyValuesHolder(newTile,
+                    PropertyValuesHolder.ofFloat("scaleX", 0.2f, 1f),
+                    PropertyValuesHolder.ofFloat("scaleY", 0.2f, 1f));
 
 
-                constraintSet.clone(binding.playfieldContainer);
-
-                View tileToRemove = allViews[y][x];
-                int id = tileToRemove.getId();
-                constraintSet.clear(tileToRemove.getId());
-                int index = binding.playfieldContainer.indexOfChild(tileToRemove);
-                binding.playfieldContainer.removeView(tileToRemove);
-
-                PlayfieldTileView newTile = new PlayfieldTileView(binding.playfieldContainer.getContext());
-                newTile.setLevel(level);
-                newTile.setId(id);
-                binding.playfieldContainer.addView(newTile, index);
-
-                doConstraintsBasedOnPosition(x, y, allViews.length, allViews[0].length);
-                constraintSet.applyTo(binding.playfieldContainer);
-
-                allViews[y][x] = newTile;
-
-                scaleUp[0] = ObjectAnimator.ofPropertyValuesHolder(newTile,
-                        PropertyValuesHolder.ofFloat("scaleX", 0.2f, 1f),
-                        PropertyValuesHolder.ofFloat("scaleY", 0.2f, 1f));
-
-
-                scaleUp[0].setDuration(animationDuration);
-                scaleUp[0].start();
-            }
+            scaleUp[0].setDuration(animationDuration);
+            scaleUp[0].start();
         });
         return scaleUp[0];
     }

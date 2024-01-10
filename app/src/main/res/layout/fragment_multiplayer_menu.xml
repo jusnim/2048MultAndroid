@@ -63,14 +63,15 @@
         android:id="@+id/usernameSection"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/connectList"
+        app:layout_constraintBottom_toTopOf="@id/connectContainer"
         app:layout_constraintEnd_toEndOf="@id/chooseGuidelineRight"
         app:layout_constraintStart_toStartOf="@id/chooseGuidelineLeft"
+
         app:layout_constraintTop_toBottomOf="@id/title">
 
         <LinearLayout
             android:id="@+id/usernameField"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -98,6 +99,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins"
                 android:includeFontPadding="false"
+                android:maxLines="1"
                 android:text="coolerGamer"
 
                 android:textSize="30sp"
@@ -108,10 +110,11 @@
         </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatButton
+            android:maxLines="1"
             android:id="@+id/buttonChangeUsername"
             style="@style/ButtonTheme"
 
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/button_shape"
             android:text="change"
@@ -124,7 +127,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/connectList"
+        android:id="@+id/connectContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/createLobbyField"
@@ -187,6 +190,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
+                android:id="@+id/connectList"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/ic_launcher_background"

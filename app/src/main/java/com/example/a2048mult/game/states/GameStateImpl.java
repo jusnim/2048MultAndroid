@@ -11,6 +11,9 @@ public class GameStateImpl implements GameState {
     // if value false --> the player with this index  quitted
     private boolean[] onlineStatusPlayer;
 
+    // if value false --> the player with this index lost
+    private boolean[] playingPlayer;
+
     public GameStateImpl(Player[] playerList){
         this.playerList = playerList;
     }
@@ -40,7 +43,7 @@ public class GameStateImpl implements GameState {
     @Override
     public void nextPlayer() {
         currentPlayerIndex++;
-        if (!onlineStatusPlayer[currentPlayerIndex]) {
+        if (!onlineStatusPlayer[currentPlayerIndex] || !playingPlayer[currentPlayerIndex] ) {
             nextPlayer();
         }
     }
@@ -62,5 +65,33 @@ public class GameStateImpl implements GameState {
     @Override
     public Player[] getAllPlayer() {
         return playerList;
+    }
+
+    @Override
+    public Player[] getPlayerLost() {
+        Player[] lostPlayer = new Player[playerList.length];
+
+        for (int i = 0; i < playingPlayer.length; i++){
+            if (! playingPlayer[i]){
+                lostPlayer[i] = playerList[i];
+            }
+        }
+        // trim array, so no null values are there
+        lostPlayer = (Player[]) Arrays.asList(lostPlayer).stream().filter(Objects::nonNull).toArray();
+        return lostPlayer;
+    }
+
+    @Override
+    public Player[] getPlayerPlaying() {
+        Player[] playingPlayerx = new Player[playerList.length];
+
+        for (int i = 0; i < playingPlayer.length; i++){
+            if (playingPlayer[i]){
+                playingPlayerx[i] = playerList[i];
+            }
+        }
+        // trim array, so no null values are there
+        playingPlayerx = (Player[]) Arrays.asList(playingPlayerx).stream().filter(Objects::nonNull).toArray();
+        return playingPlayerx;
     }
 }
