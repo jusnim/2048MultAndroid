@@ -6,7 +6,6 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -16,11 +15,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.example.a2048mult.databinding.ViewPlayfieldBinding;
-import com.example.a2048mult.game.logic.GameTile;
-import com.example.a2048mult.game.logic.Player;
-import com.example.a2048mult.game.logic.PlayfieldTurn;
-import com.example.a2048mult.game.logic.PlayfieldTurnAnimTuple;
-import com.example.a2048mult.game.logic.PlayfieldTurnAnimationTypes;
+import com.example.a2048mult.game.states.GameTile;
+import com.example.a2048mult.game.states.Player;
+import com.example.a2048mult.game.states.PlayfieldTurn;
+import com.example.a2048mult.game.states.PlayfieldTurnAnimTuple;
+import com.example.a2048mult.game.states.PlayfieldTurnAnimationType;
 
 
 public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
@@ -151,7 +150,7 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
 
     @Override
     public void drawPlayfieldTurn(PlayfieldTurn playfieldTurn) {
-        PlayfieldTurnAnimTuple<PlayfieldTurnAnimationTypes, GameTile> animation;
+        PlayfieldTurnAnimTuple<PlayfieldTurnAnimationType, GameTile> animation;
 
         animation = playfieldTurn.pollNextAnimation();
         while (animation != null) {
@@ -160,7 +159,7 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
         }
     }
 
-    private void doAnimation(PlayfieldTurnAnimTuple<PlayfieldTurnAnimationTypes, GameTile> animation) {
+    private void doAnimation(PlayfieldTurnAnimTuple<PlayfieldTurnAnimationType, GameTile> animation) {
         switch (animation.type) {
             case SPAWN:
                 spawnTileAt(animation.tile.getNewX(), animation.tile.getNewY(), animation.tile.getLevel());

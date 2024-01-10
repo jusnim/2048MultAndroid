@@ -10,8 +10,8 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.a2048mult.databinding.ViewPlayfieldWithPlayerBinding;
-import com.example.a2048mult.game.logic.Player;
-import com.example.a2048mult.game.logic.PlayfieldTurn;
+import com.example.a2048mult.game.states.Player;
+import com.example.a2048mult.game.states.PlayfieldTurn;
 
 public class PlayfieldWithPlayerView extends ConstraintLayout implements PlayfieldUI {
     private ViewPlayfieldWithPlayerBinding binding;

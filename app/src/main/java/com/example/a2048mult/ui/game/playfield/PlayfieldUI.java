@@ -1,8 +1,7 @@
 package com.example.a2048mult.ui.game.playfield;
 
-import com.example.a2048mult.game.logic.Player;
-import com.example.a2048mult.game.logic.PlayfieldState;
-import com.example.a2048mult.game.logic.PlayfieldTurn;
+import com.example.a2048mult.game.states.Player;
+import com.example.a2048mult.game.states.PlayfieldTurn;
 
 public interface PlayfieldUI  {
     /**

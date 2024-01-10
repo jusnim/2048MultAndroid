@@ -1,4 +1,7 @@
-package com.example.a2048mult.game.logic;
+package com.example.a2048mult.game.states;
+
+import com.example.a2048mult.game.states.PlayfieldState;
+import com.example.a2048mult.game.states.PlayfieldTurn;
 
 import java.io.Serializable;
 
@@ -24,10 +27,11 @@ public interface Player extends Serializable {
     void addScore(long points);
 
     /**
-     * get the Playfield associated with the Player
+     * getter for Playfield
      * @return
      */
     PlayfieldState getPlayfieldState();
+
 
     /**
      * setter for PlayfieldState

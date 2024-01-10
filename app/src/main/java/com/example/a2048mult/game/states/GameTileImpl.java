@@ -1,4 +1,4 @@
-package com.example.a2048mult.game.logic;
+package com.example.a2048mult.game.states;
 
 public class GameTileImpl implements GameTile {
 

@@ -1,4 +1,4 @@
-package com.example.a2048mult.game.logic;
+package com.example.a2048mult.game.states;
 
 public class PlayerImpl implements Player {
 
@@ -34,6 +34,7 @@ public class PlayerImpl implements Player {
     public PlayfieldState getPlayfieldState() {
         return this.playfieldState;
     }
+
 
     @Override
     public void setPlayfieldSize(int size) {

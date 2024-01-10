@@ -1,7 +1,4 @@
-package com.example.a2048mult.game;
-
-import com.example.a2048mult.game.logic.Player;
-import com.example.a2048mult.game.logic.PlayfieldTurn;
+package com.example.a2048mult.game.states;
 
 import java.io.Serializable;
 

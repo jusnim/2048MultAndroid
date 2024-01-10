@@ -1,8 +1,6 @@
 package com.example.a2048mult.ui.game;
 
-import com.example.a2048mult.GameDraw;
-import com.example.a2048mult.game.GameState;
-import com.example.a2048mult.game.logic.PlayfieldState;
+import com.example.a2048mult.game.states.GameState;
 
 public interface GameUI {
     /**
@@ -10,7 +8,7 @@ public interface GameUI {
      *  used when starting a new game
      *  important for setting game once
      */
-    public void initGameState(GameState gameState) throws IllegalAccessException;
+    public void initDrawGameState(GameState gameState) throws IllegalAccessException;
 
     /**
      * draw current Gamestate

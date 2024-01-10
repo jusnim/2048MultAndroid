@@ -1,4 +1,4 @@
-package com.example.a2048mult.game.logic;
+package com.example.a2048mult.game.states;
 
 /**
  * represents the data structure of a tile on a playfield
