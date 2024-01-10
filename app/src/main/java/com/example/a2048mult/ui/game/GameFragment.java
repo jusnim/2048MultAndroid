@@ -30,32 +30,9 @@ public class GameFragment extends Fragment implements GameUI {
     private FragmentGameBinding binding;
 
 
-    private InGameControl inGameControl;
-
     public GameFragment() {
         // Required empty public constructor
     }
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            this.inGameControl = byteArrayToGameState(getArguments().getByteArray(GAMELOGIC));
-        }
-    }
-
-    private InGameControl byteArrayToGameState(byte[] byteArray) {
-        try {
-            ByteArrayInputStream isB = new ByteArrayInputStream(byteArray);
-            ObjectInputStream isO = new ObjectInputStream(isB);
-            return (InGameControl) isO.readObject();
-
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentGameBinding.inflate(getLayoutInflater());

@@ -90,22 +90,7 @@ public class GameLogic implements InGameControl, ReceiveListener, GameControlMen
         this.gameState = new GameStateImpl(this.lobbySettings.getAllPlayer());
         this.gameStarted = true;
 
-        // serialize gamelogic object to byte Array
-        byte[] gamestateContent;
-        try {
-            ByteArrayOutputStream osB = new ByteArrayOutputStream();
-            ObjectOutputStream osO = new ObjectOutputStream(osB);
-            osO.writeObject(this);
-            osB.flush();
-            gamestateContent = osB.toByteArray();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        Bundle bundle = new Bundle();
-        bundle.putByteArray(GameFragment.GAMELOGIC, gamestateContent);
-
-        NavController navController = NavHostFragment.findNavController(fragment);
-        navController.navigate(resID, bundle);
+        NavHostFragment.findNavController(fragment).navigate(resID);
     }
 
     @Override
