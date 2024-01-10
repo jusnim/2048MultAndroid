@@ -38,10 +38,6 @@ public class GameLogic implements InGameControl, ReceiveListener, GameControlMen
 
     @Override
     public void swipe(MoveType move) {
-        int[][] field = this.gameState.getAllPlayer()[0].getPlayfieldState().getField();
-        Log.e("!",
-                String.valueOf(field[0][0] + "" + field[0][1] + "" + field[1][0] + "" + field[1][1])
-        );
         Runnable r = () -> {
             switch (move) {
                 case UP:
@@ -50,7 +46,6 @@ public class GameLogic implements InGameControl, ReceiveListener, GameControlMen
                     }
                     break;
                 case DOWN:
-                    Log.e("!", "logic");
                     for (Player player : gameState.getAllPlayer()) {
                         GameRules.moveDown(player);
                     }
@@ -68,9 +63,6 @@ public class GameLogic implements InGameControl, ReceiveListener, GameControlMen
             }
             gameUI.drawGameState(GameLogic.this.gameState);
         };
-        Log.e("!",
-                String.valueOf(field[0][0] + "" + field[0][1] + "" + field[1][0] + "" + field[1][1])
-        );
 
         HandlerThread handlerThread = new HandlerThread("handleMove", 0);
         handlerThread.start();
@@ -92,7 +84,7 @@ public class GameLogic implements InGameControl, ReceiveListener, GameControlMen
 
     @Override
     public void startGame(Fragment fragment, int resID) throws IllegalStateException {
-        // TODO create GameState, sendGameState to other Devices
+        // TODO sendGameState to other Devices
         if (this.lobbySettings == null) {
             throw new IllegalStateException("LobbySettings isnt set");
         }
@@ -106,8 +98,7 @@ public class GameLogic implements InGameControl, ReceiveListener, GameControlMen
 
         Runnable r = () -> {
             for (Player player : gameState.getAllPlayer()) {
-                GameRules.spawnTile(player);
-                GameRules.spawnTile(player);
+                GameRules.initGame(player);
             }
         };
         HandlerThread handlerThread = new HandlerThread("spawnFirstTiles", 0);

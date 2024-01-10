@@ -43,7 +43,7 @@ public class SinglePlayerMenuFragment extends Fragment implements MenuLobbyChang
     private void startSingleplayer() {
         this.lobbySettings = new LobbySettingsImpl();
 
-        Player player = new PlayerImpl("username", 0, new PlayfieldStateImpl());
+        Player player = new PlayerImpl("cICH HABE KEInsad Ahnug was ich HIER mache", 0, new PlayfieldStateImpl());
         this.lobbySettings.setPlayFieldSize(binding.chooseView.getSelectedPlayfieldSize());
 
         this.lobbySettings.addPlayer(player);
@@ -56,6 +56,7 @@ public class SinglePlayerMenuFragment extends Fragment implements MenuLobbyChang
 
     @Override
     public void notifyChangeInLobby() {
+        // no need to update Lobby in Singleplayer
         // TODO update UI based on gameLogic-object
         this.lobbySettings.getAllPlayer();
         this.lobbySettings.getLeader();

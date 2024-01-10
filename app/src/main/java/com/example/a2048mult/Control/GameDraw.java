@@ -1,4 +1,4 @@
-package com.example.a2048mult;
+package com.example.a2048mult.Control;
 
 public interface GameDraw {
     /**

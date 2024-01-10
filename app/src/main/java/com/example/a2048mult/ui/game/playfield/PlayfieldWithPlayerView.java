@@ -38,7 +38,7 @@ public class PlayfieldWithPlayerView extends ConstraintLayout implements Playfie
         init(context);
     }
 
-    // TODO score and username is not displaying
+    // TODO score and username better xml
     private void init(@NonNull Context context) {
         binding = ViewPlayfieldWithPlayerBinding.inflate(LayoutInflater.from(context), this, true);
 
@@ -53,6 +53,7 @@ public class PlayfieldWithPlayerView extends ConstraintLayout implements Playfie
     @Override
     public void initPlayer(Player player) {
         this.playfieldView.initPlayer(player);
+        binding.name.setText(player.getName().toString());
     }
 
     private void updateScore(long score) {

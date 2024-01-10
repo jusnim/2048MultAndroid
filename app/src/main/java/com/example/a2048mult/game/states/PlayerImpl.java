@@ -17,12 +17,12 @@ public class PlayerImpl implements Player {
 
     @Override
     public String getName() {
-        return null;
+        return this.name;
     }
 
     @Override
     public long getScore() {
-        return 0;
+        return this.score;
     }
 
     @Override

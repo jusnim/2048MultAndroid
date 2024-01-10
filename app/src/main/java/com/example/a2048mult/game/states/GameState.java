@@ -42,9 +42,22 @@ public interface GameState extends Serializable {
      * @return
      */
     Player[] getQuittedPlayer();
+
     /**
      * get all player
      * @return
      */
     Player[] getAllPlayer();
+
+    /**
+     * get all lost player
+     * @return
+     */
+    Player[] getPlayerLost();
+
+    /**
+     * get all playing player
+     * @return
+     */
+    Player[] getPlayerPlaying();
 }
