@@ -3,10 +3,11 @@ package com.example.a2048mult.game.states;
 import java.io.Serializable;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class PlayfieldTurnImpl implements PlayfieldTurn, Serializable {
 
-    private Queue<PlayfieldTurnAnimTuple<PlayfieldTurnAnimationType, GameTile>> animationQueue = new PriorityQueue<>();
+    private Queue<PlayfieldTurnAnimTuple<PlayfieldTurnAnimationType, GameTile>> animationQueue = new ConcurrentLinkedQueue<>();
     @Override
 
     public void addNewSpawned(GameTile tile) {

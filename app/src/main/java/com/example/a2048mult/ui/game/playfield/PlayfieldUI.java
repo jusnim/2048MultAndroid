@@ -11,7 +11,6 @@ public interface PlayfieldUI  {
      */
     public void initPlayer(Player player);
 
-    void drawPlayfieldBackground(int width, int height);
 
     /**
      * draws animations, after that UI represents PlayfieldState

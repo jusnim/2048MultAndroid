@@ -36,7 +36,6 @@ public class PlayfieldTestFragment extends Fragment {
 
         binding = FragmentPlayfieldTestBinding.inflate(getLayoutInflater());
         lm = new LinearLayout(binding.getRoot().getContext());
-        protoPlayfield(4, 4);
 
 //        Toast.makeText(binding.getRoot().getContext(), "lol", Toast.LENGTH_SHORT).show();
 
@@ -66,31 +65,14 @@ public class PlayfieldTestFragment extends Fragment {
         binding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                protoSetupMove4x4();
+
             }
         });
 
         return binding.getRoot();
     }
 
-    private void protoPlayfield(int width, int height) {
-        PlayfieldView playfield = new PlayfieldView(binding.getRoot().getContext());
-////
-        int[][] showcaseData = new int[height][width];
-        int level = 1;
-        for (int y = 0; y < height; y++) {
-            int[] row = new int[width];
-            for (int x = 0; x < width; x++) {
-                row[x] = level;
-                level++;
-            }
-            showcaseData[y] = row;
-        }
-        this.playfield = playfield;
-        playfield.drawPlayfieldBackground(width, height);
-        playfield.drawPlayfieldState(showcaseData);
-        binding.getRoot().addView(playfield);
-    }
+
 
     private void protoRemovePlayfield(int width, int height) {
         for (int y = 0; y < height; y++) {
@@ -110,18 +92,5 @@ public class PlayfieldTestFragment extends Fragment {
         }
     }
 
-    private void protoSetupMove4x4() {
-        binding.getRoot().removeView(this.playfield);
-        PlayfieldView playfield = new PlayfieldView(binding.getRoot().getContext());
-        int[][] showcaseData = new int[4][4];
-        showcaseData[0] = new int[]{5, 2, 0, 2};
-        showcaseData[1] = new int[]{0, 0, 0, 0};
-        showcaseData[2] = new int[]{5, 0, 0, 0};
-        showcaseData[3] = new int[]{0, 0, 0, 0};
 
-        this.playfield = playfield;
-        playfield.drawPlayfieldBackground(4, 4);
-        playfield.drawPlayfieldState(showcaseData);
-        binding.getRoot().addView(playfield);
-    }
 }

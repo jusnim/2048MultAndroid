@@ -60,7 +60,6 @@ public class PlayfieldWithPlayerView extends ConstraintLayout implements Playfie
         binding.score.setText(Long.toString(score));
     }
 
-    @Override
     public void drawPlayfieldBackground(int width, int height) {
         this.playfieldView.drawPlayfieldBackground(width, height);
     }

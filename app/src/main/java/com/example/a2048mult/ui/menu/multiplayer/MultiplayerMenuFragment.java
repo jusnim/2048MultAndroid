@@ -3,15 +3,20 @@ package com.example.a2048mult.ui.menu.multiplayer;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.a2048mult.R;
 import com.example.a2048mult.databinding.FragmentMultiplayerMenuBinding;
+import com.example.a2048mult.game.logic.GameLogic;
 
 public class MultiplayerMenuFragment extends Fragment {
 
@@ -24,13 +29,25 @@ public class MultiplayerMenuFragment extends Fragment {
                 v -> changeUsername()
         );
         binding.buttonBluetooth.setOnClickListener(
+                // TODO remove test
                 v -> test()
+        );
+        binding.buttonCreateLobby.setOnClickListener(
+                v -> createLobby()
         );
 
         return binding.getRoot();
     }
 
+    private void createLobby() {
+        Log.e("!","test");
+        NavHostFragment.findNavController(this).navigate(R.id.action_multiplayerMenu_to_multiplayerMenuLobbyFragment);
+    }
+
+
+
     private void test() {
+        binding.connectList.removeView(binding.noLobbyInfo);
         binding.connectList.addView(new LobbyEntryView(getContext()));
     }
 

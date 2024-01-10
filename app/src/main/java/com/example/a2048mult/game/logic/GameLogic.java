@@ -10,6 +10,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.a2048mult.game.currentlyNotUsed.ReceiveListener;
 import com.example.a2048mult.game.states.GameState;
 import com.example.a2048mult.game.states.GameStateImpl;
+import com.example.a2048mult.game.states.GameTileImpl;
 import com.example.a2048mult.game.states.LobbySettings;
 import com.example.a2048mult.game.states.MoveType;
 import com.example.a2048mult.game.states.Player;
@@ -41,9 +42,10 @@ public class GameLogic implements InGameControl, ReceiveListener, GameControlMen
         Runnable r = () -> {
             switch (move) {
                 case UP:
-                    for (Player player : gameState.getAllPlayer()) {
-                        GameRules.moveUp(player);
-                    }
+                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewSpawned(new GameTileImpl(0, 0, 1));
+//                    for (Player player : gameState.getAllPlayer()) {
+//                        GameRules.moveUp(player);
+//                    }
                     break;
                 case DOWN:
                     for (Player player : gameState.getAllPlayer()) {
