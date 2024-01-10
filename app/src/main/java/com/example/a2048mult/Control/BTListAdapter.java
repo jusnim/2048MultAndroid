@@ -1,5 +1,6 @@
 package com.example.a2048mult.Control;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
@@ -24,8 +25,9 @@ public class BTListAdapter extends BaseAdapter {
         this.app = app;
         btDevicesList = new ArrayList<BluetoothDevice>();
         clickedDevice = null;
-
     }
+
+
 
     public void add(BluetoothDevice device) {
         btDevicesList.add(device);
@@ -61,6 +63,7 @@ public class BTListAdapter extends BaseAdapter {
         return 0;
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         BluetoothDevice btDevice = btDevicesList.get(position);
@@ -68,4 +71,7 @@ public class BTListAdapter extends BaseAdapter {
         textView.setText(btDevice.getName() + ": " + btDevice.getAddress());
         return null;
     }
+
+
+    public  ArrayList<BluetoothDevice> getDevices (){ return this.btDevicesList;}
 }

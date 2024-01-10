@@ -1,6 +1,6 @@
 package com.example.a2048mult.Control;
 
-import com.example.a2048mult.game.states.Player;
+import com.example.a2048mult.game.logic.Player;
 
 /**
  * connects players with their mac addresses
