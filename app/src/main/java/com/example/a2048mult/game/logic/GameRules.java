@@ -44,7 +44,6 @@ public class GameRules {
     public static boolean spawnTile(Player player) {
         // TODO add PLayfieldTurn Spawn
         int[][] field = player.getPlayfieldState().getField();
-//        Log.e("!", String.valueOf(field[0][0]));
 
         boolean freeSpaceForNewTile = false;
         int[][] freeSpaces = new int[field.length* field[0].length][2];
@@ -70,8 +69,6 @@ public class GameRules {
         if (Math.random() > 0.8)
             tileValue = 2;
 
-        Log.e("!", String.valueOf(freeSpaces[rmdPos][0]));
-        Log.e("!", String.valueOf(freeSpaces[rmdPos][1]));
         player.getPlayfieldState().setTile(freeSpaces[rmdPos][0], freeSpaces[rmdPos][1], tileValue);
         return true;
     }
@@ -139,10 +136,10 @@ public class GameRules {
             neueListe[x][positionNeueListe] = zahl;
         }
 
-        PlayfieldTurn playfieldTurn = new PlayfieldTurnImpl();
-        GameTile gameTile = new GameTileImpl(0,0,1);
-        playfieldTurn.addNewSpawned(gameTile);
-        player.setPlayfieldTurn(playfieldTurn);
+//        PlayfieldTurn playfieldTurn = new PlayfieldTurnImpl();
+//        GameTile gameTile = new GameTileImpl(0,0,2,0,1);
+//        playfieldTurn.addNewMove(gameTile);
+//        player.setPlayfieldTurn(playfieldTurn);
         // spielfeld einfügen
         playfieldState.setField(neueListe);
     }

@@ -6,10 +6,10 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.app.Activity;
 import android.content.Context;
-import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -91,7 +91,7 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
      * @implNote level == -1, invisible tile
      * @see ConstraintLayout
      */
-    private void drawPlayfieldStateInContainer(int[][] data, ConstraintLayout container) {
+    private void drawPlayfieldState(int[][] data, Boolean inBackground) {
         // TODO remove lines in implementation, so less nesting, so faster
 
         int width = data.length;
@@ -100,22 +100,16 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
         allViews = new View[height][width];
         constraintSet = new ConstraintSet();
         PlayfieldTileView newTile;
+        ConstraintLayout container = new ConstraintLayout(getContext());
+
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                Looper looper;
-                Boolean addedTile = false;
-                while(! addedTile){
-                    looper = Looper.myLooper();
-                    newTile = new PlayfieldTileView(container.getContext());
-                    newTile.setLevel(data[y][x]);
-                    newTile.setLayoutParams(new LayoutParams(0, 0));
-                    newTile.setId(ConstraintLayout.generateViewId());
-                    if (looper.isCurrentThread()){
-                        container.addView(newTile);
-                        addedTile = true;
-                        allViews[y][x] = newTile;
-                    }
-                }
+                newTile = new PlayfieldTileView(container.getContext());
+                newTile.setLevel(data[y][x]);
+                newTile.setLayoutParams(new LayoutParams(0, 0));
+                newTile.setId(ConstraintLayout.generateViewId());
+                container.addView(newTile);
+                allViews[y][x] = newTile;
             }
         }
 
@@ -126,6 +120,21 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
             }
         }
         constraintSet.applyTo(container);
+
+        if (inBackground) {
+            ((Activity)this.binding.getRoot().getContext()).runOnUiThread(()->{
+                container.setLayoutParams(binding.backgroundContainer.getLayoutParams());
+                binding.getRoot().removeView(binding.backgroundContainer);
+
+                binding.getRoot().addView(container);
+            });
+        } else {
+            ((Activity)this.binding.getRoot().getContext()).runOnUiThread(()->{
+                container.setLayoutParams(binding.playfieldContainer.getLayoutParams());
+                binding.getRoot().removeView(binding.playfieldContainer);
+                binding.getRoot().addView(container);
+            });
+        }
     }
 
     private void doConstraintsBasedOnPosition(int x, int y, int width, int height) {
@@ -155,7 +164,7 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
     // TODO private
     public void drawPlayfieldBackground(int width, int height) {
         int[][] bgData = new int[height][width];
-        drawPlayfieldStateInContainer(bgData, binding.backgroundContainer);
+        drawPlayfieldState(bgData, true);
     }
 
     @Override
@@ -198,7 +207,7 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
                 }
             }
         }
-        drawPlayfieldStateInContainer(copyData, binding.playfieldContainer);
+        drawPlayfieldState(copyData, false);
     }
 
     public ObjectAnimator spawnTileAt(int x, int y, int level) {

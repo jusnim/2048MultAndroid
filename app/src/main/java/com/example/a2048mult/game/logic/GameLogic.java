@@ -1,13 +1,10 @@
 package com.example.a2048mult.game.logic;
 
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Looper;
 import android.util.Log;
 
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.a2048mult.game.currentlyNotUsed.ReceiveListener;
@@ -16,12 +13,8 @@ import com.example.a2048mult.game.states.GameStateImpl;
 import com.example.a2048mult.game.states.LobbySettings;
 import com.example.a2048mult.game.states.MoveType;
 import com.example.a2048mult.game.states.Player;
-import com.example.a2048mult.ui.game.GameFragment;
 import com.example.a2048mult.ui.game.GameUI;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
@@ -45,6 +38,10 @@ public class GameLogic implements InGameControl, ReceiveListener, GameControlMen
 
     @Override
     public void swipe(MoveType move) {
+        int[][] field = this.gameState.getAllPlayer()[0].getPlayfieldState().getField();
+        Log.e("!",
+                String.valueOf(field[0][0] + "" + field[0][1] + "" + field[1][0] + "" + field[1][1])
+        );
         Runnable r = () -> {
             switch (move) {
                 case UP:
@@ -53,7 +50,7 @@ public class GameLogic implements InGameControl, ReceiveListener, GameControlMen
                     }
                     break;
                 case DOWN:
-                    Log.e("!","logic");
+                    Log.e("!", "logic");
                     for (Player player : gameState.getAllPlayer()) {
                         GameRules.moveDown(player);
                     }
@@ -71,9 +68,11 @@ public class GameLogic implements InGameControl, ReceiveListener, GameControlMen
             }
             gameUI.drawGameState(GameLogic.this.gameState);
         };
+        Log.e("!",
+                String.valueOf(field[0][0] + "" + field[0][1] + "" + field[1][0] + "" + field[1][1])
+        );
 
-
-        HandlerThread handlerThread = new HandlerThread("handleMove",0);
+        HandlerThread handlerThread = new HandlerThread("handleMove", 0);
         handlerThread.start();
         Handler handler = new Handler(handlerThread.getLooper());
         handler.post(r);
@@ -111,7 +110,7 @@ public class GameLogic implements InGameControl, ReceiveListener, GameControlMen
                 GameRules.spawnTile(player);
             }
         };
-        HandlerThread handlerThread = new HandlerThread("spawnFirstTiles",0);
+        HandlerThread handlerThread = new HandlerThread("spawnFirstTiles", 0);
         handlerThread.start();
         Handler handler = new Handler(handlerThread.getLooper());
         handler.post(r);
