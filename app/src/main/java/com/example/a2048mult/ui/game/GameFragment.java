@@ -85,6 +85,7 @@ public class GameFragment extends Fragment implements DrawGameUI {
         binding.inputObject.setOnTouchListener(new InputListener(binding.getRoot().getContext()) {
             @Override
             public void onLeft() {
+                Log.e("!", "Fragment");
                 GameLogic.getInstance().swipe(MoveType.LEFT);
             }
 
@@ -96,11 +97,13 @@ public class GameFragment extends Fragment implements DrawGameUI {
 
             @Override
             public void onUp() {
+                Log.e("!", "Fragment");
                 GameLogic.getInstance().swipe(MoveType.UP);
             }
 
             @Override
             public void onRight() {
+                Log.e("!", "Fragment");
                 GameLogic.getInstance().swipe(MoveType.RIGHT);
             }
         });

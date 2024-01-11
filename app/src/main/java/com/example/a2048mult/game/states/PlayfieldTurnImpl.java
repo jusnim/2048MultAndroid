@@ -21,7 +21,12 @@ public class PlayfieldTurnImpl implements PlayfieldTurn, Serializable {
 
     @Override
     public void addNewMerged(GameTile tile1, GameTile tile2, GameTile mergedTile) {
-        animationQueue.add(new PlayfieldTurnAnimTuple<>(PlayfieldTurnAnimationType.MERGE, new GameTile[]{tile1,tile2,mergedTile}));
+        animationQueue.add(new PlayfieldTurnAnimTuple<>(PlayfieldTurnAnimationType.MOVE, new GameTile[]{tile1}));
+        animationQueue.add(new PlayfieldTurnAnimTuple<>(PlayfieldTurnAnimationType.MOVE, new GameTile[]{tile2}));
+//        animationQueue.add(new PlayfieldTurnAnimTuple<>(PlayfieldTurnAnimationType.REMOVE, new GameTile[]{tile1}));
+//        animationQueue.add(new PlayfieldTurnAnimTuple<>(PlayfieldTurnAnimationType.REMOVE, new GameTile[]{tile2}));
+//        animationQueue.add(new PlayfieldTurnAnimTuple<>(PlayfieldTurnAnimationType.SPAWN, new GameTile[]{mergedTile}));
+//        animationQueue.add(new PlayfieldTurnAnimTuple<>(PlayfieldTurnAnimationType.MERGE, new GameTile[]{tile1,tile2,mergedTile}));
     }
 
     @Override

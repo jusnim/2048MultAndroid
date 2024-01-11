@@ -7,6 +7,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -21,6 +22,8 @@ import com.example.a2048mult.game.states.Player;
 import com.example.a2048mult.game.states.PlayfieldTurn;
 import com.example.a2048mult.game.states.PlayfieldTurnAnimTuple;
 import com.example.a2048mult.game.states.PlayfieldTurnAnimationType;
+
+import java.util.Arrays;
 
 
 public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
@@ -193,29 +196,52 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
     public void drawPlayfieldTurn(PlayfieldTurn playfieldTurn) {
         PlayfieldTurnAnimTuple<PlayfieldTurnAnimationType, GameTile[]> animation;
 
+        int counter=0;
         animation = playfieldTurn.pollNextAnimation();
         while (animation != null) {
             doAnimation(animation);
             animation = playfieldTurn.pollNextAnimation();
+            counter++;
         }
+        Log.e("!","counter" + counter);
+
     }
 
     private void doAnimation(PlayfieldTurnAnimTuple<PlayfieldTurnAnimationType, GameTile[]> animation) {
         switch (animation.type) {
             case SPAWN:
-                spawnTileAt(animation.tiles[0].getNewX(), animation.tiles[0].getNewY(), animation.tiles[0].getLevel());
+
+//                spawnTileAt(animation.tiles[0].getNewX(), animation.tiles[0].getNewY(), animation.tiles[0].getLevel());
+                Log.e("!","spawn");
+                spawnTileAt(0, 0,2);
                 break;
             case MOVE:
+
+                Log.e("!", Arrays.deepToString(allViews));
                 moveTile(animation.tiles[0].getOldX(), animation.tiles[0].getOldY(), animation.tiles[0].getNewX(), animation.tiles[0].getNewY());
+
+                Runnable r = () -> {
+                    removeTile(animation.tiles[0].getOldX(), animation.tiles[0].getOldY());
+                    replaceTile(animation.tiles[0].getNewX(), animation.tiles[0].getNewY(), animation.tiles[0].getLevel(), 0);
+                };
+                HandlerThread handlerThread = new HandlerThread("removeOdPlaceMove", 0);
+                handlerThread.start();
+                Handler handler = new Handler(handlerThread.getLooper());
+                handler.postDelayed(r, PlayfieldConfig.animationDurationInMs + 20);
+                Log.e("!", Arrays.deepToString(allViews));
                 break;
             case REMOVE:
+                Log.e("!","remove");
                 removeTile(animation.tiles[0].getNewX(), animation.tiles[0].getNewY());
                 break;
             case MERGE:
-                mergeTile(animation.tiles[0].getOldX(), animation.tiles[0].getOldY(),
-                        animation.tiles[1].getOldX(), animation.tiles[1].getOldY(),
-                        animation.tiles[2].getNewX(), animation.tiles[2].getNewY(),
-                        animation.tiles[0].getLevel() + 1);
+                Log.e("!","merge");
+
+//                mergeTile(animation.tiles[0].getOldX(), animation.tiles[0].getOldY(),
+//                        animation.tiles[1].getOldX(), animation.tiles[1].getOldY(),
+//                        animation.tiles[2].getNewX(), animation.tiles[2].getNewY(),
+//                        animation.tiles[0].getLevel() + 1);
+
         }
     }
 
@@ -234,25 +260,25 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
     public void mergeTile(int x1, int y1, int x2, int y2, int x3, int y3, int level) {
 
 
-        Runnable r = () -> {
-            moveTile(x1, y1, x3, y3);
-            moveTile(x2, y2, x3, y3);
+//        Runnable r = () -> {
+//            moveTile(x1, y1, x3, y3);
+//            moveTile(x2, y2, x3, y3);
 
-            Runnable r2 = () -> {
-                removeTile(x1,y1);
-                removeTile(x2,y2);
-                Runnable r3 = () -> {
-                    spawnTileAt(x3, y3, level);
-                };
-                getHandler().post(r3);
-            };
-            getHandler().postDelayed(r2,PlayfieldConfig.animationDurationInMs+0);
-        };
+//            Runnable r2 = () -> {
+//                removeTile(x1,y1);
+//                removeTile(x2,y2);
+//                Runnable r3 = () -> {
+//                    spawnTileAt(x3, y3, level);
+//                };
+//                getHandler().post(r3);
+//            };
+//            getHandler().postDelayed(r2,PlayfieldConfig.animationDurationInMs+0);
+//        };
 
-        HandlerThread handlerThread = new HandlerThread("move", 0);
-        handlerThread.start();
-        Handler handler = new Handler(handlerThread.getLooper());
-        handler.post(r);
+//        HandlerThread handlerThread = new HandlerThread("move", 0);
+//        handlerThread.start();
+//        Handler handler = new Handler(handlerThread.getLooper());
+//        handler.post(r);
 
 
 //        HandlerThread handlerThread2 = new HandlerThread("spawn", 0);
@@ -292,18 +318,6 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
             animation[0].setDuration(PlayfieldConfig.animationDurationInMs);
             animation[0].start();
         });
-        Runnable r = () -> {
-            removeTile(yFrom, xFrom);
-            // TODO view must be upated in allviews[][]
-//            Runnable r2 = () -> {
-//                replaceTile(xTo, yTo, PlayfieldConfig.invisibleTile, 0);
-//            };
-//            getHandler().postDelayed(r2,2000);
-        };
-        HandlerThread handlerThread = new HandlerThread("removeOdPlaceMove", 0);
-        handlerThread.start();
-        Handler handler = new Handler(handlerThread.getLooper());
-        handler.postDelayed(r, PlayfieldConfig.animationDurationInMs + 20);
 
 
         return animation[0];
