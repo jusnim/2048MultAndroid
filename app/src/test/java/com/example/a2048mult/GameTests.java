@@ -12,7 +12,7 @@ import com.example.a2048mult.game.states.PlayfieldStateImpl;
 import com.example.a2048mult.game.states.PlayfieldTurnAnimTuple;
 import com.example.a2048mult.game.states.PlayfieldTurnAnimationType;
 
-public class gameTests {
+public class GameTests {
 
     @Test
     public void initGameTest(){
