@@ -4,17 +4,19 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import android.util.Log;
-
 import com.example.a2048mult.game.logic.GameRules;
 import com.example.a2048mult.game.states.GameTile;
+import com.example.a2048mult.game.states.MoveType;
 import com.example.a2048mult.game.states.Player;
 import com.example.a2048mult.game.states.PlayerImpl;
+import com.example.a2048mult.game.states.PlayfieldState;
 import com.example.a2048mult.game.states.PlayfieldStateImpl;
 import com.example.a2048mult.game.states.PlayfieldTurnAnimTuple;
 import com.example.a2048mult.game.states.PlayfieldTurnAnimationType;
 
-import org.junit.Test;
+import org.junit.*;
+import org.junit.jupiter.api.Nested;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +39,29 @@ public class GameTests {
         assertEquals(2, counter);
     }
 
+    private int[][] execMoveSwitch(MoveType moveType, int[][] inputArray) {
+        PlayfieldState playfieldstate = new PlayfieldStateImpl();
+        playfieldstate.setField(inputArray);
+        Player player = new PlayerImpl("", 0, playfieldstate);
+
+        switch (moveType) {
+            case UP:
+                GameRules.moveUp(player);
+                break;
+            case DOWN:
+                GameRules.moveDown(player);
+                break;
+            case LEFT:
+                GameRules.moveLeft(player);
+                break;
+            case RIGHT:
+                GameRules.moveRight(player);
+                break;
+        }
+        return playfieldstate.getField();
+    }
+
+
     @Test
     public void calculateAndMoveTest() {
         Player player = new PlayerImpl("Max Mustermann", 0, new PlayfieldStateImpl());
@@ -52,7 +77,7 @@ public class GameTests {
                 {1, 2, 1, 0}};//probable outcome without new spawned tiles
 
         for (int[] line : player.getPlayfieldState().getField()) {
-            for (int level: line) {
+            for (int level : line) {
                 System.out.print(level + " ");
 //                Log.e("!", String.valueOf(level));
             }
@@ -77,7 +102,7 @@ public class GameTests {
         }
 
         for (int[] line : player.getPlayfieldState().getField()) {
-            for (int level: line) {
+            for (int level : line) {
                 System.out.print(level + " ");
 //                Log.e("!", String.valueOf(level));
             }
@@ -88,7 +113,7 @@ public class GameTests {
 
 
         for (int[] line : compare) {
-            for (int level: line) {
+            for (int level : line) {
                 System.out.print(level + " ");
 //                Log.e("!", String.valueOf(level));
             }
@@ -96,4 +121,116 @@ public class GameTests {
         }
 //        assertArrayEquals(compare, player.getPlayfieldState().getField());
     }
+
+    @Nested
+    class moveDown {
+        @Test
+        public void moveDown1() {
+            int[][] inputArray = {
+                    {1, 0, 0, 0},
+                    {0, 0, 0, 0},
+                    {0, 0, 0, 0},
+                    {0, 0, 0, 0},
+            };
+
+            int[][] expectedArrau = {
+                    {0, 0, 0, 0},
+                    {0, 0, 0, 0},
+                    {0, 0, 0, 0},
+                    {1, 0, 0, 0},
+            };
+            int[][] processedArray;
+            processedArray = execMoveSwitch(MoveType.DOWN, inputArray);
+
+            assertArrayEquals(processedArray, expectedArrau);
+        }
+
+        @Test
+        public void moveDown2() {
+            int[][] inputArray = {
+                    {1, 1, 0, 0},
+                    {0, 0, 0, 0},
+                    {0, 0, 1, 0},
+                    {0, 0, 0, 0},
+            };
+
+            int[][] expectedArrau = {
+                    {0, 0, 0, 0},
+                    {0, 0, 0, 0},
+                    {0, 0, 0, 0},
+                    {1, 1, 1, 0},
+            };
+            int[][] processedArray;
+            processedArray = execMoveSwitch(MoveType.DOWN, inputArray);
+
+            assertArrayEquals(processedArray, expectedArrau);
+        }
+
+        @Test
+        public void moveDown3() {
+            int[][] inputArray = {
+                    {1, 1, 1, 1},
+                    {0, 0, 0, 0},
+                    {0, 0, 0, 0},
+                    {0, 0, 0, 0},
+            };
+
+            int[][] expectedArrau = {
+                    {0, 0, 0, 0},
+                    {0, 0, 0, 0},
+                    {0, 0, 0, 0},
+                    {1, 1, 1, 1},
+            };
+            int[][] processedArray;
+            processedArray = execMoveSwitch(MoveType.DOWN, inputArray);
+
+            assertArrayEquals(processedArray, expectedArrau);
+        }
+        @Test
+        public void moveDown4() {
+            int[][] inputArray = {
+                    {1, 1, 1, 1},
+                    {0, 0, 0, 1},
+                    {0, 1, 0, 0},
+                    {0, 0, 0, 0},
+            };
+
+            int[][] expectedArrau = {
+                    {0, 0, 0, 0},
+                    {0, 0, 0, 0},
+                    {0, 0, 0, 0},
+                    {1, 2, 1, 2},
+            };
+            int[][] processedArray;
+            processedArray = execMoveSwitch(MoveType.DOWN, inputArray);
+
+            assertArrayEquals(processedArray, expectedArrau);
+        }
+        @Test
+        public void moveDown5() {
+            int[][] inputArray = {
+                    {1, 1, 1, 1},
+                    {0, 0, 0, 1},
+                    {0, 1, 0, 1},
+                    {1, 0, 0, 0},
+            };
+
+            int[][] expectedArrau = {
+                    {0, 0, 0, 0},
+                    {0, 0, 0, 0},
+                    {0, 0, 0, 1},
+                    {2, 2, 1, 2},
+            };
+            int[][] processedArray;
+            processedArray = execMoveSwitch(MoveType.DOWN, inputArray);
+
+            assertArrayEquals(processedArray, expectedArrau);
+        }
+    }
+    @Nested
+    class moveUp{}
+    @Nested
+    class moveLeft{}
+    @Nested
+    class moveRight{}
 }
