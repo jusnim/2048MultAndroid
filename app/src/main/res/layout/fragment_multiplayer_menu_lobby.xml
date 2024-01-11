@@ -9,7 +9,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/title"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
@@ -26,8 +26,8 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_semibold"
             android:text="2048"
-            android:textSize="80sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:textSize="50sp"
+            app:layout_constraintEnd_toStartOf="@id/textTitle2048Multiplayer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,12 +36,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins"
-            android:text="+ Multiplayer"
 
-            android:textSize="30sp"
+            android:text="+ Multiplayer"
+            android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toEndOf="@id/textTitle2048"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -56,14 +57,16 @@
         android:id="@+id/chooseView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/chooseView"
+        app:layout_constraintBottom_toTopOf="@id/playerList"
         app:layout_constraintEnd_toStartOf="@id/chooseGuidelineRight"
         app:layout_constraintStart_toEndOf="@id/chooseGuidelineLeft"
         app:layout_constraintTop_toBottomOf="@id/title" />
 
+
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:id="@+id/playerList"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginBottom="20sp"
         app:layout_constraintTop_toBottomOf="@id/chooseView"
         app:layout_constraintEnd_toStartOf="@id/chooseGuidelineRight"
@@ -105,7 +108,7 @@
         app:layout_constraintBottom_toTopOf="@id/chooseGuidelineBottom"
         app:layout_constraintEnd_toStartOf="@id/chooseGuidelineRight"
         app:layout_constraintStart_toEndOf="@id/chooseGuidelineLeft"
-        app:layout_constraintTop_toBottomOf="@id/chooseView" />
+        app:layout_constraintTop_toBottomOf="@id/playerList" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/chooseGuidelineBottom"
