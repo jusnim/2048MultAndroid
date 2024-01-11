@@ -6,6 +6,8 @@ import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class BtConnectAsClientThread extends Thread{
 
@@ -15,8 +17,15 @@ public class BtConnectAsClientThread extends Thread{
     public final BluetoothSocket btSocket;
     public final BluetoothDevice btDevice;
 
+    private ArrayList<UUID> candidates;
+
+    private int connectionCount = 0;
+
     @SuppressLint("MissingPermission")
-    public BtConnectAsClientThread(BluetoothDevice device, String UUID) {
+    public BtConnectAsClientThread(BluetoothDevice device) {
+        candidates.add(btManager.getSERVICE_UUID1());
+        candidates.add(btManager.getSERVICE_UUID2());
+        candidates.add(btManager.getSERVICE_UUID3());
         this.btManager = btManager;
         BluetoothSocket tmpSocket = null;
         btDevice = device;
@@ -24,7 +33,8 @@ public class BtConnectAsClientThread extends Thread{
         // Get a BluetoothSocket for connection with the given device
         try {
         Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] Get a BluetoothSocket for connection with the given device");
-        tmpSocket = btDevice.createRfcommSocketToServiceRecord(java.util.UUID.fromString(UUID));
+        tmpSocket = btDevice.createRfcommSocketToServiceRecord(candidates.get(connectionCount));
+        connectionCount++;
         } catch (IOException e) {
         Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] IOException occurred on socket creation");
         }

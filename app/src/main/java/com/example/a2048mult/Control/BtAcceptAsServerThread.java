@@ -6,21 +6,33 @@ import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class BtAcceptAsServerThread extends Thread {
 
     private BluetoothManager btManager;
     public final BluetoothServerSocket btServerSocket;
 
+    private ArrayList<UUID> candidates;
+
+
+
+    private int connectionCount = 0;
+
 
     @SuppressLint("MissingPermission")
-    public BtAcceptAsServerThread(BluetoothManager btManager, String UUID) {
+    public BtAcceptAsServerThread(BluetoothManager btManager) {
+        candidates = new ArrayList<UUID>();
+        candidates.add(btManager.getSERVICE_UUID1());
+        candidates.add(btManager.getSERVICE_UUID2());
+        candidates.add(btManager.getSERVICE_UUID3());
         this.btManager = btManager;
         BluetoothServerSocket tmpSocket = null;
 
         try {
             Log.d(btManager.getLOG_TAG(), "[BtAcceptAsServerThread] Get a BluetoothServerSocket");
-            tmpSocket = btManager.getBluetoothAdapter().listenUsingRfcommWithServiceRecord(btManager.getSERVICE_NAME(), java.util.UUID.fromString(UUID));
+            tmpSocket = btManager.getBluetoothAdapter().listenUsingRfcommWithServiceRecord(btManager.getSERVICE_NAME(),candidates.get(connectionCount));
         } catch (IOException e) {
             Log.d(btManager.getLOG_TAG(), "[BtAcceptAsServerThread] IOException on BluetoothServerSocket creation");
         }
@@ -36,6 +48,7 @@ public class BtAcceptAsServerThread extends Thread {
             try {
                 Log.d(btManager.getLOG_TAG(), "[BtAcceptAsServerThread] Listening and waiting for socket...");
                 btSocket = btServerSocket.accept();
+                connectionCount += 1;
             } catch (IOException e) {
                 Log.d(btManager.getLOG_TAG(), "[BtAcceptAsServerThread] IOException");
                 break;
@@ -49,15 +62,18 @@ public class BtAcceptAsServerThread extends Thread {
                 // Manage connection
                 btManager.btManageConnection(btSocket);
 
-                try {
-                    // Close the useless BluetoothServerSocket
-                    btServerSocket.close();
-                } catch (IOException e) {
-                    Log.d(btManager.getLOG_TAG(), "[BtAcceptAsServerThread] IOException when .close()");
+                if(connectionCount == 3) {
+                    try {
+                        // Close the useless BluetoothServerSocket
+                        btServerSocket.close();
+                    } catch (IOException e) {
+                        Log.d(btManager.getLOG_TAG(), "[BtAcceptAsServerThread] IOException when .close()");
+                    }
+                }
                 }
             }
         }
-    }
+
 
     // Cancel the listening socket and cause the thread to finish
     public void cancel() {
@@ -66,6 +82,10 @@ public class BtAcceptAsServerThread extends Thread {
         } catch (IOException e) {
             Log.d(btManager.getLOG_TAG()    , "[BtAcceptThread] IOException when .close()");
         }
+    }
+
+    public int getConnectionCount(){
+        return connectionCount;
     }
 
    /* public void updateUI(String msgString) {

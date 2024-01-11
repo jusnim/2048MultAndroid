@@ -32,7 +32,7 @@ import java.util.UUID;
 
 public class BluetoothManager {
 
-    private static final BluetoothManager btManager = new BluetoothManager(, new BTListAdapter())
+
     public static final String RESUlT_CONN_OK = "connection_OK";
     public static final int SYS_MSG_WHAT = 3;
     public static final String SYS_MSG_KEY = "system_msg";
@@ -44,7 +44,8 @@ public class BluetoothManager {
     public static final int CLIENTSOCK_THREAD_WHAT = 1;
     private static final int REQUEST_ENABLE_BT = 1;
 
-    
+    private final Activity app;
+
     private final String SERVICE_NAME = "BT_2048";
     private final UUID SERVICE_UUID1 = UUID.fromString("f193cb8f-9353-48d9-b074-da3db1c21f64");
     private final UUID SERVICE_UUID2 = UUID.fromString("26be7207-966e-4512-bb1f-5f53a32d6a81");
@@ -92,7 +93,7 @@ public class BluetoothManager {
 
         //Init Bluetooth and start server socket
         BluetoothDevice btdevice = null;
-        BTinit();
+        //BTinit();
         //btConnectAsServer(UUID);
         btdevice.getAddress();
     }
@@ -103,7 +104,7 @@ public class BluetoothManager {
             //device doesnt support Bluetooth
         } else {
             if (!bluetoothAdapter.isEnabled()) {
-                //TODO
+
                 Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(app, enableIntent, REQUEST_ENABLE_BT, null);
             } else {
@@ -174,7 +175,7 @@ public class BluetoothManager {
             serverSocketThread.cancel();
             serverSocketThread.interrupt();
         }
-        serverSocketThread = new BtAcceptAsServerThread(this,UUID);
+        serverSocketThread = new BtAcceptAsServerThread(this);
         serverSocketThread.start();
     }
 
@@ -187,7 +188,7 @@ public class BluetoothManager {
                 connectClientSocketThread.cancel();
                 connectClientSocketThread.interrupt();
             }
-            connectClientSocketThread = new BtConnectAsClientThread(btDevice, UUID);
+            connectClientSocketThread = new BtConnectAsClientThread(btDevice);
             connectClientSocketThread.start();
         }
     }
@@ -252,6 +253,18 @@ public class BluetoothManager {
     }
     public String getSERVICE_NAME (){
         return this.SERVICE_NAME;
+    }
+
+    public UUID getSERVICE_UUID1() {
+        return SERVICE_UUID1;
+    }
+
+    public UUID getSERVICE_UUID2() {
+        return SERVICE_UUID2;
+    }
+
+    public UUID getSERVICE_UUID3() {
+        return SERVICE_UUID3;
     }
 
     public class BtMessageReceiverThread extends Thread {
