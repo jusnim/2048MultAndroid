@@ -19,10 +19,11 @@ public class GameRules {
         move(player);
         rotateAntiClockwise(player.getPlayfieldState());
         calculateMove(player, beforeField, copyFieldFromPlayer(player), MoveType.UP);
+        GameRules.spawnTile(player);
     }
 
     public static void moveDown(Player player) {
-        Log.e("!", "rules");
+//        Log.e("!", "rules");
         int[][] beforeField = copyFieldFromPlayer(player);
         rotateAntiClockwise(player.getPlayfieldState());
         move(player);
@@ -30,12 +31,14 @@ public class GameRules {
         rotateAntiClockwise(player.getPlayfieldState());
         rotateAntiClockwise(player.getPlayfieldState());
         calculateMove(player, beforeField, copyFieldFromPlayer(player), MoveType.DOWN);
+        GameRules.spawnTile(player);
     }
 
     public static void moveLeft(Player player) {
         int[][] beforeField = copyFieldFromPlayer(player);
         move(player);
         calculateMove(player, beforeField, copyFieldFromPlayer(player), MoveType.LEFT);
+        GameRules.spawnTile(player);
     }
 
     public static void moveRight(Player player) {
@@ -46,6 +49,7 @@ public class GameRules {
         rotateAntiClockwise(player.getPlayfieldState());
         rotateAntiClockwise(player.getPlayfieldState());
         calculateMove(player, beforeField, copyFieldFromPlayer(player), MoveType.RIGHT);
+        GameRules.spawnTile(player);
     }
 
     public static boolean spawnTile(Player player) {
@@ -151,7 +155,6 @@ public class GameRules {
 //        player.setPlayfieldTurn(playfieldTurn);
         // spielfeld einfügen
         playfieldState.setField(neueListe);
-        GameRules.spawnTile(player);
     }
 
     private static void rotateAntiClockwise(PlayfieldState playfieldState) {
@@ -175,105 +178,138 @@ public class GameRules {
     private static void calculateMove(Player player, int[][] before, int[][] after, MoveType moveType) {
         switch (moveType) {
             case UP:
-                for (int x = 0; x < player.getPlayfieldState().getFieldSizeX(); x++) {
-                    int offset = 0;
-                    for (int y = 0; y < player.getPlayfieldState().getFieldSizeY(); y++) {
-                        if (after[x][y] != 0 && before[x][y + offset] != after[x][y] && y + offset < player.getPlayfieldState().getFieldSizeY()) {   //find changed Tile
-                            int old1 = y + offset;                                               //find old coordinate from first tile
-                            while (before[x][old1] == 0) {
-                                old1++;
-                                offset++;
-                            }
-                            before[x][old1] = 0;                                        //remove first coordinate to find second
-                            int old2 = old1 + 1;                                        //find old coordinate from second tile
-                            while (before[x][old2] == 0) {
-                                old2++;
-                                offset++;
-                            }
-                            offset++;
-                            int oldValue = before[x][old2];
-                            before[x][old2] = 0;                                        //remove second coordinate to find possible next
-                            player.getPlayfieldTurn().addNewMerged(new GameTileImpl(x, old1, x, y, oldValue), new GameTileImpl(x, old2, x, y, oldValue), new GameTileImpl(x, y, after[x][y]));
-                            after[x][y] = 0;
-                        }
-                    }
-                }
+                calculateUpMove(player, before, after);
                 break;
             case DOWN:
-                for (int x = 0; x < player.getPlayfieldState().getFieldSizeX(); x++) {
-                    int offset = 0;                                                              //offset is always positive
-                    for (int y = player.getPlayfieldState().getFieldSizeY() - 1; y >= 0; y--) {
-                        if (after[x][y] != 0 && before[x][y - offset] != after[x][y] && y - offset >= 0) {            //find changed Tile
-                            int old1 = y;                                               //find old coordinate from first tile
-                            while (before[x][old1] == 0) {
-                                old1--;
-                                offset++;
-                            }
-                            before[x][old1] = 0;                                        //remove first coordinate to find second
-                            int old2 = old1 - 1;                                        //find old coordinate from second tile
-                            while (before[x][old2] == 0) {
-                                old2--;
-                                offset++;
-                            }
-                            offset++;
-                            int oldValue = before[x][old2];
-                            before[x][old2] = 0;                                        //remove second coordinate to find possible next
-                            player.getPlayfieldTurn().addNewMerged(new GameTileImpl(x, old1, x, y, oldValue), new GameTileImpl(x, old2, x, y, oldValue), new GameTileImpl(x, y, after[x][y]));
-                            after[x][y] = 0;
-                        }
-                    }
-                }
+                calculateDownMove(player, before, after);
                 break;
             case LEFT:
-                for (int y = 0; y < player.getPlayfieldState().getFieldSizeY(); y++) {
-                    int offset = 0;
-                    for (int x = 0; x < player.getPlayfieldState().getFieldSizeX(); x++) {
-                        if (after[x][y] != 0 && before[x + offset][y] != after[x][y] && x + offset < player.getPlayfieldState().getFieldSizeX()) {            //find changed Tile
-                            int old1 = x;                                               //find old coordinate from first tile
-                            while (before[old1][y] == 0) {
-                                old1++;
-                                offset++;
-                            }
-                            before[old1][y] = 0;                                        //remove first coordinate to find second
-                            int old2 = old1 + 1;                                        //find old coordinate from second tile
-                            while (before[old2][y] == 0) {
-                                old2++;
-                                offset++;
-                            }
-                            offset++;
-                            int oldValue = before[old2][y];
-                            before[old2][y] = 0;                                        //remove second coordinate to find possible next
-                            player.getPlayfieldTurn().addNewMerged(new GameTileImpl(old1, y, x, y, oldValue), new GameTileImpl(old2, y, x, y, oldValue), new GameTileImpl(x, y, after[x][y]));
-                            after[x][y] = 0;
-                        }
-                    }
-                }
+                calculateLeftMove(player, before, after);
                 break;
             case RIGHT:
-                for (int y = 0; y < player.getPlayfieldState().getFieldSizeY(); y++) {
-                    int offset = 0;
-                    for (int x = player.getPlayfieldState().getFieldSizeX(); x >= 0; x--) {
-                        if (after[x][y] != 0 && before[x - offset][y] != after[x][y] && x - offset >= 0) {            //find changed Tile
-                            int old1 = x;                                               //find old coordinate from first tile
-                            while (before[old1][y] == 0) {
-                                old1--;
-                                offset++;
-                            }
-                            before[old1][y] = 0;                                        //remove first coordinate to find second
-                            int old2 = old1 - 1;                                        //find old coordinate from second tile
-                            while (before[old2][y] == 0) {
-                                old2--;
-                                offset++;
-                            }
-                            offset++;
-                            int oldValue = before[old2][y];
-                            before[old2][y] = 0;                                        //remove second coordinate to find possible next
-                            player.getPlayfieldTurn().addNewMerged(new GameTileImpl(old1, y, x, y, oldValue), new GameTileImpl(old2, y, x, y, oldValue), new GameTileImpl(x, y, after[x][y]));
-                            after[x][y] = 0;
-                        }
-                    }
-                }
+                calculateRightMove(player, before, after);
                 break;
+        }
+    }
+
+    private static void calculateUpMove(Player player, int[][] before, int[][] after){
+        for (int y = 0; y < player.getPlayfieldState().getFieldSizeY(); y++) {
+            int offset = 0;
+            for (int x = 0; x < player.getPlayfieldState().getFieldSizeX(); x++) {
+                if (after[x][y] != 0 && x + offset < player.getPlayfieldState().getFieldSizeX()) {            //find changed Tile
+                    int old1 = x + offset;                                               //find old coordinate from first tile
+                    while (before[old1][y] == 0) {
+                        old1++;
+                        offset++;
+                    }
+                    if(before[old1][y] == after[x][y]){
+                        before[old1][y] = 0;                                        //remove first coordinate to find second
+                        player.getPlayfieldTurn().addNewMove(new GameTileImpl(old1, y, x, y, after[x][y]));
+                    } else {
+                        before[old1][y] = 0;                                        //remove first coordinate to find second
+                        int old2 = old1 + 1;                                        //find old coordinate from second tile
+                        while (before[old2][y] == 0) {
+                            old2++;
+                            offset++;
+                        }
+                        offset++;
+                        int oldValue = before[old2][y];
+                        before[old2][y] = 0;                                        //remove second coordinate to find possible next
+                        player.getPlayfieldTurn().addNewMerged(new GameTileImpl(old1, y, x, y, oldValue), new GameTileImpl(old2, y, x, y, oldValue), new GameTileImpl(x, y, after[x][y]));
+                    }
+                    after[x][y] = 0;
+                }
+            }
+        }
+    }
+    private static void calculateDownMove(Player player, int[][] before, int[][] after){
+        for (int y = 0; y < player.getPlayfieldState().getFieldSizeY(); y++) {
+            int offset = 0;
+            for (int x = player.getPlayfieldState().getFieldSizeX()-1; x >= 0; x--) {
+                if (after[x][y] != 0 && x - offset >= 0) {            //find changed Tile
+                    int old1 = x - offset;                                               //find old coordinate from first tile
+                    while (before[old1][y] == 0) {
+                        old1--;
+                        offset++;
+                    }
+                    if(before[old1][y] == after[x][y]){
+                        before[old1][y] = 0;                                        //remove first coordinate to find second
+                        player.getPlayfieldTurn().addNewMove(new GameTileImpl(old1, y, x, y, after[x][y]));
+                    } else {
+                        before[old1][y] = 0;                                        //remove first coordinate to find second
+                        int old2 = old1 - 1;                                        //find old coordinate from second tile
+                        while (before[old2][y] == 0) {
+                            old2--;
+                            offset++;
+                        }
+                        offset++;
+                        int oldValue = before[old2][y];
+                        before[old2][y] = 0;                                        //remove second coordinate to find possible next
+                        player.getPlayfieldTurn().addNewMerged(new GameTileImpl(old1, y, x, y, oldValue), new GameTileImpl(old2, y, x, y, oldValue), new GameTileImpl(x, y, after[x][y]));
+                    }
+                    after[x][y] = 0;
+                }
+            }
+        }
+    }
+    private static void calculateLeftMove(Player player, int[][] before, int[][] after){
+        for (int x = 0; x < player.getPlayfieldState().getFieldSizeX(); x++) {
+            int offset = 0;
+            for (int y = 0; y < player.getPlayfieldState().getFieldSizeY(); y++) {
+                if (after[x][y] != 0 && y + offset < player.getPlayfieldState().getFieldSizeY()) {            //find changed Tile
+                    int old1 = y + offset;                                               //find old coordinate from first tile
+                    while (before[x][old1] == 0) {
+                        old1++;
+                        offset++;
+                    }
+                    if (before[x][old1] == after[x][y]) {
+                        before[x][old1] = 0;                                        //remove first coordinate to find second
+                        player.getPlayfieldTurn().addNewMove(new GameTileImpl(x, old1, x, y, after[x][y]));
+                    } else {
+                        before[x][old1] = 0;                                        //remove first coordinate to find second
+                        int old2 = old1 + 1;                                        //find old coordinate from second tile
+                        while (before[x][old2] == 0) {
+                            old2++;
+                            offset++;
+                        }
+                        offset++;
+                        int oldValue = before[x][old2];
+                        before[x][old2] = 0;                                        //remove second coordinate to find possible next
+                        player.getPlayfieldTurn().addNewMerged(new GameTileImpl(x, old1, x, y, oldValue), new GameTileImpl(x, old2, x, y, oldValue), new GameTileImpl(x, y, after[x][y]));
+                    }
+                    after[x][y] = 0;
+                }
+            }
+        }
+    }
+    private static void calculateRightMove(Player player, int[][] before, int[][] after){
+        for (int x = 0; x < player.getPlayfieldState().getFieldSizeX(); x++) {
+            int offset = 0;                                                              //offset is always positive
+            for (int y = player.getPlayfieldState().getFieldSizeY() - 1; y >= 0; y--) {
+                if (after[x][y] != 0 && y - offset >= 0) {            //find changed Tile
+                    int old1 = y - offset;                                               //find old coordinate from first tile
+                    while (before[x][old1] == 0) {
+                        old1--;
+                        offset++;
+                    }
+                    if (before[x][old1] == after[x][y]) {
+                        before[x][old1] = 0;                                        //remove first coordinate to find second
+                        player.getPlayfieldTurn().addNewMove(new GameTileImpl(x, old1, x, y, after[x][y]));
+                    } else {
+                        before[x][old1] = 0;                                        //remove first coordinate to find second
+                        int old2 = old1 - 1;                                        //find old coordinate from second tile
+                        while (before[x][old2] == 0) {
+                            old2--;
+                            offset++;
+                        }
+                        offset++;
+                        int oldValue = before[x][old2];
+                        before[x][old2] = 0;                                        //remove second coordinate to find possible next
+                        player.getPlayfieldTurn().addNewMerged(new GameTileImpl(x, old1, x, y, oldValue), new GameTileImpl(x, old2, x, y, oldValue), new GameTileImpl(x, y, after[x][y]));
+                    }
+                    after[x][y] = 0;
+                }
+            }
         }
     }
 
