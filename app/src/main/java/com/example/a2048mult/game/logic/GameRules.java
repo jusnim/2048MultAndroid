@@ -178,7 +178,7 @@ public class GameRules {
                 for (int x = 0; x < player.getPlayfieldState().getFieldSizeX(); x++) {
                     int offset = 0;
                     for (int y = 0; y < player.getPlayfieldState().getFieldSizeY(); y++) {
-                        if (after[x][y] != 0 && before[x][y + offset] != after[x][y]) {   //find changed Tile
+                        if (after[x][y] != 0 && before[x][y + offset] != after[x][y] && y + offset < player.getPlayfieldState().getFieldSizeY()) {   //find changed Tile
                             int old1 = y + offset;                                               //find old coordinate from first tile
                             while (before[x][old1] == 0) {
                                 old1++;
@@ -203,7 +203,7 @@ public class GameRules {
                 for (int x = 0; x < player.getPlayfieldState().getFieldSizeX(); x++) {
                     int offset = 0;                                                              //offset is always positive
                     for (int y = player.getPlayfieldState().getFieldSizeY() - 1; y >= 0; y--) {
-                        if (after[x][y] != 0 && before[x][y - offset] != after[x][y]) {            //find changed Tile
+                        if (after[x][y] != 0 && before[x][y - offset] != after[x][y] && y - offset >= 0) {            //find changed Tile
                             int old1 = y;                                               //find old coordinate from first tile
                             while (before[x][old1] == 0) {
                                 old1--;
@@ -228,7 +228,7 @@ public class GameRules {
                 for (int y = 0; y < player.getPlayfieldState().getFieldSizeY(); y++) {
                     int offset = 0;
                     for (int x = 0; x < player.getPlayfieldState().getFieldSizeX(); x++) {
-                        if (after[x][y] != 0 && before[x + offset][y] != after[x][y]) {            //find changed Tile
+                        if (after[x][y] != 0 && before[x + offset][y] != after[x][y] && x + offset < player.getPlayfieldState().getFieldSizeX()) {            //find changed Tile
                             int old1 = x;                                               //find old coordinate from first tile
                             while (before[old1][y] == 0) {
                                 old1++;
@@ -253,7 +253,7 @@ public class GameRules {
                 for (int y = 0; y < player.getPlayfieldState().getFieldSizeY(); y++) {
                     int offset = 0;
                     for (int x = player.getPlayfieldState().getFieldSizeX(); x >= 0; x--) {
-                        if (after[x][y] != 0 && before[x - offset][y] != after[x][y]) {            //find changed Tile
+                        if (after[x][y] != 0 && before[x - offset][y] != after[x][y] && x - offset >= 0) {            //find changed Tile
                             int old1 = x;                                               //find old coordinate from first tile
                             while (before[old1][y] == 0) {
                                 old1--;
