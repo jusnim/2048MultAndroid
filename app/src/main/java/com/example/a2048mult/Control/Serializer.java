@@ -9,7 +9,6 @@ import java.io.OutputStream;
 import java.util.Objects;
 
 public class Serializer {
-    //TODO: (De-)Serializer
     public static void serializePDU(PDU pdu, OutputStream os) throws IOException {
         ObjectOutputStream oos = new ObjectOutputStream(os);
 
