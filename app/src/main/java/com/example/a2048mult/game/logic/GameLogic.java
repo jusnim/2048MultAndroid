@@ -2,30 +2,30 @@ package com.example.a2048mult.game.logic;
 
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.util.Log;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.a2048mult.game.currentlyNotUsed.ReceiveListener;
+import com.example.a2048mult.game.states.OperateOnGameState;
 import com.example.a2048mult.game.states.GameState;
-import com.example.a2048mult.game.states.GameStateImpl;
-import com.example.a2048mult.game.states.LobbySettings;
+import com.example.a2048mult.game.states.GameTileImpl;
+import com.example.a2048mult.game.states.ChangeLobbyConfigurations;
 import com.example.a2048mult.game.states.MoveType;
 import com.example.a2048mult.game.states.Player;
-import com.example.a2048mult.ui.game.GameUI;
+import com.example.a2048mult.ui.game.DrawGameUI;
 
 import java.io.Serializable;
 
 /**
  * singleton pattern
  */
-public class GameLogic implements InGameControl, ReceiveListener, GameControlMenu, Serializable {
+public class GameLogic implements InGameControl, ReceiveListener, GameMenuControl, Serializable {
     private static final GameLogic gameLogic = new GameLogic();
     boolean gameStarted = false;
-    private LobbySettings lobbySettings;
-    private GameState gameState;
-    private GameUI gameUI;
+    private ChangeLobbyConfigurations lobbySettings;
+    private OperateOnGameState gameState;
+    private DrawGameUI gameUI;
 
     private GameLogic() {
     }
@@ -41,6 +41,16 @@ public class GameLogic implements InGameControl, ReceiveListener, GameControlMen
         Runnable r = () -> {
             switch (move) {
                 case UP:
+//                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMerged(
+//                            new GameTileImpl(1,1,3, 1, 1),
+//                            new GameTileImpl(3,1,3, 1, 1),
+//                            new GameTileImpl(3, 1, 2));
+//
+//                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMerged(
+//                            new GameTileImpl(0,2,3, 2, 1),
+//                            new GameTileImpl(2,2,3, 2, 1),
+//                            new GameTileImpl(3,1,3, 2, 2));
+//                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMove(new GameTileImpl(1,1,3, 1, 1));
                     for (Player player : gameState.getAllPlayer()) {
                         GameRules.moveUp(player);
                     }
@@ -77,7 +87,7 @@ public class GameLogic implements InGameControl, ReceiveListener, GameControlMen
     }
 
     @Override
-    public void initDrawGameUI(GameUI gameUI) {
+    public void initDrawGameUI(DrawGameUI gameUI) {
         this.gameUI = gameUI;
         this.gameUI.initDrawGameState(this.gameState);
     }
@@ -91,7 +101,7 @@ public class GameLogic implements InGameControl, ReceiveListener, GameControlMen
 
         // for updating all Players on given Playfieldsize
         this.lobbySettings.setPlayFieldSize(this.lobbySettings.getPlayFieldSize());
-        this.gameState = new GameStateImpl(this.lobbySettings.getAllPlayer());
+        this.gameState = new GameState(this.lobbySettings.getAllPlayer());
         this.gameStarted = true;
 
         NavHostFragment.findNavController(fragment).navigate(resID);
@@ -108,7 +118,7 @@ public class GameLogic implements InGameControl, ReceiveListener, GameControlMen
     }
 
     @Override
-    public void setLobbySettings(LobbySettings lobbySettings) {
+    public void setLobbySettings(ChangeLobbyConfigurations lobbySettings) {
         this.lobbySettings = lobbySettings;
     }
 

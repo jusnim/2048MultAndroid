@@ -10,9 +10,9 @@ import androidx.fragment.app.Fragment;
 
 import com.example.a2048mult.R;
 import com.example.a2048mult.databinding.FragmentSinglePlayerMenuBinding;
-import com.example.a2048mult.game.logic.GameControlMenu;
-import com.example.a2048mult.game.states.LobbySettingsImpl;
 import com.example.a2048mult.game.logic.GameLogic;
+import com.example.a2048mult.game.logic.GameMenuControl;
+import com.example.a2048mult.game.states.LobbySettings;
 import com.example.a2048mult.game.states.Player;
 import com.example.a2048mult.game.states.PlayerImpl;
 import com.example.a2048mult.game.states.PlayfieldStateImpl;
@@ -20,8 +20,8 @@ import com.example.a2048mult.ui.menu.MenuLobbyChangeListener;
 
 public class SinglePlayerMenuFragment extends Fragment implements MenuLobbyChangeListener {
     private FragmentSinglePlayerMenuBinding binding;
-    private GameControlMenu gameControlMenu;
-    private LobbySettingsImpl lobbySettings;
+    private GameMenuControl gameControlMenu;
+    private LobbySettings lobbySettings;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -41,9 +41,18 @@ public class SinglePlayerMenuFragment extends Fragment implements MenuLobbyChang
     }
 
     private void startSingleplayer() {
-        this.lobbySettings = new LobbySettingsImpl();
+        this.lobbySettings = new LobbySettings();
 
-        Player player = new PlayerImpl("cICH HABE KEInsad Ahnug was ich HIER mache", 0, new PlayfieldStateImpl());
+        PlayfieldStateImpl playfieldState = new PlayfieldStateImpl();
+//        playfieldState.setField(new int[][]
+//                {
+//                        {0, 0, 0, 0},
+//                        {0, 1, 0, 1},
+//                        {1, 0, 1, 0},
+//                        {0, 0, 0, 0},
+//                }
+//        );
+        Player player = new PlayerImpl("cICH HABE KEInsad Ahnug was ich HIER mache", 0, playfieldState);
         this.lobbySettings.setPlayFieldSize(binding.chooseView.getSelectedPlayfieldSize());
 
         this.lobbySettings.addPlayer(player);

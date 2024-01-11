@@ -1,18 +1,18 @@
 package com.example.a2048mult.ui.game;
 
-import com.example.a2048mult.game.states.GameState;
+import com.example.a2048mult.game.states.OperateOnGameState;
 
 /**
  * when initialized, should save into Gamelogic with:
  * GameLogic.getInstance().setgameUI(this);
  */
-public interface GameUI {
+public interface DrawGameUI {
     /**
      *  inits a Game
      *  used when starting a new game
      *  important for setting game once
      */
-    void initDrawGameState(GameState gameState);
+    void initDrawGameState(OperateOnGameState gameState);
 
     /**
      * draw current Gamestate
@@ -20,5 +20,5 @@ public interface GameUI {
      * also used when going out of a game and going in again
      * basically refreshes current game
      */
-    void drawGameState(GameState gameState);
+    void drawGameState(OperateOnGameState gameState);
 }

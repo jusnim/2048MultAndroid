@@ -24,13 +24,7 @@ public interface PlayfieldTurn {
      * @param tile2 - alte und neue Koordinaten + alter Wert
      * @param mergedTile - hat NUR neue Koordinaten + neuer Wert
      */
-    default void addNewMerged(GameTile tile1, GameTile tile2, GameTile mergedTile){
-        addNewMove(tile1);
-        addNewMove(tile2);
-        addRemoved(tile1);
-        addRemoved(tile2);
-        addNewSpawned(mergedTile);
-    };
+    void addNewMerged(GameTile tile1, GameTile tile2, GameTile mergedTile);
 
     /**
      * adds a remove to the object
@@ -43,6 +37,6 @@ public interface PlayfieldTurn {
      *
      * @return
      */
-    PlayfieldTurnAnimTuple<PlayfieldTurnAnimationType, GameTile> pollNextAnimation();
+    PlayfieldTurnAnimTuple<PlayfieldTurnAnimationType, GameTile[]> pollNextAnimation();
 
 }

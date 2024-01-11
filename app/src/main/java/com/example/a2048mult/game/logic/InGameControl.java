@@ -1,8 +1,7 @@
 package com.example.a2048mult.game.logic;
 
-import com.example.a2048mult.game.states.GameState;
 import com.example.a2048mult.game.states.MoveType;
-import com.example.a2048mult.ui.game.GameUI;
+import com.example.a2048mult.ui.game.DrawGameUI;
 
 /**
  * Interface zum Verarbeiten der GameView-Inputs
@@ -23,5 +22,5 @@ public interface InGameControl {
     /**
      * setter for GameUI
      */
-    void initDrawGameUI(GameUI gameUI);
+    void initDrawGameUI(DrawGameUI gameUI);
 }

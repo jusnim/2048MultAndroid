@@ -3,7 +3,7 @@ package com.example.a2048mult.ui.game.playfield;
 import com.example.a2048mult.game.states.Player;
 import com.example.a2048mult.game.states.PlayfieldTurn;
 
-public interface PlayfieldUI  {
+public interface DrawPlayfieldUI {
     /**
      *  inits a Player (also Playfield)
      *  used when starting a new game
@@ -11,7 +11,6 @@ public interface PlayfieldUI  {
      */
     public void initPlayer(Player player);
 
-    void drawPlayfieldBackground(int width, int height);
 
     /**
      * draws animations, after that UI represents PlayfieldState

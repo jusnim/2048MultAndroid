@@ -9,6 +9,7 @@ import com.example.a2048mult.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
+    // TODO meilenstein4 uml gamestate
     private ActivityMainBinding binding;
 
     //private static final BluetoothManager btManager = new BluetoothManager(MainActivity., new BTListAdapter(this));

@@ -8,18 +8,18 @@
     android:backgroundTint="@color/brown_playfield_bg"
     app:layout_constraintDimensionRatio="1:1">
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/backgroundContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:clipChildren="false"
         android:orientation="vertical"
+
 
         app:layout_constraintBottom_toTopOf="@+id/testBot"
         app:layout_constraintEnd_toStartOf="@+id/testRight"
         app:layout_constraintStart_toStartOf="@+id/testLeft"
         app:layout_constraintTop_toTopOf="@+id/testTop"/>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/playfieldContainer"
         android:layout_width="0dp"
@@ -27,10 +27,14 @@
         android:clipChildren="false"
         android:orientation="vertical"
 
+
         app:layout_constraintBottom_toTopOf="@+id/testBot"
         app:layout_constraintEnd_toStartOf="@+id/testRight"
         app:layout_constraintStart_toStartOf="@+id/testLeft"
         app:layout_constraintTop_toTopOf="@+id/testTop"/>
+
+
+
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/testTop"

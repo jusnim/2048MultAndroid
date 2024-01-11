@@ -13,6 +13,10 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.a2048mult.databinding.ViewChooseBinding;
+import com.example.a2048mult.game.states.Player;
+import com.example.a2048mult.game.states.PlayerImpl;
+import com.example.a2048mult.game.states.PlayfieldState;
+import com.example.a2048mult.game.states.PlayfieldStateImpl;
 import com.example.a2048mult.ui.game.playfield.PlayfieldView;
 
 import java.util.Random;
@@ -102,21 +106,19 @@ public class ChooseView extends ConstraintLayout {
     private View createPlayfieldPreview(int size) {
         PlayfieldView[] playfield = new PlayfieldView[1];
         playfield[0] = new PlayfieldView(binding.getRoot().getContext());
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                Random rd = new Random();
+        Runnable r = () -> {
+            Random rd = new Random();
+            int[][] levels = new int[size][size];
+            for (int y = 0; y < size; y++) {
+                for (int x = 0; x < size; x++) {
 
-                playfield[0].drawPlayfieldBackground(size, size);
-                int[][] levels = new int[size][size];
-                for (int y = 0; y < size; y++) {
-                    for (int x = 0; x < size; x++) {
-
-                        levels[y][x] = rd.nextInt(12);
-                    }
+                    levels[y][x] = rd.nextInt(12);
                 }
-                playfield[0].drawPlayfieldState(levels);
             }
+            PlayfieldState playfildState = new PlayfieldStateImpl(size);
+            playfildState.setField(levels);
+            Player p = new PlayerImpl("test",0,playfildState);
+            playfield[0].initPlayer(p);
         };
 
         HandlerThread handlerThread = new HandlerThread("createChoose",0);
