@@ -10,20 +10,16 @@ import java.util.Objects;
 
 public class Serializer {
     //TODO: (De-)Serializer
-    void serializePDU(PDU pdu, OutputStream os) throws IOException {
+    public static void serializePDU(PDU pdu, OutputStream os) throws IOException {
         ObjectOutputStream oos = new ObjectOutputStream(os);
 
         oos.writeUTF(PDU.MAGIC_NUMBER);
         oos.writeUTF(PDU.VERSION);
-        //os.write(pdu.getPDUType().ordinal());
-        if (pdu instanceof GameStatePDU){
-            oos.writeObject(((GameStatePDU)pdu).getData());
-        }else if(pdu instanceof LobbyInfoPDU){
-            oos.writeObject(((LobbyInfoPDU)pdu).getData());
-        }
+        oos.writeObject(pdu);
+
     }
 
-    PDU deserializePDU(InputStream is) throws IOException, ClassNotFoundException {
+    public static PDU deserializePDU(InputStream is) throws IOException, ClassNotFoundException {
         ObjectInputStream ois = new ObjectInputStream(is);
         if(!Objects.equals(ois.readUTF(), PDU.MAGIC_NUMBER) || !Objects.equals(ois.readUTF(), PDU.VERSION)){
             throw new NotSerializableException("Wrong Protocol or Version");

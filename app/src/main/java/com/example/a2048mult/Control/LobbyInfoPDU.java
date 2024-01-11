@@ -1,6 +1,8 @@
 package com.example.a2048mult.Control;
 
-public class LobbyInfoPDU extends PDU{
+import java.io.Serializable;
+
+public class LobbyInfoPDU extends PDU implements Serializable {
     private static final PDUType pduType = PDUType.LobbyInfoPDU;
     private LobbyInfo data;
     public LobbyInfo getData() {
