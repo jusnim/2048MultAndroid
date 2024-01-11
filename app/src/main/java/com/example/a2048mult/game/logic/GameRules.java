@@ -1,8 +1,5 @@
 package com.example.a2048mult.game.logic;
 
-import android.util.Log;
-
-import com.example.a2048mult.game.states.GameTile;
 import com.example.a2048mult.game.states.GameTileImpl;
 import com.example.a2048mult.game.states.MoveType;
 import com.example.a2048mult.game.states.Player;
@@ -18,7 +15,7 @@ public class GameRules {
         rotateAntiClockwise(player.getPlayfieldState());
         move(player);
         rotateAntiClockwise(player.getPlayfieldState());
-        calculateMove(player, beforeField, copyFieldFromPlayer(player), MoveType.UP);
+//        calculateMove(player, beforeField, copyFieldFromPlayer(player), MoveType.UP);
         GameRules.spawnTile(player);
     }
 
@@ -30,14 +27,14 @@ public class GameRules {
         rotateAntiClockwise(player.getPlayfieldState());
         rotateAntiClockwise(player.getPlayfieldState());
         rotateAntiClockwise(player.getPlayfieldState());
-        calculateMove(player, beforeField, copyFieldFromPlayer(player), MoveType.DOWN);
+//        calculateMove(player, beforeField, copyFieldFromPlayer(player), MoveType.DOWN);
         GameRules.spawnTile(player);
     }
 
     public static void moveLeft(Player player) {
         int[][] beforeField = copyFieldFromPlayer(player);
         move(player);
-        calculateMove(player, beforeField, copyFieldFromPlayer(player), MoveType.LEFT);
+//        calculateMove(player, beforeField, copyFieldFromPlayer(player), MoveType.LEFT);
         GameRules.spawnTile(player);
     }
 
@@ -48,7 +45,7 @@ public class GameRules {
         move(player);
         rotateAntiClockwise(player.getPlayfieldState());
         rotateAntiClockwise(player.getPlayfieldState());
-        calculateMove(player, beforeField, copyFieldFromPlayer(player), MoveType.RIGHT);
+//        calculateMove(player, beforeField, copyFieldFromPlayer(player), MoveType.RIGHT);
         GameRules.spawnTile(player);
     }
 
@@ -79,7 +76,8 @@ public class GameRules {
         int tileValue = 1;
         if (Math.random() > 0.8)
             tileValue = 2;
-//        player.getPlayfieldTurn().addNewSpawned(new GameTileImpl(freeSpaces[rmdPos][0], freeSpaces[rmdPos][1], tileValue));
+
+        player.getPlayfieldTurn().addNewSpawned(new GameTileImpl(freeSpaces[rmdPos][0], freeSpaces[rmdPos][1], tileValue));
         // TODO change
 
 //        player.getPlayfieldTurn().addNewSpawned(new GameTileImpl(0, 0, tileValue));
@@ -139,11 +137,20 @@ public class GameRules {
                 } else if (zahl == playfieldState.getTile(x, y)) {
                     neueListe[x][positionNeueListe] = zahl + 1;
                     zahl = 0;
+
+                    //move
+//                    player.getPlayfieldTurn().addNewMove(new GameTileImpl(x, y, x, positionNeueListe, zahl + 1));
+
                     positionNeueListe++;
                 } else if (playfieldState.getTile(x, y) != 0) {
                     neueListe[x][positionNeueListe] = zahl;
                     zahl = playfieldState.getTile(x, y);
+
+                    // Merge
+//                    player.getPlayfieldTurn().addNewMerged(new GameTileImpl(x, y, x, positionNeueListe, zahl + 1));
+
                     positionNeueListe++;
+
                 }
             }
             neueListe[x][positionNeueListe] = zahl;
@@ -154,6 +161,8 @@ public class GameRules {
 //        playfieldTurn.addNewMove(gameTile);
 //        player.setPlayfieldTurn(playfieldTurn);
         // spielfeld einfügen
+
+
         playfieldState.setField(neueListe);
     }
 
@@ -192,7 +201,7 @@ public class GameRules {
         }
     }
 
-    private static void calculateUpMove(Player player, int[][] before, int[][] after){
+    private static void calculateUpMove(Player player, int[][] before, int[][] after) {
         for (int y = 0; y < player.getPlayfieldState().getFieldSizeY(); y++) {
             int offset = 0;
             for (int x = 0; x < player.getPlayfieldState().getFieldSizeX(); x++) {
@@ -202,7 +211,7 @@ public class GameRules {
                         old1++;
                         offset++;
                     }
-                    if(before[old1][y] == after[x][y]){
+                    if (before[old1][y] == after[x][y]) {
                         before[old1][y] = 0;                                        //remove first coordinate to find second
                         player.getPlayfieldTurn().addNewMove(new GameTileImpl(old1, y, x, y, after[x][y]));
                     } else {
@@ -222,17 +231,18 @@ public class GameRules {
             }
         }
     }
-    private static void calculateDownMove(Player player, int[][] before, int[][] after){
+
+    private static void calculateDownMove(Player player, int[][] before, int[][] after) {
         for (int y = 0; y < player.getPlayfieldState().getFieldSizeY(); y++) {
             int offset = 0;
-            for (int x = player.getPlayfieldState().getFieldSizeX()-1; x >= 0; x--) {
+            for (int x = player.getPlayfieldState().getFieldSizeX() - 1; x >= 0; x--) {
                 if (after[x][y] != 0 && x - offset >= 0) {            //find changed Tile
                     int old1 = x - offset;                                               //find old coordinate from first tile
                     while (before[old1][y] == 0) {
                         old1--;
                         offset++;
                     }
-                    if(before[old1][y] == after[x][y]){
+                    if (before[old1][y] == after[x][y]) {
                         before[old1][y] = 0;                                        //remove first coordinate to find second
                         player.getPlayfieldTurn().addNewMove(new GameTileImpl(old1, y, x, y, after[x][y]));
                     } else {
@@ -252,7 +262,8 @@ public class GameRules {
             }
         }
     }
-    private static void calculateLeftMove(Player player, int[][] before, int[][] after){
+
+    private static void calculateLeftMove(Player player, int[][] before, int[][] after) {
         for (int x = 0; x < player.getPlayfieldState().getFieldSizeX(); x++) {
             int offset = 0;
             for (int y = 0; y < player.getPlayfieldState().getFieldSizeY(); y++) {
@@ -282,7 +293,8 @@ public class GameRules {
             }
         }
     }
-    private static void calculateRightMove(Player player, int[][] before, int[][] after){
+
+    private static void calculateRightMove(Player player, int[][] before, int[][] after) {
         for (int x = 0; x < player.getPlayfieldState().getFieldSizeX(); x++) {
             int offset = 0;                                                              //offset is always positive
             for (int y = player.getPlayfieldState().getFieldSizeY() - 1; y >= 0; y--) {

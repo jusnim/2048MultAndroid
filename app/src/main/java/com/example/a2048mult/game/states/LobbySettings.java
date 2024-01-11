@@ -1,49 +1,49 @@
 package com.example.a2048mult.game.states;
 
-import java.io.Serializable;
+import java.util.Arrays;
 
-/**
- * gives and recieves information about the current lobby and exchanges them with MenuView
- */
-public interface LobbySettings extends Serializable {
+public class LobbySettings implements ChangeLobbyConfigurations {
 
-    /**
-     * returns the number of Players, already joined in the Lobby
-     * @return playernum
-     */
-    int getPlayerNum();
+    private Player[] playerForStarting = new Player[0];
+    private int sizeForStarting = 0;
+    Player leader;
 
-    /**
-     * returns the list of player already joined the lobby
-     */
-    Player[] getAllPlayer();
+    @Override
+    public int getPlayerNum() {
+        return playerForStarting.length;
+    }
 
-    /**
-     * gets the leader of the current Lobby
-     * @return Lobbyleader
-     */
-    Player getLeader();
+    @Override
+    public Player[] getAllPlayer() {
+        return playerForStarting;
+    }
 
-    /**
-     * setter for leader
-     * @param player
-     */
-    void setLeader(Player player);
+    @Override
+    public void addPlayer(Player player) {
+        this.playerForStarting = Arrays.copyOf(this.playerForStarting, playerForStarting.length + 1);
+        this.playerForStarting[this.playerForStarting.length - 1] = player;
+    }
 
-    /**
-     * add Player to Game
-     * @param player
-     */
-    void addPlayer(Player player);
-    /**
-     * gets current playfield size
-     * @return playfieldsize
-     */
-    int getPlayFieldSize();
+    @Override
+    public Player getLeader() {
+        return this.leader;
+    }
 
-    /**
-     * sets size of playfield
-     * @param size is the new size
-     */
-    void setPlayFieldSize(int size);
+    @Override
+    public void setLeader(Player player) {
+        this.leader = player;
+    }
+
+    @Override
+    public int getPlayFieldSize() {
+        return sizeForStarting;
+    }
+
+    @Override
+    public void setPlayFieldSize(int size) {
+        for (int i = 0; i < this.getPlayerNum(); i++) {
+            this.getAllPlayer()[i].setPlayfieldSize(size);
+        }
+        this.sizeForStarting = size;
+    }
 }

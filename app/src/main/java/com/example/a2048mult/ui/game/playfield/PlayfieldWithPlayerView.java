@@ -13,7 +13,7 @@ import com.example.a2048mult.databinding.ViewPlayfieldWithPlayerBinding;
 import com.example.a2048mult.game.states.Player;
 import com.example.a2048mult.game.states.PlayfieldTurn;
 
-public class PlayfieldWithPlayerView extends ConstraintLayout implements PlayfieldUI {
+public class PlayfieldWithPlayerView extends ConstraintLayout implements DrawPlayfieldUI {
     private ViewPlayfieldWithPlayerBinding binding;
 
     private PlayfieldView playfieldView;

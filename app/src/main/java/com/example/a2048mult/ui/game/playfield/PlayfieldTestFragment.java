@@ -44,12 +44,12 @@ public class PlayfieldTestFragment extends Fragment {
         binding.getRoot().setOnTouchListener(new InputListener(binding.getRoot().getContext()) {
             @Override
             public void onLeft() {
-                playfield.mergeTile(3, 0, 1, 0, 3);
+//                playfield.mergeTile(3, 0, 1, 0, 3);
             }
 
             @Override
             public void onDown() {
-                playfield.mergeTile(0, 0, 0, 2, 6);
+//                playfield.mergeTile(0, 0, 0, 2, 6);
             }
 
             @Override

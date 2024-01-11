@@ -7,6 +7,7 @@ import com.example.a2048mult.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
+    // TODO meilenstein4 uml gamestate
     private ActivityMainBinding binding;
 
     @Override

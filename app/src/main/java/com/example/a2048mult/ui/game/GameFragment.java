@@ -1,9 +1,6 @@
 package com.example.a2048mult.ui.game;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,16 +12,16 @@ import androidx.fragment.app.Fragment;
 
 import com.example.a2048mult.databinding.FragmentGameBinding;
 import com.example.a2048mult.game.logic.GameLogic;
-import com.example.a2048mult.game.states.GameState;
+import com.example.a2048mult.game.states.OperateOnGameState;
 import com.example.a2048mult.game.states.MoveType;
 import com.example.a2048mult.game.states.Player;
-import com.example.a2048mult.ui.game.playfield.PlayfieldUI;
+import com.example.a2048mult.ui.game.playfield.DrawPlayfieldUI;
 import com.example.a2048mult.ui.game.playfield.PlayfieldWithPlayerView;
 
 
-public class GameFragment extends Fragment implements GameUI {
+public class GameFragment extends Fragment implements DrawGameUI {
     private FragmentGameBinding binding;
-    private PlayfieldUI[] playfieldUIs;
+    private DrawPlayfieldUI[] playfieldUIs;
 
     public GameFragment() {
         // Required empty public constructor
@@ -45,10 +42,10 @@ public class GameFragment extends Fragment implements GameUI {
     }
 
     @Override
-    public void initDrawGameState(GameState gameState) throws IllegalArgumentException {
+    public void initDrawGameState(OperateOnGameState gameState) throws IllegalArgumentException {
 //        Runnable r = () -> {
             Player[] players = gameState.getAllPlayer();
-            this.playfieldUIs = new PlayfieldUI[players.length];
+            this.playfieldUIs = new DrawPlayfieldUI[players.length];
 
 
             for (int i = 0; i < players.length; i++) {
@@ -110,7 +107,7 @@ public class GameFragment extends Fragment implements GameUI {
     }
 
 
-    private void drawSingleplayer(PlayfieldUI playfieldUI, Player player) {
+    private void drawSingleplayer(DrawPlayfieldUI playfieldUI, Player player) {
         View playfield = (View) playfieldUI;
 
 
@@ -144,7 +141,7 @@ public class GameFragment extends Fragment implements GameUI {
     }
 
     @Override
-    public void drawGameState(GameState gameState) {
+    public void drawGameState(OperateOnGameState gameState) {
         for (int i = 0; i < gameState.getAllPlayer().length; i++) {
             this.playfieldUIs[i].drawPlayfieldTurn(
                     gameState.getAllPlayer()[i].getPlayfieldTurn()

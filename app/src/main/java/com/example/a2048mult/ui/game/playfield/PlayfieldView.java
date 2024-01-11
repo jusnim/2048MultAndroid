@@ -1,11 +1,11 @@
 package com.example.a2048mult.ui.game.playfield;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +23,7 @@ import com.example.a2048mult.game.states.PlayfieldTurnAnimTuple;
 import com.example.a2048mult.game.states.PlayfieldTurnAnimationType;
 
 
-public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
+public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
     private ViewPlayfieldBinding binding;
     private ConstraintSet constraintSet;
 
@@ -191,55 +191,92 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
 
     @Override
     public void drawPlayfieldTurn(PlayfieldTurn playfieldTurn) {
-        PlayfieldTurnAnimTuple<PlayfieldTurnAnimationType, GameTile> animation;
+        PlayfieldTurnAnimTuple<PlayfieldTurnAnimationType, GameTile[]> animation;
 
         animation = playfieldTurn.pollNextAnimation();
         while (animation != null) {
-
             doAnimation(animation);
             animation = playfieldTurn.pollNextAnimation();
         }
     }
 
-    private void doAnimation
-            (PlayfieldTurnAnimTuple<PlayfieldTurnAnimationType, GameTile> animation) {
+    private void doAnimation(PlayfieldTurnAnimTuple<PlayfieldTurnAnimationType, GameTile[]> animation) {
         switch (animation.type) {
             case SPAWN:
-                spawnTileAt(animation.tile.getNewX(), animation.tile.getNewY(), animation.tile.getLevel());
+                spawnTileAt(animation.tiles[0].getNewX(), animation.tiles[0].getNewY(), animation.tiles[0].getLevel());
                 break;
             case MOVE:
-                moveTile(animation.tile.getOldX(), animation.tile.getOldY(), animation.tile.getNewX(), animation.tile.getNewY());
+                moveTile(animation.tiles[0].getOldX(), animation.tiles[0].getOldY(), animation.tiles[0].getNewX(), animation.tiles[0].getNewY());
                 break;
             case REMOVE:
-                removeTile(animation.tile.getNewX(), animation.tile.getNewY());
+                removeTile(animation.tiles[0].getNewX(), animation.tiles[0].getNewY());
                 break;
+            case MERGE:
+                mergeTile(animation.tiles[0].getOldX(), animation.tiles[0].getOldY(),
+                        animation.tiles[1].getOldX(), animation.tiles[1].getOldY(),
+                        animation.tiles[2].getNewX(), animation.tiles[2].getNewY(),
+                        animation.tiles[0].getLevel() + 1);
         }
     }
-
 
     public ObjectAnimator spawnTileAt(int x, int y, int level) {
         return replaceTile(x, y, level, PlayfieldConfig.animationSpawnDurationInMs);
     }
 
     public ObjectAnimator removeTile(int x, int y) {
+//        View tileToRemove = allViews[y][x];
+//        constraintSet.clear(tileToRemove.getId());
+//        this.playfieldContainer.removeView(tileToRemove);
+
         return replaceTile(x, y, PlayfieldConfig.invisibleTile, PlayfieldConfig.animationDurationInMs);
     }
 
-    public void mergeTile(int x1, int y1, int x2, int y2, int level) {
-        moveTile(x1, y1, x2, y2).addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                removeTile(x1, y1);
-                removeTile(x2, y2);
-                spawnTileAt(x2, y2, level);
-            }
-        });
+    public void mergeTile(int x1, int y1, int x2, int y2, int x3, int y3, int level) {
+
+
+        Runnable r = () -> {
+            moveTile(x1, y1, x3, y3);
+            moveTile(x2, y2, x3, y3);
+
+            Runnable r2 = () -> {
+                removeTile(x1,y1);
+                removeTile(x2,y2);
+                Runnable r3 = () -> {
+                    spawnTileAt(x3, y3, level);
+                };
+                getHandler().post(r3);
+            };
+            getHandler().postDelayed(r2,PlayfieldConfig.animationDurationInMs+0);
+        };
+
+        HandlerThread handlerThread = new HandlerThread("move", 0);
+        handlerThread.start();
+        Handler handler = new Handler(handlerThread.getLooper());
+        handler.post(r);
+
+
+//        HandlerThread handlerThread2 = new HandlerThread("spawn", 0);
+//        handlerThread2.start();
+//        Handler handler2 = new Handler(handlerThread.getLooper());
+//        handler.post(r2);
+
+
+//        spawnTileAt(x3, y3, level);
+
+//                .addListener(new AnimatorListenerAdapter() {
+//            @Override
+//            public void onAnimationEnd(Animator animation) {
+//                removeTile(x1, y1);
+//            }
+//        });
+//
+
+
     }
 
     private ObjectAnimator moveTile(int xFrom, int yFrom, int xTo, int yTo) {
         final ObjectAnimator[] animation = new ObjectAnimator[1];
         ((Activity) binding.getRoot().getContext()).runOnUiThread(() -> {
-            // TODO save into ALLVIEWs
             View fromTile = allViews[yFrom][xFrom];
             View toTile = allViews[yTo][xTo];
 
@@ -254,9 +291,21 @@ public class PlayfieldView extends ConstraintLayout implements PlayfieldUI {
 
             animation[0].setDuration(PlayfieldConfig.animationDurationInMs);
             animation[0].start();
-            // TODO wenn zuende
-//        removeTile(xFrom,yFrom);
         });
+        Runnable r = () -> {
+            removeTile(yFrom, xFrom);
+            // TODO view must be upated in allviews[][]
+//            Runnable r2 = () -> {
+//                replaceTile(xTo, yTo, PlayfieldConfig.invisibleTile, 0);
+//            };
+//            getHandler().postDelayed(r2,2000);
+        };
+        HandlerThread handlerThread = new HandlerThread("removeOdPlaceMove", 0);
+        handlerThread.start();
+        Handler handler = new Handler(handlerThread.getLooper());
+        handler.postDelayed(r, PlayfieldConfig.animationDurationInMs + 20);
+
+
         return animation[0];
     }
 
