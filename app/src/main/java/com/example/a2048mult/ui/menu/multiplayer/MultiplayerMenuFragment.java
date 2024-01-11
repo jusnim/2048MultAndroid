@@ -27,7 +27,7 @@ public class MultiplayerMenuFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MainActivity.getInstance().BTinit();
+//        MainActivity.getInstance().BTinit();
     }
 
     @Override

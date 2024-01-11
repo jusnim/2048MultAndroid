@@ -15,7 +15,7 @@ public class GameRules {
         rotateAntiClockwise(player.getPlayfieldState());
         move(player);
         rotateAntiClockwise(player.getPlayfieldState());
-//        calculateMove(player, beforeField, copyFieldFromPlayer(player), MoveType.UP);
+        calculateMove(player, beforeField, copyFieldFromPlayer(player), MoveType.UP);
         GameRules.spawnTile(player);
     }
 
@@ -27,14 +27,14 @@ public class GameRules {
         rotateAntiClockwise(player.getPlayfieldState());
         rotateAntiClockwise(player.getPlayfieldState());
         rotateAntiClockwise(player.getPlayfieldState());
-//        calculateMove(player, beforeField, copyFieldFromPlayer(player), MoveType.DOWN);
+        calculateMove(player, beforeField, copyFieldFromPlayer(player), MoveType.DOWN);
         GameRules.spawnTile(player);
     }
 
     public static void moveLeft(Player player) {
         int[][] beforeField = copyFieldFromPlayer(player);
         move(player);
-//        calculateMove(player, beforeField, copyFieldFromPlayer(player), MoveType.LEFT);
+        calculateMove(player, beforeField, copyFieldFromPlayer(player), MoveType.LEFT);
         GameRules.spawnTile(player);
     }
 
@@ -45,7 +45,7 @@ public class GameRules {
         move(player);
         rotateAntiClockwise(player.getPlayfieldState());
         rotateAntiClockwise(player.getPlayfieldState());
-//        calculateMove(player, beforeField, copyFieldFromPlayer(player), MoveType.RIGHT);
+        calculateMove(player, beforeField, copyFieldFromPlayer(player), MoveType.RIGHT);
         GameRules.spawnTile(player);
     }
 
@@ -77,7 +77,7 @@ public class GameRules {
         if (Math.random() > 0.8)
             tileValue = 2;
 
-        player.getPlayfieldTurn().addNewSpawned(new GameTileImpl(freeSpaces[rmdPos][0], freeSpaces[rmdPos][1], tileValue));
+//        player.getPlayfieldTurn().addNewSpawned(new GameTileImpl(freeSpaces[rmdPos][0], freeSpaces[rmdPos][1], tileValue));
         // TODO change
 
 //        player.getPlayfieldTurn().addNewSpawned(new GameTileImpl(0, 0, tileValue));
