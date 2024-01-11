@@ -2,7 +2,9 @@ package com.example.a2048mult.Control;
 
 import com.example.a2048mult.game.states.OperateOnGameState;
 
-public class GameStatePDU extends PDU{
+import java.io.Serializable;
+
+public class GameStatePDU extends PDU implements Serializable {
     private static final PDUType pduType = PDUType.GameStatePDU;
     private OperateOnGameState data;
     public OperateOnGameState getData() {
