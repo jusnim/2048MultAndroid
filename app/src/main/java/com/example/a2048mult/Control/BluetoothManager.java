@@ -92,10 +92,10 @@ public class BluetoothManager {
         app.registerReceiver(btBroadcastReceiver, filter);
 
         //Init Bluetooth and start server socket
-        BluetoothDevice btdevice = null;
+        //BluetoothDevice btdevice = null;
         //BTinit();
         //btConnectAsServer(UUID);
-        btdevice.getAddress();
+        //btdevice.getAddress();
     }
 
     public void BTinit() {
