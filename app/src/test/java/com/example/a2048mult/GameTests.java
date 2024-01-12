@@ -92,16 +92,16 @@ public class GameTests {
         player.getPlayfieldTurn().addNewMove(new GameTileImpl(1,0,2,0,1));
 
         //gets all registered changes from calculateMove and similar methods and prints them for manual debugging
-        PlayfieldTurnAnimTuple<PlayfieldTurnAnimationType, GameTile[]> pt =
+        PlayfieldTurnAnimTuple pt =
                 player.getPlayfieldTurn().pollNextAnimation();
 
         int i = 0;
         while (pt != null) {
             System.out.println(
-            pt.tiles[0].getOldX() + ", "
-                    + pt.tiles[0].getOldY() + ", "
-                    + pt.tiles[0].getNewX() + ", "
-                    + pt.tiles[0].getNewY());
+            pt.tile.getOldX() + ", "
+                    + pt.tile.getOldY() + ", "
+                    + pt.tile.getNewX() + ", "
+                    + pt.tile.getNewY());
             pt = player.getPlayfieldTurn().pollNextAnimation();
             i++;
         }

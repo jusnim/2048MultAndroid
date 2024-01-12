@@ -2,12 +2,6 @@ package com.example.a2048mult.ui.game.playfield;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
-
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.RelativeSizeSpan;
@@ -15,11 +9,17 @@ import android.text.style.SuperscriptSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+
 import com.example.a2048mult.R;
 import com.example.a2048mult.databinding.ViewPlayfieldTileBinding;
 
 public class PlayfieldTileView extends ConstraintLayout {
     private ViewPlayfieldTileBinding binding;
+    private int level;
 
     public PlayfieldTileView(@NonNull Context context) {
         super(context);
@@ -57,6 +57,7 @@ public class PlayfieldTileView extends ConstraintLayout {
      * new color and text are representing the corresponding level
      */
     void setLevel(int level) {
+        this.level = level;
         // background tile
         if (level < 0) {
             setInvisibleTile();
@@ -114,5 +115,13 @@ public class PlayfieldTileView extends ConstraintLayout {
         binding.getRoot().removeView(binding.textView);
         int bgColor = ContextCompat.getColor(binding.getRoot().getContext(), R.color.brown_playfield_placeholder);
         binding.getRoot().getBackground().setTint(bgColor);
+    }
+
+    @Override
+    public String toString() {
+        if (level < 0) {
+            return " ";
+        }
+        return String.valueOf(this.level);
     }
 }

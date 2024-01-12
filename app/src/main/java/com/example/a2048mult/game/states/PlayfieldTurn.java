@@ -37,6 +37,6 @@ public interface PlayfieldTurn {
      *
      * @return
      */
-    PlayfieldTurnAnimTuple<PlayfieldTurnAnimationType, GameTile[]> pollNextAnimation();
+    PlayfieldTurnAnimTuple pollNextAnimation();
 
 }

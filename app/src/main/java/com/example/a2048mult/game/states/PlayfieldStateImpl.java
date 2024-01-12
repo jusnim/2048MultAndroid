@@ -3,6 +3,10 @@ package com.example.a2048mult.game.states;
 import android.util.Log;
 import java.util.Arrays;
 
+import android.util.Log;
+
+import java.util.Arrays;
+
 public class PlayfieldStateImpl implements PlayfieldState {
     @Override
     public void printField() {
@@ -83,4 +87,5 @@ public class PlayfieldStateImpl implements PlayfieldState {
                 System.arraycopy(field[x], 0, this.field[x], 0, getFieldSizeY());
         }
     }
+
 }

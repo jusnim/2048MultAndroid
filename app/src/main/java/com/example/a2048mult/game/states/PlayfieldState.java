@@ -39,4 +39,5 @@ public interface PlayfieldState extends Serializable {
      */
     void setField(int[][] field);
 
+
 }
