@@ -1,6 +1,18 @@
 package com.example.a2048mult.game.states;
 
+import android.util.Log;
+import java.util.Arrays;
+
 public class PlayfieldStateImpl implements PlayfieldState {
+    @Override
+    public void printField() {
+        String string = "";
+        for (int[] line : this.field) {
+            string += (Arrays.toString(line) + "\n");
+        }
+        Log.e("!",string);
+    }
+
     /**
      * The GameState class which provides the playing field.
      * @author Niklas Paggel
@@ -41,11 +53,7 @@ public class PlayfieldStateImpl implements PlayfieldState {
      */
     @Override
     public boolean setTile(int x, int y, int value) {
-        //TODO: frei Felder besetzen
-        if (field[x][y] != 0) {
-            return false;
-        }
-        field[x][y] = value;
+        field[y][x] = value;
         return true;
     }
 
@@ -59,7 +67,7 @@ public class PlayfieldStateImpl implements PlayfieldState {
 
     @Override
     public int getTile(int x, int y) {
-        return field[x][y];
+        return field[y][x];
     }
 
     @Override
