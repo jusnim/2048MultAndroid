@@ -46,7 +46,7 @@ public class BtAcceptAsServerThread extends Thread {
 
             if (ActivityCompat.checkSelfPermission(btManager.getApp(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
 
-                ActivityCompat.requestPermissions(btManager.app, new String[]{"android.permission.BLUETOOTH_CONNECT"}, 1);
+                ActivityCompat.requestPermissions(btManager.app, new String[]{"Manifest.permission.BLUETOOTH_CONNECT"}, 1);
             }
             tmpSocket = btManager.getBluetoothAdapter().listenUsingRfcommWithServiceRecord(btManager.getSERVICE_NAME(), candidates.get(connectionCount));
             Log.d(btManager.getLOG_TAG(), "ServerSocket created");
