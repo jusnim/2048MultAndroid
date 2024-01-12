@@ -3,6 +3,8 @@ package com.example.a2048mult.ui.menu.multiplayer;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.text.InputType;
 import android.util.Log;
 import android.util.Pair;
@@ -11,16 +13,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.example.a2048mult.Control.ConnectionType;
-import com.example.a2048mult.ui.menu.MainActivity;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.a2048mult.Control.ConnectionType;
 import com.example.a2048mult.R;
 import com.example.a2048mult.databinding.FragmentMultiplayerMenuBinding;
+import com.example.a2048mult.ui.menu.MainActivity;
 
 import java.util.Set;
 
@@ -43,7 +44,7 @@ public class MultiplayerMenuFragment extends Fragment {
         );
         binding.buttonBluetooth.setOnClickListener(
                 // TODO remove test
-                v -> addNewLobby(null,"test")
+                v -> addNewLobby(null, "test")
         );
         binding.buttonBluetooth.setOnClickListener(
                 // TODO remove test
@@ -57,16 +58,24 @@ public class MultiplayerMenuFragment extends Fragment {
     }
 
     private void test2() {
-        Set<Pair<BluetoothDevice,String>> lobbies = MainActivity.getBTManagerInstance().getDevices();
+        Set<Pair<BluetoothDevice, String>> lobbies = MainActivity.getBTManagerInstance().getDevices();
         lobbies.stream().forEach(
                 (lobby) -> addNewLobby(lobby.first, lobby.second)
         );
     }
 
     private void createLobby() {
-        Log.e("!","test");
+        Log.e("!", "test");
         NavHostFragment.findNavController(this).navigate(R.id.action_multiplayerMenu_to_multiplayerMenuLobbyFragment);
-        MainActivity.getBTManagerInstance().setConnectionType(ConnectionType.Server);
+
+        Runnable r = () -> {
+            MainActivity.getBTManagerInstance().setConnectionType(ConnectionType.Server);
+        };
+
+        HandlerThread handlerThread = new HandlerThread("bluetooth", 4);
+        handlerThread.start();
+        Handler handler = new Handler(handlerThread.getLooper());
+        handler.post(r);
     }
 
 
