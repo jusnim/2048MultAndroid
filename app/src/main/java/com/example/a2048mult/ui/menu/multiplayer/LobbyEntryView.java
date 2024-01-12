@@ -1,5 +1,6 @@
 package com.example.a2048mult.ui.menu.multiplayer;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -42,7 +43,15 @@ public class LobbyEntryView extends ConstraintLayout {
     /**
      * sets LobbyName for LobbyEntry
      */
-    public void setName() {
+    public void setName(String name) {
+        binding.lobbyName.setText(name);
+    }
 
+    /**
+     * adds the reference for the join button to the corressponding device
+     *
+     */
+    public void addLobbyDeviceConnection(BluetoothDevice device){
+//        binding.buttonJoinLobby.s
     }
 }

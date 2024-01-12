@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
     // TODO meilenstein4 uml gamestate
     private ActivityMainBinding binding;
 
-    public static BluetoothManager getInstance() {
+    public static BluetoothManager getBTManagerInstance() {
         return btManager;
     }
 

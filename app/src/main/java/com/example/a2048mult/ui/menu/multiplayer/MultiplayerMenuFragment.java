@@ -1,14 +1,17 @@
 package com.example.a2048mult.ui.menu.multiplayer;
 
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
+
+import com.example.a2048mult.Control.BluetoothManager;
+import com.example.a2048mult.Tuple;
 import com.example.a2048mult.ui.menu.MainActivity;
 
 import androidx.annotation.NonNull;
@@ -18,7 +21,11 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.a2048mult.R;
 import com.example.a2048mult.databinding.FragmentMultiplayerMenuBinding;
-import com.example.a2048mult.game.logic.GameLogic;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class MultiplayerMenuFragment extends Fragment {
 
@@ -27,24 +34,36 @@ public class MultiplayerMenuFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MainActivity.getInstance().BTinit();
+        MainActivity.getBTManagerInstance().BTinit();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMultiplayerMenuBinding.inflate(getLayoutInflater());
+
         binding.buttonChangeUsername.setOnClickListener(
                 v -> changeUsername()
         );
         binding.buttonBluetooth.setOnClickListener(
                 // TODO remove test
-                v -> test()
+                v -> addNewLobby(null,"test")
+        );
+        binding.buttonBluetooth.setOnClickListener(
+                // TODO remove test
+                v -> test2()
         );
         binding.buttonCreateLobby.setOnClickListener(
                 v -> createLobby()
         );
 
         return binding.getRoot();
+    }
+
+    private void test2() {
+        Set<Tuple<BluetoothDevice,String>> lobbies = MainActivity.getBTManagerInstance().findDevices();
+        lobbies.stream().forEach(
+                (lobby) -> addNewLobby(lobby.t, lobby.u)
+        );
     }
 
     private void createLobby() {
@@ -54,9 +73,11 @@ public class MultiplayerMenuFragment extends Fragment {
 
 
 
-    private void test() {
+    private void addNewLobby(BluetoothDevice device, String lobbyname) {
         binding.connectList.removeView(binding.noLobbyInfo);
-        binding.connectList.addView(new LobbyEntryView(getContext()));
+        LobbyEntryView lobbyEntryView = new LobbyEntryView(getContext());
+        lobbyEntryView.setName(lobbyname);
+        lobbyEntryView.addLobbyDeviceConnection(device);
     }
 
     private void changeUsername() {
@@ -73,7 +94,8 @@ public class MultiplayerMenuFragment extends Fragment {
 
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
         builder.show();
-        MainActivity.getInstance().ChangeDeviceName(binding.usernameInput.getText().toString());
+
+        MainActivity.getBTManagerInstance().ChangeDeviceName(binding.usernameInput.getText().toString());
     }
 
     @Override
