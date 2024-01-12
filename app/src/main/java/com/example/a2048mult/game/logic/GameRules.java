@@ -13,6 +13,7 @@ import java.util.Random;
 
 public class GameRules {
 
+    // merge two tiles in memory and queue all necessary animations
     private static void internalMerge(GameTile tile_view, int x_new, int y_new, Player player) {
         GameTile tile_merge_old;
         GameTile tile_merge_new;
@@ -24,8 +25,8 @@ public class GameRules {
         tile_view.updateCoordinates(x_new, y_new);
 
         // merge in memory
-        field_state.setTile(x_new, y_new, tile_view.getLevel() + 1);
         field_state.setTile(tile_view.getOldX(), tile_view.getOldY(), 0);
+        field_state.setTile(x_new, y_new, tile_view.getLevel() + 1);
 
         // tile we merge our with
         tile_merge_old = new GameTileImpl(x_new, y_new, tile_view.getLevel());
@@ -78,7 +79,7 @@ public class GameRules {
                 // play field or if we can merge our knowledge and the friends
                 // we made on our way with another tile
                 if (yy != 0 && field_state.getTile(x, yy - 1) == tile) {
-                    // GameRules.internalMerge(tile_view, x, yy + 1, player);
+                    GameRules.internalMerge(tile_view, x, yy - 1, player);
                     continue;
                 }
 
@@ -158,7 +159,7 @@ public class GameRules {
 
                 // check if we are able to merge
                 if (yy != field_state.getFieldSizeY() - 1 && field_state.getTile(x, yy + 1) == tile) {
-                    // GameRules.internalMerge(tile_view, x, yy + 1, player);
+                    GameRules.internalMerge(tile_view, x, yy + 1, player);
                     continue;
                 }
 
@@ -227,8 +228,8 @@ public class GameRules {
 
                 // tile has space to move (pull it to the left)
                 xx = x;
-                while (field_state.getTile(--xx, y) == 0) {
-                    if (xx == 0) {
+                while (field_state.getTile(xx - 1, y) == 0) {
+                    if (--xx == 0) {
                         break;
                     }
                 }
@@ -238,7 +239,7 @@ public class GameRules {
 
                 // check if we are able to merge
                 if (xx != 0 && field_state.getTile(xx - 1, y) == tile) {
-                    // GameRules.internalMerge(tile_view, x, yy + 1, player);
+                    GameRules.internalMerge(tile_view, xx - 1, y, player);
                     continue;
                 }
 
@@ -301,18 +302,20 @@ public class GameRules {
 
                 // tile has space to move (pull it to the right)
                 xx = x;
-                while (field_state.getTile(++xx, y) == 0) {
-                    if (xx == field_state.getFieldSizeX() - 1) {
+                while (field_state.getTile(xx + 1, y) == 0) {
+                    if (++xx == field_state.getFieldSizeX() - 1) {
                         break;
                     }
                 }
+
+                Log.e("!", "Tile could be moved to " + xx + " " + y);
 
                 // create a tile with the old x and y
                 tile_view = new GameTileImpl(x, y, tile);
 
                 // check if we are able to merge
                 if (xx != field_state.getFieldSizeX() - 1 && field_state.getTile(xx + 1, y) == tile) {
-                    // GameRules.internalMerge(tile_view, x, yy + 1, player);
+                    GameRules.internalMerge(tile_view, xx + 1, y, player);
                     continue;
                 }
 
@@ -367,7 +370,7 @@ public class GameRules {
         }
 
         if (!freeSpaceForNewTile) {
-            //TODO PLayer Variable verloren dafuer Methode wird void
+            //TODO Player Variable verloren dafuer Methode wird void
             return false; // spiel verloren
         }
 
