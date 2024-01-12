@@ -24,6 +24,6 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-//        btManager = new BluetoothManager(this, new BTListAdapter(this));
+        btManager = new BluetoothManager(this, new BTListAdapter(this));
     }
 }

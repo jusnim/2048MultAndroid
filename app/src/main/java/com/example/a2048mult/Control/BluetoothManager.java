@@ -138,7 +138,7 @@ public class BluetoothManager {
         //msg.setData(msgBundle);
         //msgHandler.sendMessage(msg);
 
-        //bluetoothAdapter.cancelDiscovery();
+        bluetoothAdapter.cancelDiscovery();
         if (ActivityCompat.checkSelfPermission(app, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -192,7 +192,7 @@ public class BluetoothManager {
 
     public void btManageConnection(BluetoothSocket btSocket) {
         // Start receiver thread
-        messageReceiverThread = new BtMessageReceiverThread(btSocket);
+        messageReceiverThread = new BtMessageReceiverThread(this,btSocket);
         messageReceiverThread.start();
         Log.d(LOG_TAG, "Message Receiver starts receiving");
         // Init sender object
@@ -314,68 +314,7 @@ public class BluetoothManager {
         return btListAdapter;
     }
 
-    public class BtMessageReceiverThread extends Thread {
-        public final BluetoothSocket btSocket;
-        public final InputStream btIStream;
-        ;
 
-        public BtMessageReceiverThread(BluetoothSocket otherSocket) {
-            btSocket = otherSocket;
-            InputStream tmpIStream = null;
-
-            try {
-                Log.d(LOG_TAG, "[BtMessageReceiverThread] Trying to get I/O Stream from BT socket");
-                tmpIStream = btSocket.getInputStream();
-            } catch (IOException e) {
-                Log.d(LOG_TAG, "[BtMessageReceiverThread] IOException while getting I/O Streams");
-            }
-
-            btIStream = tmpIStream;
-        }
-
-        /**
-         * Receive data with Thread function
-         */
-        @Override
-        public void run() {
-            byte[] buffer = new byte[1024];
-            int numBytes;
-
-            // Keep listening to the InputStream until an exception occurs
-            Log.d(LOG_TAG, "[ConnectionManager] Listening InputStream fore data");
-            while (true) {
-                try {
-                    numBytes = btIStream.read(buffer);
-                    // Log.d(LOG_TAG, "[BtMessageReceiverThread] Read bytes: " + numBytes);
-                    // Send the received data to the UI thread
-                    String receivedMsg = new String(buffer, 0, numBytes, CHAR_SET);
-                    receivedMsg = receivedMsg.trim();
-                    updateUI(receivedMsg);
-                } catch (IOException e) {
-                    Log.d(LOG_TAG, "[ConnectionManager] IOException while receiving data from the InputStream");
-                    break;
-                }
-            }
-        }
-
-        public void cancel() {
-            try {
-                Log.d(LOG_TAG, "[ConnectionManager] Trying to shutdown the connection");
-                btSocket.close();
-            } catch (IOException e) {
-                Log.d(LOG_TAG, "[ConnectionManager] IOException while canceling");
-            }
-        }
-
-        public void updateUI(String msgString) {
-            Bundle msgBundle = new Bundle();
-            msgBundle.putString(RECEIVER_MSG_KEY, msgString);
-            Message msg = new Message();
-            msg.what = RECEIVER_THREAD_WHAT;
-            msg.setData(msgBundle);
-            msgHandler.sendMessage(msg);
-        }
-    }
 
 
 
