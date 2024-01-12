@@ -1,52 +1,356 @@
 package com.example.a2048mult.game.logic;
 
+import android.util.Log;
+
+import com.example.a2048mult.game.states.GameTile;
 import com.example.a2048mult.game.states.GameTileImpl;
 import com.example.a2048mult.game.states.MoveType;
 import com.example.a2048mult.game.states.Player;
 import com.example.a2048mult.game.states.PlayfieldState;
+import com.example.a2048mult.game.states.PlayfieldTurn;
 
 import java.util.Random;
 
 public class GameRules {
+
+    // merge two tiles in memory and queue all necessary animations
+    private static void internalMerge(GameTile tile_view, int x_new, int y_new, Player player) {
+        GameTile tile_merge_old;
+        GameTile tile_merge_new;
+        PlayfieldState field_state;
+
+        field_state = player.getPlayfieldState();
+
+        // tile we pulled
+        tile_view.updateCoordinates(x_new, y_new);
+
+        // merge in memory
+        field_state.setTile(tile_view.getOldX(), tile_view.getOldY(), 0);
+        field_state.setTile(x_new, y_new, tile_view.getLevel() + 1);
+
+        // tile we merge our with
+        tile_merge_old = new GameTileImpl(x_new, y_new, tile_view.getLevel());
+        tile_merge_old.changeNewToOld();
+
+        // new tile that will spawn
+        tile_merge_new = new GameTileImpl(x_new, y_new, tile_view.getLevel() + 1);
+
+        // add turn to queue
+        player.getPlayfieldTurn().addNewMerged(tile_view, tile_merge_old, tile_merge_new);
+
+        Log.e("!", "MERGED");
+    }
+
+    private static void internalMoveUp(PlayfieldState field_state, Player player) {
+        int y;
+        int x;
+        int yy;
+        int tile;
+        GameTile tile_view;
+        PlayfieldTurn playfield_turn;
+
+        // move: iterate from top to bottom and from left to right
+        for (y = 0; y < field_state.getFieldSizeY(); y++) {
+            for (x = 0; x < field_state.getFieldSizeX(); x++) {
+
+                // field is already at the upper walls, do nothing
+                if (y == 0) {
+                    continue;
+                }
+
+                // get tile, if its 0 there is no tile
+                tile = field_state.getTile(x, y);
+                if (tile == 0) {
+                    continue;
+                }
+
+                // tile has space to move (ok i pull up)
+                yy = y;
+                while (field_state.getTile(x, yy - 1) == 0) {
+                    if (--yy == 0) {
+                        break;
+                    }
+                }
+
+                // create a tile with the old x and y
+                tile_view = new GameTileImpl(x, y, tile);
+
+                // check if we are at the end of our long journey through the
+                // play field or if we can merge our knowledge and the friends
+                // we made on our way with another tile
+                if (yy != 0 && field_state.getTile(x, yy - 1) == tile) {
+                    GameRules.internalMerge(tile_view, x, yy - 1, player);
+                    continue;
+                }
+
+                // if we haven't moved at all continue lol
+                if (y == yy) {
+                    continue;
+                }
+
+                // move tile in data
+                field_state.setTile(x, yy, tile);
+                field_state.setTile(x, y, 0);
+
+                // update tile view
+                tile_view.updateCoordinates(x, yy);
+
+                // move animation (please let it end finally)
+                playfield_turn = player.getPlayfieldTurn();
+                playfield_turn.addNewMove(tile_view);
+
+                Log.e("!", "MOVED ("
+                        + Integer.toString(x) + " | "
+                        + Integer.toString(y) + ") to ("
+                        + Integer.toString(x) + " | "
+                        + Integer.toString(yy) + ")"
+                );
+            }
+        }
+    }
+
     public static void moveUp(Player player) {
-        int[][] beforeField = copyFieldFromPlayer(player);
-        rotateAntiClockwise(player.getPlayfieldState());
-        rotateAntiClockwise(player.getPlayfieldState());
-        rotateAntiClockwise(player.getPlayfieldState());
-        move(player);
-        rotateAntiClockwise(player.getPlayfieldState());
-//        calculateMove(player, beforeField, copyFieldFromPlayer(player), MoveType.UP);
-        GameRules.spawnTile(player);
+        PlayfieldState field_state;
+
+        // obtain field state
+        field_state = player.getPlayfieldState();
+
+        field_state.printField();
+
+        // move or merge
+        GameRules.internalMoveUp(field_state, player);
+
+        field_state.printField();
+    }
+
+    private static void internalMoveDown(PlayfieldState field_state, Player player) {
+        int y;
+        int x;
+        int yy;
+        int tile;
+        GameTile tile_view;
+        PlayfieldTurn playfield_turn;
+
+        // move: iterate from bottom to top and from left to right
+        for (y = field_state.getFieldSizeY() - 1; y > -1; y--) {
+            for (x = 0; x < field_state.getFieldSizeX(); x++) {
+
+                // field is already at the bottom walls, do nothing
+                if (y == (field_state.getFieldSizeY() - 1)) {
+                    continue;
+                }
+
+                // get tile, if its 0 there is no tile
+                tile = field_state.getTile(x, y);
+                if (tile == 0) {
+                    continue;
+                }
+
+                // tile has space to move (pull it down)
+                yy = y;
+                while (field_state.getTile(x, yy + 1) == 0) {
+                    if (++yy == field_state.getFieldSizeY() - 1) {
+                        break;
+                    }
+                }
+
+                // create a tile with the old x and y
+                tile_view = new GameTileImpl(x, y, tile);
+
+                // check if we are able to merge
+                if (yy != field_state.getFieldSizeY() - 1 && field_state.getTile(x, yy + 1) == tile) {
+                    GameRules.internalMerge(tile_view, x, yy + 1, player);
+                    continue;
+                }
+
+                // if we haven't moved at all continue lol
+                if (y == yy) {
+                    continue;
+                }
+
+                // move tile in data
+                field_state.setTile(x, yy, tile);
+                field_state.setTile(x, y, 0);
+
+                // update tile view
+                tile_view.updateCoordinates(x, yy);
+
+                // move animation (please let it end finally)
+                playfield_turn = player.getPlayfieldTurn();
+                playfield_turn.addNewMove(tile_view);
+
+                Log.e("!", "MOVED ("
+                        + Integer.toString(x) + " | "
+                        + Integer.toString(y) + ") to ("
+                        + Integer.toString(x) + " | "
+                        + Integer.toString(yy) + ")"
+                );
+            }
+        }
     }
 
     public static void moveDown(Player player) {
-//        Log.e("!", "rules");
-        int[][] beforeField = copyFieldFromPlayer(player);
-        rotateAntiClockwise(player.getPlayfieldState());
-        move(player);
-        rotateAntiClockwise(player.getPlayfieldState());
-        rotateAntiClockwise(player.getPlayfieldState());
-        rotateAntiClockwise(player.getPlayfieldState());
-//        calculateMove(player, beforeField, copyFieldFromPlayer(player), MoveType.DOWN);
-        GameRules.spawnTile(player);
+        PlayfieldState field_state;
+
+        // obtain field state
+        field_state = player.getPlayfieldState();
+
+        field_state.printField();
+
+        // move or merge
+        GameRules.internalMoveDown(field_state, player);
+
+        field_state.printField();
+    }
+
+    private static void internalMoveLeft(PlayfieldState field_state, Player player) {
+        int y;
+        int x;
+        int xx;
+        int tile;
+        GameTile tile_view;
+        PlayfieldTurn playfield_turn;
+
+        // move: iterate from top to bottom and from left to right
+        for (x = 0; x < field_state.getFieldSizeX(); x++) {
+            for (y = 0; y < field_state.getFieldSizeY(); y++) {
+
+                // field is already at the left wall, do nothing
+                if (x == 0) {
+                    continue;
+                }
+
+                // get tile, if its 0 there is no tile
+                tile = field_state.getTile(x, y);
+                if (tile == 0) {
+                    continue;
+                }
+
+                // tile has space to move (pull it to the left)
+                xx = x;
+                while (field_state.getTile(xx - 1, y) == 0) {
+                    if (--xx == 0) {
+                        break;
+                    }
+                }
+
+                // create a tile with the old x and y
+                tile_view = new GameTileImpl(x, y, tile);
+
+                // check if we are able to merge
+                if (xx != 0 && field_state.getTile(xx - 1, y) == tile) {
+                    GameRules.internalMerge(tile_view, xx - 1, y, player);
+                    continue;
+                }
+
+                // if we haven't moved at all continue lol
+                if (x == xx) {
+                    continue;
+                }
+
+                // move tile in data
+                field_state.setTile(xx, y, tile);
+                field_state.setTile(x, y, 0);
+
+                // update tile view
+                tile_view.updateCoordinates(xx, y);
+
+                // move animation (please let it end finally)
+                playfield_turn = player.getPlayfieldTurn();
+                playfield_turn.addNewMove(tile_view);
+            }
+
+        }
     }
 
     public static void moveLeft(Player player) {
-        int[][] beforeField = copyFieldFromPlayer(player);
-        move(player);
-//        calculateMove(player, beforeField, copyFieldFromPlayer(player), MoveType.LEFT);
-        GameRules.spawnTile(player);
+        PlayfieldState field_state;
+
+        // obtain field state
+        field_state = player.getPlayfieldState();
+
+        field_state.printField();
+
+        // move or merge
+        GameRules.internalMoveLeft(field_state, player);
+
+        field_state.printField();
+    }
+
+    private static void internalMoveRight(PlayfieldState field_state, Player player) {
+        int y;
+        int x;
+        int xx;
+        int tile;
+        GameTile tile_view;
+        PlayfieldTurn playfield_turn;
+
+        // move: iterate from top to bottom and from right to left
+        for (x = field_state.getFieldSizeX() - 1; x >= 0; x--) {
+            for (y = 0; y < field_state.getFieldSizeY(); y++) {
+
+                // field is already at the right wall, do nothing
+                if (x == field_state.getFieldSizeX() - 1) {
+                    continue;
+                }
+
+                // get tile, if its 0 there is no tile
+                tile = field_state.getTile(x, y);
+                if (tile == 0) {
+                    continue;
+                }
+
+                // tile has space to move (pull it to the right)
+                xx = x;
+                while (field_state.getTile(xx + 1, y) == 0) {
+                    if (++xx == field_state.getFieldSizeX() - 1) {
+                        break;
+                    }
+                }
+
+                Log.e("!", "Tile could be moved to " + xx + " " + y);
+
+                // create a tile with the old x and y
+                tile_view = new GameTileImpl(x, y, tile);
+
+                // check if we are able to merge
+                if (xx != field_state.getFieldSizeX() - 1 && field_state.getTile(xx + 1, y) == tile) {
+                    GameRules.internalMerge(tile_view, xx + 1, y, player);
+                    continue;
+                }
+
+                // if we haven't moved at all continue lol
+                if (x == xx) {
+                    continue;
+                }
+
+                // move tile in data
+                field_state.setTile(xx, y, tile);
+                field_state.setTile(x, y, 0);
+
+                // update tile view
+                tile_view.updateCoordinates(xx, y);
+
+                // move animation (please let it end finally)
+                playfield_turn = player.getPlayfieldTurn();
+                playfield_turn.addNewMove(tile_view);
+            }
+
+        }
     }
 
     public static void moveRight(Player player) {
-        int[][] beforeField = copyFieldFromPlayer(player);
-        rotateAntiClockwise(player.getPlayfieldState());
-        rotateAntiClockwise(player.getPlayfieldState());
-        move(player);
-        rotateAntiClockwise(player.getPlayfieldState());
-        rotateAntiClockwise(player.getPlayfieldState());
-//        calculateMove(player, beforeField, copyFieldFromPlayer(player), MoveType.RIGHT);
-        GameRules.spawnTile(player);
+        PlayfieldState field_state;
+
+        // obtain field state
+        field_state = player.getPlayfieldState();
+
+        field_state.printField();
+
+        // move or merge
+        GameRules.internalMoveRight(field_state, player);
+
+        field_state.printField();
     }
 
     public static boolean spawnTile(Player player) {
@@ -66,7 +370,7 @@ public class GameRules {
         }
 
         if (!freeSpaceForNewTile) {
-            //TODO PLayer Variable verloren dafuer Methode wird void
+            //TODO Player Variable verloren dafuer Methode wird void
             return false; // spiel verloren
         }
 
@@ -77,7 +381,7 @@ public class GameRules {
         if (Math.random() > 0.8)
             tileValue = 2;
 
-        player.getPlayfieldTurn().addNewSpawned(new GameTileImpl(freeSpaces[rmdPos][0], freeSpaces[rmdPos][1], tileValue));
+//        player.getPlayfieldTurn().addNewSpawned(new GameTileImpl(freeSpaces[rmdPos][0], freeSpaces[rmdPos][1], tileValue));
         // TODO change
 
 //        player.getPlayfieldTurn().addNewSpawned(new GameTileImpl(0, 0, tileValue));
@@ -86,7 +390,6 @@ public class GameRules {
     }
 
 //    public static boolean spawnTile2(Player player) {
-//        //TODO: random
 //        double[][] random = new double[game.getFieldSizeX()][game.getFieldSizeY()];
 //        int[] highest = new int[2];
 //        double highestValue = 0;

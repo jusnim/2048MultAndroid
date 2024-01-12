@@ -33,7 +33,7 @@
     <color name="textBright">@color/level1</color>
     <color name="textDark">@color/level16</color>
 
-
+    <color name="invisibile">#00000000</color>
     <array name="colorLevelSteps">
         <item>@color/level1</item>
         <item>@color/level2</item>

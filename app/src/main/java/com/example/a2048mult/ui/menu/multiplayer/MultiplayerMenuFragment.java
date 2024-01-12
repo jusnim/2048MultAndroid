@@ -20,6 +20,8 @@ import com.example.a2048mult.R;
 import com.example.a2048mult.databinding.FragmentMultiplayerMenuBinding;
 import com.example.a2048mult.game.logic.GameLogic;
 
+import java.util.Arrays;
+
 public class MultiplayerMenuFragment extends Fragment {
 
     private FragmentMultiplayerMenuBinding binding;
@@ -27,7 +29,7 @@ public class MultiplayerMenuFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MainActivity.getInstance().BTinit();
+//        MainActivity.getInstance().BTinit();
     }
 
     @Override

@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.example.a2048mult.game.logic.GameRules;
 import com.example.a2048mult.game.states.GameTile;
+import com.example.a2048mult.game.states.GameTileImpl;
 import com.example.a2048mult.game.states.MoveType;
 import com.example.a2048mult.game.states.Player;
 import com.example.a2048mult.game.states.PlayerImpl;
@@ -14,11 +15,11 @@ import com.example.a2048mult.game.states.PlayfieldStateImpl;
 import com.example.a2048mult.game.states.PlayfieldTurnAnimTuple;
 import com.example.a2048mult.game.states.PlayfieldTurnAnimationType;
 
-import org.junit.*;
+import org.junit.Test;
 import org.junit.jupiter.api.Nested;
 
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GameTests {
@@ -85,42 +86,26 @@ public class GameTests {
         }
         System.out.println();
         System.out.println();
+//        GameRules.moveDown(player);
 
+        player.getPlayfieldTurn().addNewMove(new GameTileImpl(0,0,1,0,1));
+        player.getPlayfieldTurn().addNewMove(new GameTileImpl(1,0,2,0,1));
 
-        GameRules.moveDown(player);
-
-
-        List<PlayfieldTurnAnimTuple<PlayfieldTurnAnimationType, GameTile[]>> listPts = new ArrayList<>();
         //gets all registered changes from calculateMove and similar methods and prints them for manual debugging
-        PlayfieldTurnAnimTuple<PlayfieldTurnAnimationType, GameTile[]> pt =
+        PlayfieldTurnAnimTuple pt =
                 player.getPlayfieldTurn().pollNextAnimation();
 
-        listPts.add(pt);
+        int i = 0;
         while (pt != null) {
+            System.out.println(
+            pt.tile.getOldX() + ", "
+                    + pt.tile.getOldY() + ", "
+                    + pt.tile.getNewX() + ", "
+                    + pt.tile.getNewY());
             pt = player.getPlayfieldTurn().pollNextAnimation();
-            listPts.add(pt);
+            i++;
         }
-
-        for (int[] line : player.getPlayfieldState().getField()) {
-            for (int level : line) {
-                System.out.print(level + " ");
-//                Log.e("!", String.valueOf(level));
-            }
-            System.out.println();
-        }
-        System.out.println();
-        System.out.println();
-
-
-        for (int[] line : compare) {
-            for (int level : line) {
-                System.out.print(level + " ");
-//                Log.e("!", String.valueOf(level));
-            }
-            System.out.println();
-        }
-//        assertArrayEquals(compare, player.getPlayfieldState().getField());
-    }
+        System.out.println(i);
 
     @Nested
     class moveDown {
@@ -186,6 +171,7 @@ public class GameTests {
 
             assertArrayEquals(processedArray, expectedArrau);
         }
+
         @Test
         public void moveDown4() {
             int[][] inputArray = {
@@ -206,6 +192,7 @@ public class GameTests {
 
             assertArrayEquals(processedArray, expectedArrau);
         }
+
         @Test
         public void moveDown5() {
             int[][] inputArray = {
@@ -227,10 +214,17 @@ public class GameTests {
             assertArrayEquals(processedArray, expectedArrau);
         }
     }
+
     @Nested
-    class moveUp{}
+    class moveUp {
+    }
+
     @Nested
-    class moveLeft{}
+    class moveLeft {
+    }
+
     @Nested
-    class moveRight{}
-}
+    class moveRight {
+    }
+}}
+

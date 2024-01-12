@@ -7,6 +7,7 @@ import java.io.Serializable;
  */
 public interface PlayfieldState extends Serializable {
 
+    void printField();
 
     /**
      * getter for FieldSizeX
@@ -37,5 +38,6 @@ public interface PlayfieldState extends Serializable {
      * setter for field
      */
     void setField(int[][] field);
+
 
 }

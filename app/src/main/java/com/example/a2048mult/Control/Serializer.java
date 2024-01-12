@@ -9,14 +9,13 @@ import java.io.OutputStream;
 import java.util.Objects;
 
 public class Serializer {
-    //TODO: (De-)Serializer
     public static void serializePDU(PDU pdu, OutputStream os) throws IOException {
         ObjectOutputStream oos = new ObjectOutputStream(os);
 
         oos.writeUTF(PDU.MAGIC_NUMBER);
         oos.writeUTF(PDU.VERSION);
         oos.writeObject(pdu);
-
+        oos.close();
     }
 
     public static PDU deserializePDU(InputStream is) throws IOException, ClassNotFoundException {

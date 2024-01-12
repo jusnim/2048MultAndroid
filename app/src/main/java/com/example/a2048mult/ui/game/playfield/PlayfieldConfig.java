@@ -12,4 +12,7 @@ public class PlayfieldConfig {
     static int animationSpawnDurationInMs = 110;
     static int invisibleTile = -1;
     static int backgroundTile = 0;
+
+    private PlayfieldConfig() {
+    }
 }
