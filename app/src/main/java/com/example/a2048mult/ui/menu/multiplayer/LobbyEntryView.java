@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.a2048mult.Control.BtConnectAsClientThread;
+import com.example.a2048mult.Control.ProtocolWrapper;
 import com.example.a2048mult.databinding.ViewLobbyEntryBinding;
 import com.example.a2048mult.ui.menu.MainActivity;
 
@@ -57,6 +58,7 @@ public class LobbyEntryView extends ConstraintLayout {
         // TODO
         BtConnectAsClientThread Client = new BtConnectAsClientThread(MainActivity.getBTManagerInstance(),device);
         Client.run();
+
         //binding.buttonJoinLobby.s
     }
 }

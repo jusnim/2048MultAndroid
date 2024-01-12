@@ -52,16 +52,11 @@ public class BtAcceptAsServerThread extends Thread {
         try {
             Log.d(btManager.getLOG_TAG(), "[BtAcceptAsServerThread] Get a BluetoothServerSocket");
             if (ActivityCompat.checkSelfPermission(btManager.getApp(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
+                Log.d(btManager.getLOG_TAG(), "Permission not granted");
                 return;
             }
             tmpSocket = btManager.getBluetoothAdapter().listenUsingRfcommWithServiceRecord(btManager.getSERVICE_NAME(), candidates.get(connectionCount));
+            Log.d(btManager.getLOG_TAG(), "ServerSocket created");
         } catch (IOException e) {
             Log.d(btManager.getLOG_TAG(), "[BtAcceptAsServerThread] IOException on BluetoothServerSocket creation");
         }
@@ -86,7 +81,7 @@ public class BtAcceptAsServerThread extends Thread {
                 //updateUI(RESUlT_CONN_OK);
 
                 // Manage connection
-                btManager.btManageConnection(btSocket);
+                //btManager.btManageConnection(btSocket);
 
 
                 try {

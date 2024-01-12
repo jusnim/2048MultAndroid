@@ -25,7 +25,7 @@ public class BtConnectAsClientThread extends Thread {
 
     private int connectionCount = 0;
 
-    @SuppressLint("MissingPermission")
+
     public BtConnectAsClientThread(BluetoothManager btManager, BluetoothDevice device) {
         candidates.add(btManager.getSERVICE_UUID1());
         candidates.add(btManager.getSERVICE_UUID2());
@@ -33,14 +33,21 @@ public class BtConnectAsClientThread extends Thread {
         this.btManager = btManager;
         BluetoothSocket tmpSocket = null;
         btDevice = device;
-
+        if (ActivityCompat.checkSelfPermission(btManager.getApp(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            btSocket = null;
+            return;
+        }
         // Get a BluetoothSocket for connection with the given device
         try {
             Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] Get a BluetoothSocket for connection with the given device");
+
+
             tmpSocket = btDevice.createRfcommSocketToServiceRecord(candidates.get(connectionCount));
             connectionCount++;
         } catch (IOException e) {
             Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] IOException occurred on socket creation");
+            throw new RuntimeException();
+
         }
 
         btSocket = tmpSocket;
@@ -54,13 +61,15 @@ public class BtConnectAsClientThread extends Thread {
         if (ActivityCompat.checkSelfPermission(btManager.getApp(), Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        btManager.getBluetoothAdapter().cancelDiscovery();
+
+            btManager.getBluetoothAdapter().cancelDiscovery();
+
 
         try {
         // Connect the remote device through the socket
         Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] Try to connect with the device...");
 
-        // Send message to the UI thread
+
         //updateUI("Trying to connect to " + btDevice.getName());
 
         // Connect
@@ -86,7 +95,7 @@ public class BtConnectAsClientThread extends Thread {
         //updateUI(RESUlT_CONN_OK);
 
         // Manage the connection
-        btManager.btManageConnection(btSocket);
+        //btManager.btManageConnection(btSocket);
         }
 
 // Cancel the blocked connect() and close the socket
@@ -99,12 +108,5 @@ public void cancel() {
         }
         }
 
-/*public void updateUI(String msgString) {
-        Bundle msgBundle = new Bundle();
-        msgBundle.putString(CLIENTSOCK_MSG_KEY, msgString);
-        Message msg = new Message();
-        msg.what = CLIENTSOCK_THREAD_WHAT;
-        msg.setData(msgBundle);
-        msgHandler.sendMessage(msg);
-        }*/
+
 }

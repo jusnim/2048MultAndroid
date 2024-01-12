@@ -30,6 +30,8 @@ public class MultiplayerMenuLobbyFragment extends Fragment implements MenuLobbyC
         super.onCreate(savedInstanceState);
         if(MainActivity.getBTManagerInstance().getConnectionType() == ConnectionType.Server) {
             MainActivity.getBTManagerInstance().btMakeDiscoverable();
+            BtAcceptAsServerThread Server = new BtAcceptAsServerThread(MainActivity.getBTManagerInstance());
+            Server.run();
         }
     }
 
@@ -45,12 +47,14 @@ public class MultiplayerMenuLobbyFragment extends Fragment implements MenuLobbyC
     @Override
     public void onStart() {
         super.onStart();
+
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        //TODO: close socket on Destroy
     }
 
     @Override
