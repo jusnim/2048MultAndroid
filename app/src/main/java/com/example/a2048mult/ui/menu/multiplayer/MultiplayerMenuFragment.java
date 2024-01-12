@@ -3,8 +3,6 @@ package com.example.a2048mult.ui.menu.multiplayer;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.text.InputType;
 import android.util.Log;
 import android.util.Pair;
@@ -67,15 +65,7 @@ public class MultiplayerMenuFragment extends Fragment {
     private void createLobby() {
         Log.e("!", "test");
         NavHostFragment.findNavController(this).navigate(R.id.action_multiplayerMenu_to_multiplayerMenuLobbyFragment);
-
-        Runnable r = () -> {
-            MainActivity.getBTManagerInstance().setConnectionType(ConnectionType.Server);
-        };
-
-        HandlerThread handlerThread = new HandlerThread("bluetooth", 4);
-        handlerThread.start();
-        Handler handler = new Handler(handlerThread.getLooper());
-        handler.post(r);
+        MainActivity.getBTManagerInstance().setConnectionType(ConnectionType.Server);
     }
 
 

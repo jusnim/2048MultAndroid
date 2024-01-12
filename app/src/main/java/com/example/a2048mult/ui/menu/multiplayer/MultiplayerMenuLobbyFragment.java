@@ -1,21 +1,22 @@
 package com.example.a2048mult.ui.menu.multiplayer;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.a2048mult.Control.BtAcceptAsServerThread;
 import com.example.a2048mult.Control.ConnectionType;
 import com.example.a2048mult.R;
 import com.example.a2048mult.databinding.FragmentMultiplayerMenuLobbyBinding;
 import com.example.a2048mult.game.logic.GameLogic;
-import com.example.a2048mult.ui.menu.MenuLobbyChangeListener;
 import com.example.a2048mult.ui.menu.MainActivity;
+import com.example.a2048mult.ui.menu.MenuLobbyChangeListener;
 
 public class MultiplayerMenuLobbyFragment extends Fragment implements MenuLobbyChangeListener {
     private FragmentMultiplayerMenuLobbyBinding binding;
@@ -28,9 +29,9 @@ public class MultiplayerMenuLobbyFragment extends Fragment implements MenuLobbyC
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(MainActivity.getBTManagerInstance().getConnectionType() == ConnectionType.Server) {
-            MainActivity.getBTManagerInstance().btMakeDiscoverable();
-        }
+            if (MainActivity.getBTManagerInstance().getConnectionType() == ConnectionType.Server) {
+                MainActivity.getBTManagerInstance().btMakeDiscoverable();
+            }
     }
 
     @Override
@@ -45,8 +46,8 @@ public class MultiplayerMenuLobbyFragment extends Fragment implements MenuLobbyC
     @Override
     public void onStart() {
         super.onStart();
-        BtAcceptAsServerThread Server = new BtAcceptAsServerThread(MainActivity.getBTManagerInstance());
-        Server.run();
+        BtAcceptAsServerThread server = new BtAcceptAsServerThread(MainActivity.getBTManagerInstance());
+        server.start();
 
     }
 
