@@ -46,7 +46,7 @@ public class SinglePlayerMenuFragment extends Fragment implements MenuLobbyChang
         PlayfieldStateImpl playfieldState = new PlayfieldStateImpl();
         playfieldState.setField(new int[][]
                 {
-                        {1, 0, 1, 1},
+                        {1, 0, 0, 0},
                         {0, 1, 1, 1},
                         {1, 1, 1, 1},
                         {0, 0, 0, 0},

@@ -102,8 +102,11 @@ public class PlayfieldTileView extends ConstraintLayout {
      * tile will be drawn invisible
      */
     private void setInvisibleTile() {
-        binding.textView.setText("");
-        binding.getRoot().getBackground().setTint(getResources().getColor(R.color.invisibile));
+        try {
+            throw new IllegalAccessException("shouldnt be called anymore");
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

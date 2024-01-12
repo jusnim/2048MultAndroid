@@ -41,15 +41,15 @@ public class GameLogic implements InGameControl, ReceiveListener, GameMenuContro
         Runnable r = () -> {
             switch (move) {
                 case UP:
-                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMerged(
-                            new GameTileImpl(2, 0, 3, 0, 1),
-                            new GameTileImpl(3, 0, 3, 0, 1),
-                            new GameTileImpl(3, 0, 2));
+//                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMerged(
+//                            new GameTileImpl(2, 0, 3, 0, 1),
+//                            new GameTileImpl(3, 0, 3, 0, 1),
+//                            new GameTileImpl(3, 0, 2));
 
                     this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMove(
                             new GameTileImpl(0, 0, 2, 0, 1));
 
-
+                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewSpawned(new GameTileImpl(0,0,1));
                     /////////////////////
 
 //                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMerged(
