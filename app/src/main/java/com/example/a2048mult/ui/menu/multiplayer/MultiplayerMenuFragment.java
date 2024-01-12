@@ -88,12 +88,13 @@ public class MultiplayerMenuFragment extends Fragment {
         builder.setPositiveButton("Change", (dialog, which) -> {
                     this.username = input.getText().toString();
                     binding.usernameInput.setText(input.getText().toString());
+                MainActivity.getBTManagerInstance().ChangeDeviceName(this.username);
         });
 
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
         builder.show();
 
-        MainActivity.getBTManagerInstance().ChangeDeviceName(this.username);
+
     }
 
     @Override
