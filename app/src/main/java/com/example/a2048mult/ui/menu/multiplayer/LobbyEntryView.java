@@ -52,6 +52,7 @@ public class LobbyEntryView extends ConstraintLayout {
      *
      */
     public void addLobbyDeviceConnection(BluetoothDevice device){
+        // TODO
 //        binding.buttonJoinLobby.s
     }
 }

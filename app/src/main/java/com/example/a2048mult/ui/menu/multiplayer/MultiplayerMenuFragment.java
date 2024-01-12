@@ -5,13 +5,12 @@ import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.example.a2048mult.Control.BluetoothManager;
-import com.example.a2048mult.Tuple;
 import com.example.a2048mult.ui.menu.MainActivity;
 
 import androidx.annotation.NonNull;
@@ -22,9 +21,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.a2048mult.R;
 import com.example.a2048mult.databinding.FragmentMultiplayerMenuBinding;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class MultiplayerMenuFragment extends Fragment {
@@ -60,10 +56,10 @@ public class MultiplayerMenuFragment extends Fragment {
     }
 
     private void test2() {
-        Set<Tuple<BluetoothDevice,String>> lobbies = MainActivity.getBTManagerInstance().findDevices();
-        lobbies.stream().forEach(
-                (lobby) -> addNewLobby(lobby.t, lobby.u)
-        );
+//        Set<Pair<BluetoothDevice,String>> lobbies = MainActivity.getBTManagerInstance().findDevices();
+//        lobbies.stream().forEach(
+//                (lobby) -> addNewLobby(lobby.first, lobby.second)
+//        );
     }
 
     private void createLobby() {
