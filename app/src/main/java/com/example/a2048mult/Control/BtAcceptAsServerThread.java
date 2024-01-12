@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
 import java.io.IOException;
@@ -24,7 +25,6 @@ public class BtAcceptAsServerThread extends Thread {
     private int connectionCount = 0;
 
 
-
     public BtAcceptAsServerThread(BluetoothManager btManager) {
         candidates = new ArrayList<UUID>();
         candidates.add(btManager.getSERVICE_UUID1());
@@ -33,14 +33,6 @@ public class BtAcceptAsServerThread extends Thread {
         this.btManager = btManager;
         BluetoothServerSocket tmpSocket = null;
 
-        /*try {
-            Log.d(btManager.getLOG_TAG(), "[BtAcceptAsServerThread] Get a BluetoothServerSocket");
-            tmpSocket = btManager.getBluetoothAdapter().listenUsingRfcommWithServiceRecord(btManager.getSERVICE_NAME(),candidates.get(connectionCount));
-        } catch (IOException e) {
-            Log.d(btManager.getLOG_TAG(), "[BtAcceptAsServerThread] IOException on BluetoothServerSocket creation");
-        }
-
-        btServerSocket = tmpSocket;*/
     }
 
 
@@ -51,9 +43,10 @@ public class BtAcceptAsServerThread extends Thread {
 
         try {
             Log.d(btManager.getLOG_TAG(), "[BtAcceptAsServerThread] Get a BluetoothServerSocket");
+
             if (ActivityCompat.checkSelfPermission(btManager.getApp(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                Log.d(btManager.getLOG_TAG(), "Permission not granted");
-                return;
+
+                ActivityCompat.requestPermissions(btManager.app, new String[]{"android.permission.BLUETOOTH_CONNECT"}, 1);
             }
             tmpSocket = btManager.getBluetoothAdapter().listenUsingRfcommWithServiceRecord(btManager.getSERVICE_NAME(), candidates.get(connectionCount));
             Log.d(btManager.getLOG_TAG(), "ServerSocket created");
@@ -77,13 +70,8 @@ public class BtAcceptAsServerThread extends Thread {
 
             if (btSocket != null) {
                 Log.d(btManager.getLOG_TAG(), "[BtAcceptAsServerThread] Connection established!");
-                // updateUI("Connection established with: " + btSocket.getRemoteDevice().getName());
-                //updateUI(RESUlT_CONN_OK);
-
                 // Manage connection
                 //btManager.btManageConnection(btSocket);
-
-
                 try {
                     // Close the useless BluetoothServerSocket
                     btServerSocket.close();
@@ -94,6 +82,8 @@ public class BtAcceptAsServerThread extends Thread {
                 }
             }
         }
+
+
 
 
     // Cancel the listening socket and cause the thread to finish
@@ -109,13 +99,6 @@ public class BtAcceptAsServerThread extends Thread {
         return connectionCount;
     }
 
-   /* public void updateUI(String msgString) {
-        Bundle msgBundle = new Bundle();
-        msgBundle.putString(SERVERSOCK_MSG_KEY, msgString);
-        Message msg = new Message();
-        msg.what = SERVERSOCK_THREAD_WHAT;
-        msg.setData(msgBundle);
 
-        msgHandler.sendMessage(msg);
-    }*/
+
 }
