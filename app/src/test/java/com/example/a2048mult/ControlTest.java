@@ -1,8 +1,8 @@
 package com.example.a2048mult;
 
 import com.example.a2048mult.Control.GameStatePDU;
-import com.example.a2048mult.Control.LobbyInfo;
-import com.example.a2048mult.Control.LobbyInfoPDU;
+import com.example.a2048mult.game.states.LobbySettings;
+import com.example.a2048mult.Control.LobbySettingsPDU;
 import com.example.a2048mult.Control.Serializer;
 import com.example.a2048mult.game.states.GameState;
 import com.example.a2048mult.game.states.Player;
@@ -21,14 +21,16 @@ public class ControlTest {
     public void serializerTest() throws IOException, ClassNotFoundException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-        LobbyInfoPDU lip = new LobbyInfoPDU();
-        lip.setData(new LobbyInfo(23, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH")); //TODO Update when LobbyInfo is implemented
+        LobbySettingsPDU lip = new LobbySettingsPDU();
+        LobbySettings lobbySettings =new LobbySettings();
+        lobbySettings.addPlayer(new PlayerImpl("max", 0, new PlayfieldStateImpl()));
+        lip.setData(lobbySettings);
         Serializer.serializePDU(lip, outputStream);
         byte[] data = outputStream.toByteArray();
-        LobbyInfoPDU copy = (LobbyInfoPDU) Serializer.deserializePDU(new ByteArrayInputStream(data));
-        assertEquals(copy.getData().getAnzahl(), lip.getData().getAnzahl());
-        System.out.println(lip.getData().getNachricht());
-        System.out.println(copy.getData().getNachricht());
+        LobbySettingsPDU copy = (LobbySettingsPDU) Serializer.deserializePDU(new ByteArrayInputStream(data));
+        assertEquals(copy.getData().getPlayerNum(), lip.getData().getPlayerNum());
+        System.out.println(lip.getData().getPlayerNum());
+        System.out.println(copy.getData().getPlayerNum());
         outputStream.reset();
 
         Player player = new PlayerImpl("Max Mustermann", 69, new PlayfieldStateImpl());
