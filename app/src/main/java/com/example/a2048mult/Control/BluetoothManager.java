@@ -3,6 +3,7 @@ package com.example.a2048mult.Control;
 import static androidx.core.app.ActivityCompat.startActivityForResult;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -14,12 +15,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import androidx.core.app.ActivityCompat;
 
 import com.example.a2048mult.ui.menu.MainActivity;
 
@@ -32,7 +36,7 @@ import java.util.UUID;
 
 public class BluetoothManager {
 
-
+    private String ConnectionType;
     public static final String RESUlT_CONN_OK = "connection_OK";
     public static final int SYS_MSG_WHAT = 3;
     public static final String SYS_MSG_KEY = "system_msg";
@@ -44,7 +48,7 @@ public class BluetoothManager {
     public static final int CLIENTSOCK_THREAD_WHAT = 1;
     private static final int REQUEST_ENABLE_BT = 1;
 
-    private final Activity app;
+    public Activity app;
 
     private final String SERVICE_NAME = "BT_2048";
     private final UUID SERVICE_UUID1 = UUID.fromString("f193cb8f-9353-48d9-b074-da3db1c21f64");
@@ -98,6 +102,14 @@ public class BluetoothManager {
         //btdevice.getAddress();
     }
 
+
+    @SuppressLint("MissingPermission")
+    public void ChangeDeviceName(String name) {
+
+        bluetoothAdapter.setName(name);
+
+    }
+
     public void BTinit() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
@@ -113,20 +125,30 @@ public class BluetoothManager {
         }
     }
 
-    @SuppressLint("MissingPermission")
+
     public void BTfindDevices() {
         btListAdapter.clear();
         btListAdapter.updateAdapter();
 
         Log.d(LOG_TAG, "Async devices discovery...");
-        Bundle msgBundle = new Bundle();
-        msgBundle.putString(SYS_MSG_KEY, "Async devices discovery...");
-        Message msg = new Message();
-        msg.what = SYS_MSG_WHAT;
-        msg.setData(msgBundle);
-        msgHandler.sendMessage(msg);
+        //Bundle msgBundle = new Bundle();
+        //msgBundle.putString(SYS_MSG_KEY, "Async devices discovery...");
+        //Message msg = new Message();
+        //msg.what = SYS_MSG_WHAT;
+        //msg.setData(msgBundle);
+        //msgHandler.sendMessage(msg);
 
-        bluetoothAdapter.cancelDiscovery();
+        //bluetoothAdapter.cancelDiscovery();
+        if (ActivityCompat.checkSelfPermission(app, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         bluetoothAdapter.startDiscovery();
     }
 
@@ -151,11 +173,20 @@ public class BluetoothManager {
     }
 
     //Make the device discoverable
-    public void btMakeDiscoverable(Activity activity) {
+    public void btMakeDiscoverable() {
         int requestCode = 1;
-        Intent discoverableIntent =
-                new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 0);
+        if (ActivityCompat.checkSelfPermission(app, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         startActivityForResult(app, discoverableIntent, requestCode, null);
     }
 
@@ -165,7 +196,7 @@ public class BluetoothManager {
         messageReceiverThread.start();
         Log.d(LOG_TAG, "Message Receiver starts receiving");
         // Init sender object
-        messageSender = new BtMessageSender(btSocket);
+        messageSender = new BtMessageSender(this,btSocket);
         Log.d(LOG_TAG, "Sender OK");
     }
 
@@ -267,6 +298,22 @@ public class BluetoothManager {
         return SERVICE_UUID3;
     }
 
+    public void setConnectionType(String connectionType) {
+        ConnectionType = connectionType;
+    }
+
+    public String getConnectionType() {
+        return ConnectionType;
+    }
+
+    public Activity getApp() {
+        return app;
+    }
+
+    public BTListAdapter getBtListAdapter() {
+        return btListAdapter;
+    }
+
     public class BtMessageReceiverThread extends Thread {
         public final BluetoothSocket btSocket;
         public final InputStream btIStream;
@@ -330,46 +377,7 @@ public class BluetoothManager {
         }
     }
 
-    public class BtMessageSender {
-        public final BluetoothSocket btSocket;
-        public final OutputStream btOStream;
 
-        public BtMessageSender(BluetoothSocket otherSocket) {
-            btSocket = otherSocket;
-            OutputStream tmpOStream = null;
-
-            try {
-                Log.d(LOG_TAG, "[BtMessageSender] Trying to get I/O Stream from BT socket");
-                tmpOStream = btSocket.getOutputStream();
-            } catch (IOException e) {
-                Log.d(LOG_TAG, "[BtMessageSender] IOException while getting I/O Streams");
-            }
-
-            btOStream = tmpOStream;
-        }
-
-        public void send(String msg) {
-            try {
-                byte[] bytes = msg.getBytes(CHAR_SET);
-                // Log.d(LOG_TAG, "[BtMessageSender] Trying to write bytes...");
-                btOStream.write(bytes);
-                btOStream.flush();
-            } catch (UnsupportedEncodingException e) {
-                Log.e(LOG_TAG, "[BtMessageSender] UnsupportedEncodingException");
-            } catch (IOException e) {
-                Log.d(LOG_TAG, "[BtMessageSender] IOException while writing OutputStreams");
-            }
-        }
-
-        public void cancel() {
-            try {
-                Log.d(LOG_TAG, "[BtMessageSender] Trying to shutdown the connection");
-                btSocket.close();
-            } catch (IOException e) {
-                Log.d(LOG_TAG, "[BtMessageSender] IOException while canceling");
-            }
-        }
-    }
 
 
 }
