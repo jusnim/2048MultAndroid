@@ -370,7 +370,7 @@ public class GameRules {
         }
 
         if (!freeSpaceForNewTile) {
-            //TODO PLayer Variable verloren dafuer Methode wird void
+            //TODO Player Variable verloren dafuer Methode wird void
             return false; // spiel verloren
         }
 
