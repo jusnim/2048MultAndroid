@@ -387,7 +387,6 @@ public class GameRules {
     }
 
 //    public static boolean spawnTile2(Player player) {
-//        //TODO: random
 //        double[][] random = new double[game.getFieldSizeX()][game.getFieldSizeY()];
 //        int[] highest = new int[2];
 //        double highestValue = 0;

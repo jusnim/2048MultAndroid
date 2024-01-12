@@ -15,7 +15,7 @@ public class Serializer {
         oos.writeUTF(PDU.MAGIC_NUMBER);
         oos.writeUTF(PDU.VERSION);
         oos.writeObject(pdu);
-
+        oos.close();
     }
 
     public static PDU deserializePDU(InputStream is) throws IOException, ClassNotFoundException {
