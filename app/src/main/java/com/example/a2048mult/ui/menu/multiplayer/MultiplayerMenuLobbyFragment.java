@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.a2048mult.Control.BtAcceptAsServerThread;
+import com.example.a2048mult.Control.ConnectionType;
 import com.example.a2048mult.R;
 import com.example.a2048mult.databinding.FragmentMultiplayerMenuLobbyBinding;
 import com.example.a2048mult.game.logic.GameLogic;
@@ -27,7 +28,7 @@ public class MultiplayerMenuLobbyFragment extends Fragment implements MenuLobbyC
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(MainActivity.getBTManagerInstance().getConnectionType() == "Server") {
+        if(MainActivity.getBTManagerInstance().getConnectionType() == ConnectionType.Server) {
             MainActivity.getBTManagerInstance().btMakeDiscoverable();
         }
     }
@@ -44,7 +45,6 @@ public class MultiplayerMenuLobbyFragment extends Fragment implements MenuLobbyC
     @Override
     public void onStart() {
         super.onStart();
-
     }
 
     @Override

@@ -9,7 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.example.a2048mult.Control.BtConnectAsClientThread;
 import com.example.a2048mult.databinding.ViewLobbyEntryBinding;
+import com.example.a2048mult.ui.menu.MainActivity;
 
 
 public class LobbyEntryView extends ConstraintLayout {
@@ -53,6 +55,8 @@ public class LobbyEntryView extends ConstraintLayout {
      */
     public void addLobbyDeviceConnection(BluetoothDevice device){
         // TODO
-//        binding.buttonJoinLobby.s
+        BtConnectAsClientThread Client = new BtConnectAsClientThread(MainActivity.getBTManagerInstance(),device);
+        Client.run();
+        //binding.buttonJoinLobby.s
     }
 }
