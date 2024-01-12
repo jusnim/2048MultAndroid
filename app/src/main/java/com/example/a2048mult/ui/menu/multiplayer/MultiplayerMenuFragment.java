@@ -56,10 +56,10 @@ public class MultiplayerMenuFragment extends Fragment {
     }
 
     private void test2() {
-//        Set<Pair<BluetoothDevice,String>> lobbies = MainActivity.getBTManagerInstance().findDevices();
-//        lobbies.stream().forEach(
-//                (lobby) -> addNewLobby(lobby.first, lobby.second)
-//        );
+        Set<Pair<BluetoothDevice,String>> lobbies = MainActivity.getBTManagerInstance().getDevices();
+        lobbies.stream().forEach(
+                (lobby) -> addNewLobby(lobby.first, lobby.second)
+        );
     }
 
     private void createLobby() {

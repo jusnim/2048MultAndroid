@@ -20,9 +20,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.util.Pair;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 
 import com.example.a2048mult.ui.menu.MainActivity;
@@ -31,8 +34,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+
+import kotlin.TuplesKt;
 
 public class BluetoothManager {
 
@@ -103,9 +113,11 @@ public class BluetoothManager {
     }
 
 
-    @SuppressLint("MissingPermission")
     public void ChangeDeviceName(String name) {
 
+        if (ActivityCompat.checkSelfPermission(app, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         bluetoothAdapter.setName(name);
 
     }
@@ -125,19 +137,27 @@ public class BluetoothManager {
         }
     }
 
+    public Set<Pair<BluetoothDevice, String>> getDevices() {
+        findDevices();
+        Set tmp = new HashSet<Pair<BluetoothDevice, String>>();
 
-    public void BTfindDevices() {
+        for (BluetoothDevice i : this.btListAdapter.getDevices()) {
+            if (ActivityCompat.checkSelfPermission(app, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+
+                return null;
+            }
+            Pair<BluetoothDevice, String> temp = new Pair<>(i, i.getName());
+            tmp.add(temp);
+
+        }
+        return tmp;
+
+    }
+    public void findDevices() {
         btListAdapter.clear();
         btListAdapter.updateAdapter();
 
         Log.d(LOG_TAG, "Async devices discovery...");
-        //Bundle msgBundle = new Bundle();
-        //msgBundle.putString(SYS_MSG_KEY, "Async devices discovery...");
-        //Message msg = new Message();
-        //msg.what = SYS_MSG_WHAT;
-        //msg.setData(msgBundle);
-        //msgHandler.sendMessage(msg);
-
         if (ActivityCompat.checkSelfPermission(app, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
