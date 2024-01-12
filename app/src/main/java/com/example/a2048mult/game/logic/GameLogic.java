@@ -151,7 +151,7 @@ public class GameLogic implements InGameControl, ReceiveListener, GameMenuContro
     }
 
     @Override
-    public void onReceivedPaket() {
+    public void onReceivedPaket(PDU pdu) {
         // TODO
         PDU received = new PDU() {@Override public PDUType getPDUType() {return null;}}; //TODO als argument uebergeben anstatt erstellen
         if(received.getPDUType() == null){
