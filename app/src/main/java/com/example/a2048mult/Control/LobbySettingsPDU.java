@@ -5,7 +5,7 @@ import com.example.a2048mult.game.states.LobbySettings;
 import java.io.Serializable;
 
 public class LobbySettingsPDU extends PDU implements Serializable {
-    private static final PDUType pduType = PDUType.LobbyInfoPDU;
+    private static final PDUType pduType = PDUType.LobbySettingsPDU;
     private LobbySettings data;
     public LobbySettings getData() {
         return data;

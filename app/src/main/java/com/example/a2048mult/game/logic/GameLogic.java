@@ -6,6 +6,9 @@ import android.os.HandlerThread;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.a2048mult.Control.LobbySettingsPDU;
+import com.example.a2048mult.Control.PDU;
+import com.example.a2048mult.Control.PDUType;
 import com.example.a2048mult.game.currentlyNotUsed.ReceiveListener;
 import com.example.a2048mult.game.states.ChangeLobbyConfigurations;
 import com.example.a2048mult.game.states.GameState;
@@ -150,5 +153,19 @@ public class GameLogic implements InGameControl, ReceiveListener, GameMenuContro
     @Override
     public void onReceivedPaket() {
         // TODO
+        PDU received = new PDU() {@Override public PDUType getPDUType() {return null;}}; //TODO als argument uebergeben anstatt erstellen
+        if(received.getPDUType() == null){
+            throw new RuntimeException("Wrong PDU Type"); //TODO ExceptionType
+        }
+        switch (received.getPDUType()){
+            case LobbySettingsPDU:
+                GameLogic.getInstance().setLobbySettings(((LobbySettingsPDU) received).getData());
+                break;
+            case GameStatePDU:
+                break;
+            default:
+                throw new RuntimeException("Wrong PDU Type");//TODO ExceptionType
+        }
+
     }
 }
