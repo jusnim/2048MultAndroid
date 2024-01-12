@@ -35,6 +35,7 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
     private ConstraintLayout.LayoutParams backgroundLayoutParams;
 
     private Handler handler;
+    private Handler moveHandler;
 
     private boolean dontInterrupt;
     /**
@@ -74,7 +75,12 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
     private void init(@NonNull Context context) {
         HandlerThread handlerThread = new HandlerThread("handler", 0);
         handlerThread.start();
-        handler = new Handler(handlerThread.getLooper());
+        this.handler = new Handler(handlerThread.getLooper());
+
+        HandlerThread moveThread = new HandlerThread("moveThread", 0);
+        moveThread.start();
+        this.moveHandler = new Handler(moveThread.getLooper());
+
 
         binding = ViewPlayfieldBinding.inflate(LayoutInflater.from(context), this, true);
 
@@ -198,17 +204,29 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
 
     @Override
     public void drawPlayfieldTurn(PlayfieldTurn playfieldTurn) {
-        PlayfieldTurnAnimTuple animation;
+
 
         int counter = 0;
-        animation = playfieldTurn.pollNextAnimation();
-        while (animation != null) {
-            Log.e("!", String.valueOf(animation.type));
-            doAnimation(animation);
+        Runnable r = () -> {
+            PlayfieldTurnAnimTuple animation;
+            printAllViews();
             animation = playfieldTurn.pollNextAnimation();
-            counter++;
-        }
-        Log.e("!", "counter" + counter);
+            while (animation != null) {
+                Log.e("!", String.valueOf(animation.type));
+
+                doAnimation(animation);
+                animation = playfieldTurn.pollNextAnimation();
+            };
+
+
+            Runnable r2 = () ->{
+                printAllViews();
+            };
+            handler.postDelayed(r2, PlayfieldConfig.animationDurationInMs+20);
+
+        };
+        this.handler.post(r);
+//        Log.e("!", "counter" + counter);
 
     }
 
@@ -216,49 +234,27 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
         int delay;
         switch (animation.type) {
             case SPAWN:
-                delay = 0;
-//                if (this.dontInterrupt) {
-                    delay = PlayfieldConfig.animationDurationInMs;
-//                }
+
                 Runnable rSpawn = () -> {
                     spawnTileAt(animation.tile.getNewX(), animation.tile.getNewY(), animation.tile.getLevel());
                 };
-                HandlerThread handlerThread2 = new HandlerThread("Spawn", 0);
-                handlerThread2.start();
-                Handler handler2 = new Handler(handlerThread2.getLooper());
-                this.handler.postDelayed(rSpawn, delay);
-
+//                this.handler.postDelayed(rSpawn,PlayfieldConfig.animationDurationInMs+2000);
                 break;
 
             case MOVE:
-                this.dontInterrupt = true;
-                printAllViews();
-                moveTile(animation.tile.getOldX(), animation.tile.getOldY(), animation.tile.getNewX(), animation.tile.getNewY());
-
-                replaceTile(animation.tile.getOldX(), animation.tile.getOldY(), PlayfieldConfig.invisibleTile, 0);
-
                 Runnable rMove = () -> {
-                    replaceTile(animation.tile.getNewX(), animation.tile.getNewY(), animation.tile.getLevel(), 0);
-                    Runnable rDontInterrupt = () -> {
-                        printAllViews();
-                        this.dontInterrupt = false;
-                    };
-                    getHandler().postDelayed(rDontInterrupt, 200);
+                    moveTile(animation.tile.getOldX(), animation.tile.getOldY(), animation.tile.getNewX(), animation.tile.getNewY());
+                };
+                Runnable rAfterMove = () -> {
+                    replaceTile(animation.tile.getOldX(), animation.tile.getOldY(), PlayfieldConfig.invisibleTile, 0);
+//                    replaceTile(animation.tile.getNewX(), animation.tile.getNewY(), animation.tile.getLevel(), 2000);
                 };
 
-
-
-//                HandlerThread handlerThread = new HandlerThread("removeOdPlaceMove", 0);
-//                handlerThread.start();
-//                Handler handler = new Handler(handlerThread.getLooper());
-                handler.postDelayed(rMove, PlayfieldConfig.animationDurationInMs + 20);
-
+                this.handler.post(rMove);
+                this.handler.postDelayed(rAfterMove,PlayfieldConfig.animationDurationInMs+200);
 
                 break;
             case REMOVE:
-
-                delay = 0;
-//                if (this.dontInterrupt) {
                     delay = PlayfieldConfig.animationDurationInMs;
 //                }
                 Runnable rRemove = () -> {
@@ -267,7 +263,7 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
                 HandlerThread handlerThread3 = new HandlerThread("remove", 0);
                 handlerThread3.start();
                 Handler handler3 = new Handler(handlerThread3.getLooper());
-                this.handler.postDelayed(rRemove, delay);
+                handler3.postDelayed(rRemove, delay);
                 break;
         }
     }
@@ -307,46 +303,24 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
     }
 
     private ObjectAnimator replaceTile(int x, int y, int level, long animationDuration) {
-        ObjectAnimator[] scaleUp = new ObjectAnimator[1];
-        ((Activity) binding.getRoot().getContext()).runOnUiThread(() -> {
-            constraintSet.clone(this.playfieldContainer);
-
-            View tileToRemove = allViews[y][x];
-            int id = tileToRemove.getId();
-            constraintSet.clear(tileToRemove.getId());
-            int index = this.playfieldContainer.indexOfChild(tileToRemove);
-            this.playfieldContainer.removeView(tileToRemove);
-
-            PlayfieldTileView newTile = new PlayfieldTileView(this.playfieldContainer.getContext());
-            newTile.setLevel(level);
-            newTile.setId(id);
-            this.playfieldContainer.addView(newTile, index);
-
-            doConstraintsBasedOnPosition(x, y, allViews.length, allViews[0].length);
-            constraintSet.applyTo(this.playfieldContainer);
-
-            allViews[y][x] = newTile;
-
-            scaleUp[0] = ObjectAnimator.ofPropertyValuesHolder(newTile,
+        allViews[y][x].setLevel(level);
+        Log.e("!", String.valueOf(allViews[y][x]));
+        ObjectAnimator scaleUp = ObjectAnimator.ofPropertyValuesHolder(allViews[y][x],
                     PropertyValuesHolder.ofFloat("scaleX", 0.2f, 1f),
                     PropertyValuesHolder.ofFloat("scaleY", 0.2f, 1f));
+            scaleUp.start();
+            scaleUp.setDuration(animationDuration);
 
 
-            scaleUp[0].setDuration(animationDuration);
-            scaleUp[0].start();
-        });
 
-        return scaleUp[0];
+
+        return scaleUp;
     }
 
     @Override
     public void initPlayer(Player player) {
         this.drawPlayfieldBackground(player.getPlayfieldState().getField().length, player.getPlayfieldState().getField().length);
         this.drawPlayfieldState(player.getPlayfieldState().getField());
-
-
-//        this.backgroundContainer.bringToFront();
-//        this.playfieldContainer.bringToFront();
     }
 
     private void printAllViews() {

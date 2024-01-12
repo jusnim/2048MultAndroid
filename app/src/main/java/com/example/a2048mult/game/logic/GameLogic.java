@@ -42,14 +42,35 @@ public class GameLogic implements InGameControl, ReceiveListener, GameMenuContro
             switch (move) {
                 case UP:
                     this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMerged(
-                            new GameTileImpl(1, 1, 3, 1, 1),
-                            new GameTileImpl(3, 1, 3, 1, 1),
-                            new GameTileImpl(3, 1, 2));
+                            new GameTileImpl(2, 0, 3, 0, 1),
+                            new GameTileImpl(3, 0, 3, 0, 1),
+                            new GameTileImpl(3, 0, 2));
 
-                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMerged(
-                            new GameTileImpl(0, 2, 3, 2, 1),
-                            new GameTileImpl(2, 2, 3, 2, 1),
-                            new GameTileImpl(3, 1, 3, 2, 2));
+                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMove(
+                            new GameTileImpl(0, 0, 2, 0, 1));
+
+
+                    /////////////////////
+
+//                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMerged(
+//                            new GameTileImpl(2, 1, 3, 1, 1),
+//                            new GameTileImpl(3, 1, 3, 1, 1),
+//                            new GameTileImpl(3, 1, 2));
+//
+//                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMove(
+//                            new GameTileImpl(1, 1, 2, 1, 1));
+//
+//                    ///////////////////////////
+//
+//                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMerged(
+//                            new GameTileImpl(2, 2, 3, 2, 1),
+//                            new GameTileImpl(3, 2, 3, 2, 1),
+//                            new GameTileImpl(3, 2, 2));
+//
+//                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMerged(
+//                            new GameTileImpl(0, 2, 2, 2, 1),
+//                            new GameTileImpl(1, 2, 2, 2, 1),
+//                            new GameTileImpl( 2, 2, 2));
 
 
 //                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMove(new GameTileImpl(1,1,3, 1, 1));
