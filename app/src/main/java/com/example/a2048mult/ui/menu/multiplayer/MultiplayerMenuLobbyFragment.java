@@ -5,13 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.a2048mult.Control.BtAcceptAsServerThread;
 import com.example.a2048mult.R;
 import com.example.a2048mult.databinding.FragmentMultiplayerMenuLobbyBinding;
 import com.example.a2048mult.game.logic.GameLogic;
 import com.example.a2048mult.ui.menu.MenuLobbyChangeListener;
+import com.example.a2048mult.ui.menu.MainActivity;
 
 public class MultiplayerMenuLobbyFragment extends Fragment implements MenuLobbyChangeListener {
     private FragmentMultiplayerMenuLobbyBinding binding;
@@ -22,12 +25,26 @@ public class MultiplayerMenuLobbyFragment extends Fragment implements MenuLobbyC
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(MainActivity.getBTManagerInstance().getConnectionType() == "Server") {
+            MainActivity.getBTManagerInstance().btMakeDiscoverable();
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMultiplayerMenuLobbyBinding.inflate(getLayoutInflater());
         binding.buttonStartMultiplayer.setOnClickListener(
                 v -> startMultiplayer()
         );
         return binding.getRoot();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
     }
 
     @Override

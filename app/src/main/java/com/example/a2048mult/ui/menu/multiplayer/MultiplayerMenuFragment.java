@@ -65,6 +65,7 @@ public class MultiplayerMenuFragment extends Fragment {
     private void createLobby() {
         Log.e("!","test");
         NavHostFragment.findNavController(this).navigate(R.id.action_multiplayerMenu_to_multiplayerMenuLobbyFragment);
+        MainActivity.getBTManagerInstance().setConnectionType("Server");
     }
 
 
