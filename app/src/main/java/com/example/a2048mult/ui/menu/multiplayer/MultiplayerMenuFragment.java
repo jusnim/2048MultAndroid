@@ -70,7 +70,6 @@ public class MultiplayerMenuFragment extends Fragment {
     }
 
 
-
     private void addNewLobby(BluetoothDevice device, String lobbyname) {
         binding.connectList.removeView(binding.noLobbyInfo);
         LobbyEntryView lobbyEntryView = new LobbyEntryView(getContext());

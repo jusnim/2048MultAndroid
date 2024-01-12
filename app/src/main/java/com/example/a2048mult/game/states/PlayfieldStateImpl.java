@@ -10,7 +10,6 @@ public class PlayfieldStateImpl implements PlayfieldState {
         for (int[] line : this.field) {
             string += (Arrays.toString(line) + "\n");
         }
-        Log.e("!",string);
     }
 
     /**

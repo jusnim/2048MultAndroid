@@ -171,10 +171,6 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
         this.container = newContainer;
         this.container.setLayoutParams(this.containerLayoutParams);
 
-        for (int i = 0; i < this.container.getChildCount(); i++) {
-            Log.e("!", String.valueOf(this.container.getChildAt(i)));
-        }
-
     }
 
     private void doConstraintsBasedOnPosition(int x, int y, int width, int height, PlayfieldTileView[][] allViews, int plusMargin) {
@@ -347,7 +343,6 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
         }
 
         playfieldViews[y][x].setLevel(level);
-        Log.e("!", String.valueOf(playfieldViews[y][x]));
         ObjectAnimator scaleUp = ObjectAnimator.ofPropertyValuesHolder(playfieldViews[y][x],
                 PropertyValuesHolder.ofFloat("scaleX", 0.2f, 1f),
                 PropertyValuesHolder.ofFloat("scaleY", 0.2f, 1f));
@@ -368,7 +363,6 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
         for (PlayfieldTileView[] line : this.playfieldViews) {
             string += (Arrays.toString(line) + "\n");
         }
-        Log.e("!", string);
     }
 
 
