@@ -1,15 +1,19 @@
 package com.example.a2048mult.Control;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.pm.PackageManager;
 import android.util.Log;
+
+import androidx.core.app.ActivityCompat;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class BtConnectAsClientThread extends Thread{
+public class BtConnectAsClientThread extends Thread {
 
 
     private BluetoothManager btManager;
@@ -22,7 +26,7 @@ public class BtConnectAsClientThread extends Thread{
     private int connectionCount = 0;
 
     @SuppressLint("MissingPermission")
-    public BtConnectAsClientThread(BluetoothDevice device) {
+    public BtConnectAsClientThread(BluetoothManager btManager, BluetoothDevice device) {
         candidates.add(btManager.getSERVICE_UUID1());
         candidates.add(btManager.getSERVICE_UUID2());
         candidates.add(btManager.getSERVICE_UUID3());
@@ -32,21 +36,24 @@ public class BtConnectAsClientThread extends Thread{
 
         // Get a BluetoothSocket for connection with the given device
         try {
-        Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] Get a BluetoothSocket for connection with the given device");
-        tmpSocket = btDevice.createRfcommSocketToServiceRecord(candidates.get(connectionCount));
-        connectionCount++;
+            Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] Get a BluetoothSocket for connection with the given device");
+            tmpSocket = btDevice.createRfcommSocketToServiceRecord(candidates.get(connectionCount));
+            connectionCount++;
         } catch (IOException e) {
-        Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] IOException occurred on socket creation");
+            Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] IOException occurred on socket creation");
         }
 
         btSocket = tmpSocket;
-        }
+    }
 
-@SuppressLint("MissingPermission")
-@Override
-public void run() {
+
+    @Override
+    public void run() {
         // Cancel discovery because it will slow down the connection
         Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] Cancel discovery for efficiency concern");
+        if (ActivityCompat.checkSelfPermission(btManager.getApp(), Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         btManager.getBluetoothAdapter().cancelDiscovery();
 
         try {
@@ -66,6 +73,7 @@ public void run() {
         Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] IOException connectExp, Close the socket");
         Log.d(btManager.getLOG_TAG(), "Message: " + conExpMsg);
         btSocket.close();
+        connectionCount--;
         } catch (IOException closeExp) {
         Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] IOException closeExp, Close exception");
         }

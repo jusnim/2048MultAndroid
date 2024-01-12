@@ -46,7 +46,7 @@ import kotlin.TuplesKt;
 
 public class BluetoothManager {
 
-    private String ConnectionType;
+    private ConnectionType connectionType = ConnectionType.Client;
     public static final String RESUlT_CONN_OK = "connection_OK";
     public static final int SYS_MSG_WHAT = 3;
     public static final String SYS_MSG_KEY = "system_msg";
@@ -71,7 +71,7 @@ public class BluetoothManager {
     private BTListAdapter btListAdapter;
     private final BroadcastReceiver btBroadcastReceiver = new BroadcastReceiver() {
 
-        @SuppressLint("MissingPermission")
+
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -80,6 +80,9 @@ public class BluetoothManager {
                 // Get Bluetooth devices from the Intent
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 // Add the name and the address to an array adapter and update it
+                if (ActivityCompat.checkSelfPermission(app, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
                 Log.d(LOG_TAG, device.getName() + ": " + device.getAddress());
                 btListAdapter.add(device);
                 btListAdapter.updateAdapter();
@@ -199,13 +202,6 @@ public class BluetoothManager {
         Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
         discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 0);
         if (ActivityCompat.checkSelfPermission(app, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
         startActivityForResult(app, discoverableIntent, requestCode, null);
@@ -240,7 +236,7 @@ public class BluetoothManager {
                 connectClientSocketThread.cancel();
                 connectClientSocketThread.interrupt();
             }
-            connectClientSocketThread = new BtConnectAsClientThread(btDevice);
+            connectClientSocketThread = new BtConnectAsClientThread(this,btDevice);
             connectClientSocketThread.start();
         }
     }
@@ -319,12 +315,12 @@ public class BluetoothManager {
         return SERVICE_UUID3;
     }
 
-    public void setConnectionType(String connectionType) {
-        ConnectionType = connectionType;
+    public void setConnectionType(ConnectionType connectionType) {
+        this.connectionType = connectionType;
     }
 
-    public String getConnectionType() {
-        return ConnectionType;
+    public ConnectionType getConnectionType() {
+        return connectionType;
     }
 
     public Activity getApp() {
