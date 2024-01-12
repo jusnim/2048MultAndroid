@@ -26,6 +26,7 @@ import java.util.Set;
 public class MultiplayerMenuFragment extends Fragment {
 
     private FragmentMultiplayerMenuBinding binding;
+    private String username;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,7 +78,6 @@ public class MultiplayerMenuFragment extends Fragment {
     }
 
     private void changeUsername() {
-        String username;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("new username:");
@@ -85,13 +85,15 @@ public class MultiplayerMenuFragment extends Fragment {
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
 
-        builder.setPositiveButton("Change", (dialog, which) ->
-                binding.usernameInput.setText(input.getText().toString()));
+        builder.setPositiveButton("Change", (dialog, which) -> {
+                    this.username = input.getText().toString();
+                    binding.usernameInput.setText(input.getText().toString());
+        });
 
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
         builder.show();
 
-        MainActivity.getBTManagerInstance().ChangeDeviceName(binding.usernameInput.getText().toString());
+        MainActivity.getBTManagerInstance().ChangeDeviceName(this.username);
     }
 
     @Override
