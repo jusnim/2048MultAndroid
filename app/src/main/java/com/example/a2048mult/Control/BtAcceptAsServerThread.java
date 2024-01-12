@@ -1,9 +1,13 @@
 package com.example.a2048mult.Control;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.content.pm.PackageManager;
 import android.util.Log;
+
+import androidx.core.app.ActivityCompat;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,16 +16,15 @@ import java.util.UUID;
 public class BtAcceptAsServerThread extends Thread {
 
     private BluetoothManager btManager;
-    public final BluetoothServerSocket btServerSocket;
+    public BluetoothServerSocket btServerSocket;
 
     private ArrayList<UUID> candidates;
-
 
 
     private int connectionCount = 0;
 
 
-    @SuppressLint("MissingPermission")
+
     public BtAcceptAsServerThread(BluetoothManager btManager) {
         candidates = new ArrayList<UUID>();
         candidates.add(btManager.getSERVICE_UUID1());
@@ -30,18 +33,41 @@ public class BtAcceptAsServerThread extends Thread {
         this.btManager = btManager;
         BluetoothServerSocket tmpSocket = null;
 
-        try {
+        /*try {
             Log.d(btManager.getLOG_TAG(), "[BtAcceptAsServerThread] Get a BluetoothServerSocket");
             tmpSocket = btManager.getBluetoothAdapter().listenUsingRfcommWithServiceRecord(btManager.getSERVICE_NAME(),candidates.get(connectionCount));
         } catch (IOException e) {
             Log.d(btManager.getLOG_TAG(), "[BtAcceptAsServerThread] IOException on BluetoothServerSocket creation");
         }
 
-        btServerSocket = tmpSocket;
+        btServerSocket = tmpSocket;*/
     }
+
 
     @Override
     public void run() {
+
+        BluetoothServerSocket tmpSocket = null;
+
+        try {
+            Log.d(btManager.getLOG_TAG(), "[BtAcceptAsServerThread] Get a BluetoothServerSocket");
+            if (ActivityCompat.checkSelfPermission(btManager.getApp(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            tmpSocket = btManager.getBluetoothAdapter().listenUsingRfcommWithServiceRecord(btManager.getSERVICE_NAME(), candidates.get(connectionCount));
+        } catch (IOException e) {
+            Log.d(btManager.getLOG_TAG(), "[BtAcceptAsServerThread] IOException on BluetoothServerSocket creation");
+        }
+
+        this.btServerSocket = tmpSocket;
+
         BluetoothSocket btSocket = null;
 
         while (true) {
@@ -62,14 +88,14 @@ public class BtAcceptAsServerThread extends Thread {
                 // Manage connection
                 btManager.btManageConnection(btSocket);
 
-                if(connectionCount == 3) {
-                    try {
-                        // Close the useless BluetoothServerSocket
-                        btServerSocket.close();
-                    } catch (IOException e) {
-                        Log.d(btManager.getLOG_TAG(), "[BtAcceptAsServerThread] IOException when .close()");
-                    }
+
+                try {
+                    // Close the useless BluetoothServerSocket
+                    btServerSocket.close();
+                } catch (IOException e) {
+                    Log.d(btManager.getLOG_TAG(), "[BtAcceptAsServerThread] IOException when .close()");
                 }
+
                 }
             }
         }
