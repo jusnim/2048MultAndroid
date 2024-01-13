@@ -131,7 +131,7 @@ public class BluetoothManager {
             //device doesnt support Bluetooth
         } else {
             if (!bluetoothAdapter.isEnabled()) {
-
+                ActivityCompat.requestPermissions(this.app, new String[]{"Manifest.permission.BLUETOOTH_CONNECT"}, 1);
                 Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(app, enableIntent, REQUEST_ENABLE_BT, null);
             } else {
