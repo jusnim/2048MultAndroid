@@ -173,11 +173,13 @@ public class BluetoothManager {
         if (bluetoothAdapter.isDiscovering()){
             bluetoothAdapter.cancelDiscovery();
             bluetoothAdapter.startDiscovery();
+            Log.d(LOG_TAG,"Discovery started");
             IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
             app.registerReceiver(btBroadcastReceiver, filter);
 
         } else {
             bluetoothAdapter.startDiscovery();
+            Log.d(LOG_TAG,"Discovery started");
             IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
             app.registerReceiver(btBroadcastReceiver, filter);
         }
