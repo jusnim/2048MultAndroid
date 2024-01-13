@@ -8,9 +8,11 @@ import android.view.LayoutInflater;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.a2048mult.Control.BtConnectAsClientThread;
-import com.example.a2048mult.Control.ProtocolWrapper;
+import com.example.a2048mult.R;
 import com.example.a2048mult.databinding.ViewLobbyEntryBinding;
 import com.example.a2048mult.ui.menu.MainActivity;
 
@@ -52,13 +54,16 @@ public class LobbyEntryView extends ConstraintLayout {
 
     /**
      * adds the reference for the join button to the corressponding device
-     *
      */
-    public void addLobbyDeviceConnection(BluetoothDevice device){
-        // TODO
-        BtConnectAsClientThread Client = new BtConnectAsClientThread(MainActivity.getBTManagerInstance(),device);
-        Client.start();
-
-        //binding.buttonJoinLobby.s
+    public void addLobbyDeviceConnection(BluetoothDevice device, Fragment fragment) {
+        BtConnectAsClientThread Client = new BtConnectAsClientThread(MainActivity.getBTManagerInstance(), device);
+        binding.buttonJoinLobby.setOnClickListener(v ->
+                {
+                    Client.start();
+                    // TODO check if connection estabilished
+                    NavHostFragment.findNavController(fragment)
+                            .navigate(R.id.action_multiplayerMenu_to_multiplayerMenuLobbyFragment);
+                }
+        );
     }
 }

@@ -73,7 +73,7 @@ public class MultiplayerMenuFragment extends Fragment {
         binding.connectList.removeView(binding.noLobbyInfo);
         LobbyEntryView lobbyEntryView = new LobbyEntryView(getContext());
         lobbyEntryView.setName(lobbyname);
-        lobbyEntryView.addLobbyDeviceConnection(device);
+        lobbyEntryView.addLobbyDeviceConnection(device, this);
     }
 
     private void changeUsername() {
