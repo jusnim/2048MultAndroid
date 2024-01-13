@@ -136,6 +136,18 @@ public class BluetoothManager {
                 btOKCallback();
             }
         }
+        btListAdapter.clear();
+        btListAdapter.updateAdapter();
+
+        Log.d(LOG_TAG, "Async devices discovery...");
+        if (ActivityCompat.checkSelfPermission(app, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(app, new String[]{"Manifest.permission.BLUETOOTH_SCAN"},1);
+        }
+        bluetoothAdapter.cancelDiscovery();
+        if (ActivityCompat.checkSelfPermission(app, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(app, new String[]{"Manifest.permission.BLUETOOTH_SCAN"},1);
+        }
+        bluetoothAdapter.startDiscovery();
     }
 
     public Set<Pair<BluetoothDevice, String>> getDevices() {
@@ -168,9 +180,6 @@ public class BluetoothManager {
             return;
         }
         bluetoothAdapter.startDiscovery();
-        Intent search = new Intent(BluetoothDevice.ACTION_FOUND);
-        btBroadcastReceiver.onReceive(app,search);
-        btGetKnownDevices();
 
     }
 
