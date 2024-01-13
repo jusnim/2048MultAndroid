@@ -62,31 +62,28 @@ public class BtConnectAsClientThread extends Thread {
             return;
         }
 
-            btManager.getBluetoothAdapter().cancelDiscovery();
+        btManager.getBluetoothAdapter().cancelDiscovery();
 
 
         try {
-        // Connect the remote device through the socket
-        Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] Try to connect with the device...");
+            // Connect the remote device through the socket
+            Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] Try to connect with the device...");
 
 
-        //updateUI("Trying to connect to " + btDevice.getName());
+            //updateUI("Trying to connect to " + btDevice.getName());
 
-        // Connect
-        btSocket.connect();
+            // Connect
+            btSocket.connect();
         } catch (IOException connectExp) {
-        // Unable to connect. Get out immediately
-        try {
-        //updateUI("Failed to connecto to " + btDevice.getName());
-        String conExpMsg = connectExp.getMessage();
-        Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] IOException connectExp, Close the socket");
-        Log.d(btManager.getLOG_TAG(), "Message: " + conExpMsg);
-        btSocket.close();
-        connectionCount--;
-        } catch (IOException closeExp) {
-        Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] IOException closeExp, Close exception");
-        }
-        return;
+            // Unable to connect. Get out immediately
+            try {
+                Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] IOException connectExp, Close the socket");
+                btSocket.close();
+                connectionCount--;
+            } catch (IOException closeExp) {
+                Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] IOException closeExp, Close exception");
+            }
+            return;
         }
 
         Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] Connection is established!");
@@ -96,17 +93,17 @@ public class BtConnectAsClientThread extends Thread {
 
         // Manage the connection
         //btManager.btManageConnection(btSocket);
-        }
+    }
 
-// Cancel the blocked connect() and close the socket
-public void cancel() {
+    // Cancel the blocked connect() and close the socket
+    public void cancel() {
         try {
-        Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] Close the socket");
-        btSocket.close();
+            Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] Close the socket");
+            btSocket.close();
         } catch (IOException e) {
-        Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] Close exception");
+            Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] Close exception");
         }
-        }
+    }
 
 
 }
