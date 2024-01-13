@@ -85,6 +85,7 @@ public class BluetoothManager {
                     ActivityCompat.requestPermissions(app, new String[]{"Manifest.permission.BLUETOOTH_CONNECT"}, 1);
                 }
                 Log.d(LOG_TAG, device.getName() + ": " + device.getAddress());
+                Log.d(LOG_TAG, "Adding Device to Device List");
                 btListAdapter.add(device);
                 btListAdapter.updateAdapter();
             }
@@ -161,25 +162,20 @@ public class BluetoothManager {
         btListAdapter.clear();
         btListAdapter.updateAdapter();
 
-        Log.d(LOG_TAG, "Async devices discovery...");
-        checkBTpermission("Manifest.permission.ACCESS_FINE_LOCATION");
 
         if (ActivityCompat.checkSelfPermission(app, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-            Log.d(LOG_TAG, "Permissions not granted requesting permissions");
-            checkBTpermission("Manifest.permission.ACCESS_FINE_LOCATION");
-            checkBTpermission("Manifest.permission.ACCESS_COARSE_LOCATION");
-            checkBTpermission("Manifest.permission.BLUETOOTH_SCAN");
+            this.app.requestPermissions( new String[] {Manifest.permission.BLUETOOTH_SCAN},1);
         }
-        if (bluetoothAdapter.isDiscovering()){
+        if (bluetoothAdapter.isDiscovering()) {
             bluetoothAdapter.cancelDiscovery();
             bluetoothAdapter.startDiscovery();
-            Log.d(LOG_TAG,"Discovery started");
+            Log.d(LOG_TAG, "Discovery started");
             IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
             app.registerReceiver(btBroadcastReceiver, filter);
 
         } else {
             bluetoothAdapter.startDiscovery();
-            Log.d(LOG_TAG,"Discovery started");
+            Log.d(LOG_TAG, "Discovery started");
             IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
             app.registerReceiver(btBroadcastReceiver, filter);
         }
