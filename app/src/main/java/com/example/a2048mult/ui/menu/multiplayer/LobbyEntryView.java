@@ -3,6 +3,7 @@ package com.example.a2048mult.ui.menu.multiplayer;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 
 import androidx.annotation.NonNull;
@@ -56,14 +57,15 @@ public class LobbyEntryView extends ConstraintLayout {
      * adds the reference for the join button to the corressponding device
      */
     public void addLobbyDeviceConnection(BluetoothDevice device, Fragment fragment) {
-        BtConnectAsClientThread Client = new BtConnectAsClientThread(MainActivity.getBTManagerInstance(), device);
-        binding.buttonJoinLobby.setOnClickListener(v ->
-                {
-                    Client.start();
-                    // TODO check if connection estabilished
-                    NavHostFragment.findNavController(fragment)
-                            .navigate(R.id.action_multiplayerMenu_to_multiplayerMenuLobbyFragment);
-                }
-        );
+        Log.e("!", String.valueOf(device));
+//        BtConnectAsClientThread Client = new BtConnectAsClientThread(MainActivity.getBTManagerInstance(), device);
+//        binding.buttonJoinLobby.setOnClickListener(v ->
+//                {
+//                    Client.start();
+//                    // TODO check if connection estabilished
+//                    NavHostFragment.findNavController(fragment)
+//                            .navigate(R.id.action_multiplayerMenu_to_multiplayerMenuLobbyFragment);
+//                }
+//        );
     }
 }

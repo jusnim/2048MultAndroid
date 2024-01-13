@@ -58,7 +58,11 @@ public class MultiplayerMenuFragment extends Fragment {
     private void updateLobbyList() {
         Set<Pair<BluetoothDevice, String>> lobbies = MainActivity.getBTManagerInstance().getDevices();
         lobbies.stream().forEach(
-                (lobby) -> addNewLobbyEntryToUI(lobby.first, lobby.second)
+                (lobby) -> {
+                    Log.e("!", String.valueOf(lobby.first));
+                    Log.e("!", String.valueOf(lobby.second));
+                    addNewLobbyEntryToUI(lobby.first, lobby.second);
+                }
         );
     }
 
