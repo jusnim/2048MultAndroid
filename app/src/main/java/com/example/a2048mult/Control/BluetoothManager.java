@@ -333,8 +333,14 @@ public class BluetoothManager {
     }
 
 
+    public BtConnectAsClientThread getConnectClientSocketThread(){return this.connectClientSocketThread;}
 
+    public void setServerSocketThread(BtAcceptAsServerThread Server){
+        this.serverSocketThread = Server;
+    }
+    public BtAcceptAsServerThread getServerSocketThread(){return this.serverSocketThread;}
 
-
-
+    public void setConnectClientSocketThread(BtConnectAsClientThread connectClientSocketThread) {
+        this.connectClientSocketThread = connectClientSocketThread;
+    }
 }
