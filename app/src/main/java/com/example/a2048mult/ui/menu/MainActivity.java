@@ -26,4 +26,10 @@ public class MainActivity extends AppCompatActivity {
         android.os.Process.setThreadPriority(0);
         btManager = new BluetoothManager(this, new BTListAdapter(this));
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(btManager.getBtBroadcastReceiver());
+    }
 }

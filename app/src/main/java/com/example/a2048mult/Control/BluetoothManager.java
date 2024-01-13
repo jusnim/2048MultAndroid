@@ -81,7 +81,7 @@ public class BluetoothManager {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 // Add the name and the address to an array adapter and update it
                 if (ActivityCompat.checkSelfPermission(app, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                    return;
+                    ActivityCompat.requestPermissions(app, new String[]{"Manifest.permission.BLUETOOTH_CONNECT"}, 1);
                 }
                 Log.d(LOG_TAG, device.getName() + ": " + device.getAddress());
                 btListAdapter.add(device);
@@ -101,8 +101,6 @@ public class BluetoothManager {
         this.app = app;
         this.btListAdapter = btListAdapter;
 
-        //Set Handler
-        //msgHandler = new BtThreadHandler(hmc);
 
         //Register the BroadcastReceiver
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
@@ -218,7 +216,7 @@ public class BluetoothManager {
         Log.d(LOG_TAG, "Sender OK");
     }
 
-    public void btConnectAsServer(String UUID) {
+    public void btConnectAsServer() {
         if (serverSocketThread != null && !serverSocketThread.isInterrupted()) {
             // ServerThread has already been accepting others
             serverSocketThread.cancel();
@@ -228,7 +226,7 @@ public class BluetoothManager {
         serverSocketThread.start();
     }
 
-    public void btConnectAsClient(BluetoothDevice btDevice, String UUID) {
+    public void btConnectAsClient(BluetoothDevice btDevice) {
         if (btDevice == null) {
             Log.d(LOG_TAG, "[btConnectAsClient] btDevice is null");
         } else {
