@@ -8,6 +8,8 @@ public class GameTileImpl implements GameTile {
     private int newY;
 
     private int level;
+    private int oldestX;
+    private int oldestY;
 
     @Override
     public void updateCoordinates(int newX, int newY) {
@@ -81,5 +83,25 @@ public class GameTileImpl implements GameTile {
     @Override
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    @Override
+    public void setOldestX(int x) {
+        this.oldestX = x;
+    }
+
+    @Override
+    public void setOldestY(int y) {
+        this.oldestY = y;
+    }
+
+    @Override
+    public int getOldestX() {
+        return this.oldestX;
+    }
+
+    @Override
+    public int getOldestY() {
+        return this.oldestY;
     }
 }

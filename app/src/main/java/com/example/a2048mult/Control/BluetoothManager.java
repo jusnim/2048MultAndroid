@@ -138,6 +138,7 @@ public class BluetoothManager {
 
     }
 
+    // TODO no permisson on my s7
     public Set<Pair<BluetoothDevice, String>> getDevices() {
 
         Set tmp = new HashSet<Pair<BluetoothDevice, String>>();

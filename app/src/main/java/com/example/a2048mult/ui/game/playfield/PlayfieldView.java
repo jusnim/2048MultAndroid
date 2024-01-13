@@ -37,7 +37,6 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
     private Stack<PlayfieldTileView> tileReferenceStack = new Stack<>();
 
     private Handler handler;
-    private Handler moveHandler;
 
     /**
      * [y][x]
@@ -79,15 +78,8 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
      * @see PlayfieldConfig#marginBorderFloat
      */
     private void init(@NonNull Context context) {
-        HandlerThread handlerThread = new HandlerThread("handler", 3);
-        handlerThread.start();
-        this.handler = new Handler(handlerThread.getLooper());
-
         HandlerThread moveThread = new HandlerThread("moveThread", 3);
         moveThread.start();
-        this.moveHandler = new Handler(moveThread.getLooper());
-
-
         binding = ViewPlayfieldBinding.inflate(LayoutInflater.from(context), this, true);
 
 
@@ -226,70 +218,79 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
     @Override
     public void drawPlayfieldTurn(PlayfieldTurn playfieldTurn) {
 
-        Runnable r = () -> {
-            PlayfieldTurnAnimTuple animation;
-            printAllViews();
+        HandlerThread handlerThread = new HandlerThread("handler", 0);
+        handlerThread.start();
+        this.handler = new Handler(handlerThread.getLooper());
+
+        PlayfieldTurnAnimTuple animation;
+        printAllViews();
+        animation = playfieldTurn.pollNextAnimation();
+        while (animation != null) {
+            Log.e("!", String.valueOf(animation.type));
+
+            doAnimation(animation);
             animation = playfieldTurn.pollNextAnimation();
-            while (animation != null) {
-                Log.e("!", String.valueOf(animation.type));
-
-                doAnimation(animation);
-                animation = playfieldTurn.pollNextAnimation();
-            }
-
-            Runnable r2 = () -> {
-                printAllViews();
-            };
-            handler.postDelayed(r2, PlayfieldConfig.animationDurationInMs + 400);
-
-        };
-        this.handler.post(r);
+        }
     }
 
     private void doAnimation(PlayfieldTurnAnimTuple animation) {
+        int delay = 10;
         switch (animation.type) {
             case SPAWN:
+                // move next avaible invisible tile to position
+                PlayfieldTileView playfieldTileView2 = this.nonUsedTiles.poll();
+
+                for (int y = 0; y < playfieldViews.length; y++) {
+                    for (int x = 0; x < playfieldViews.length; x++) {
+                        if (playfieldViews[y][x] == playfieldTileView2) {
+                            playfieldViews[y][x] = null;
+                            break;
+                        }
+                    }
+                }
+                moveTile(playfieldTileView2, animation.tile.getNewX(), animation.tile.getNewY(), 0);
+
                 Runnable rSpawn = () -> {
-                    // move next avaible invisible tile to position
-                    PlayfieldTileView playfieldTileView = this.nonUsedTiles.poll();
-                    moveTile(playfieldTileView, animation.tile.getNewX(), animation.tile.getNewY(), 0);
-                    // spawn Tile
+//                    // spawn Tile
                     spawnTileAt(animation.tile.getNewX(), animation.tile.getNewY(), animation.tile.getLevel());
+
+                    Log.e("!", "     SPAWN");
                 };
-                this.handler.postDelayed(rSpawn, PlayfieldConfig.animationDurationInMs + 700);
+                this.handler.postDelayed(rSpawn, PlayfieldConfig.animationDurationInMs + 3 * delay);
                 break;
             case MOVE:
                 Runnable rMove = () -> {
                     moveTile(animation.tile.getOldX(), animation.tile.getOldY(), animation.tile.getNewX(), animation.tile.getNewY());
-
                     PlayfieldTileView playfieldTileView = this.nonUsedTiles.poll();
                     moveTile(playfieldTileView, animation.tile.getOldX(), animation.tile.getOldY(), 0);
-
+                    Log.e("!", "     MOVE");
                 };
-                this.moveHandler.postDelayed(rMove, 0);
+                this.handler.postAtFrontOfQueue(rMove);
                 break;
             case REMOVE:
-
+                /// RICHTIG
+                PlayfieldTileView playfieldTileView = playfieldViews[animation.tile.getOldY()][animation.tile.getOldX()];
                 Runnable rRemove;
-                if (!tileReferenceStack.isEmpty()) {
-                    rRemove = () -> {
-                        PlayfieldTileView test = tileReferenceStack.pop();
-                    replaceTile(test, -1, 0);
-                        this.nonUsedTiles.add(playfieldViews[animation.tile.getOldY()][animation.tile.getOldX()]);
-                    };
-                    this.moveHandler.postDelayed(rRemove, PlayfieldConfig.animationDurationInMs + 500);
-                } else {
-                    rRemove = () -> {
-//                        binding.getRoot().removeView(playfieldViews[animation.tile.getOldY()][animation.tile.getOldX()]);
-                        replaceTile(animation.tile.getOldX(), animation.tile.getOldY(), -1, 0);
-                        this.nonUsedTiles.add(playfieldViews[animation.tile.getOldY()][animation.tile.getOldX()]);
-                    };
-                    this.handler.postDelayed(rRemove, PlayfieldConfig.animationDurationInMs + 500);
-                }
-
+                rRemove = () -> {
+                    replaceTile(playfieldTileView, -1, 0);
+                    Log.e("!", "     REMOVE");
+                };
+                this.handler.postDelayed(rRemove, PlayfieldConfig.animationDurationInMs);
                 break;
+
+            case REMOVE_REFERENCE:
+                Runnable rRemoveNewPos = () -> {
+                    if (!tileReferenceStack.empty()) {
+                        replaceTile(tileReferenceStack.pop(), -1, 0);
+                        Log.e("!", "     SAA_REFERENCE");
+                    }
+                };
+                this.handler.postDelayed(rRemoveNewPos, PlayfieldConfig.animationDurationInMs + delay);
+
             case SAVE_REFERENCE:
-                tileReferenceStack.push(playfieldViews[animation.tile.getOldY()][animation.tile.getOldX()]);
+                PlayfieldTileView toPlaceholder = playfieldViews[animation.tile.getOldY()][animation.tile.getOldX()];
+                this.tileReferenceStack.add(toPlaceholder);
+                Log.e("!", "     SAVE_REFERENCE");
                 break;
         }
     }
@@ -300,6 +301,7 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
 
     private void moveTile(PlayfieldTileView playfieldTileView, int xTo, int yTo, int duration) {
 
+        playfieldViews[yTo][xTo] = playfieldTileView;
         this.nonUsedTiles.add(playfieldTileView);
 
         PlayfieldTileView fromTile = playfieldTileView;
@@ -307,7 +309,7 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
 
         float xDiff = toTile.getX() - fromTile.getX();
         float yDiff = toTile.getY() - fromTile.getY();
-        playfieldViews[yTo][xTo] = playfieldTileView;
+
 
         Runnable rUpdateCoordinates = () -> {
             if (xDiff != 0 || yDiff != 0) {
@@ -327,6 +329,7 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
     private void moveTile(int xFrom, int yFrom, int xTo, int yTo) {
         PlayfieldTileView fromTile = playfieldViews[yFrom][xFrom];
         PlayfieldTileView toTile = backgroundViews[yTo][xTo];
+        playfieldViews[yTo][xTo] = fromTile;
 
         float xDiff = toTile.getX() - fromTile.getX();
         float yDiff = toTile.getY() - fromTile.getY();
@@ -336,7 +339,6 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
             if (xDiff != 0 || yDiff != 0) {
                 fromTile.setX(toTile.getX());
                 fromTile.setY(toTile.getY());
-                playfieldViews[yTo][xTo] = fromTile;
             }
         };
 

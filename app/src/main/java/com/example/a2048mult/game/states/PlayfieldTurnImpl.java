@@ -1,5 +1,7 @@
 package com.example.a2048mult.game.states;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.PriorityQueue;
@@ -27,16 +29,14 @@ public class PlayfieldTurnImpl implements PlayfieldTurn, Serializable {
     }
 
     @Override
-    public void addNewMerged(GameTile tile1, GameTile tile2, GameTile mergedTile) {
-//        animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.SAVE_REFERENCE, tile1));
-//        animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.SAVE_REFERENCE, tile2));
-//        animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.MOVE, tile1));
-//        animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.MOVE, tile2));
-//        animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.REMOVE,tile1));
-//        animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.REMOVE, tile2));
-//        animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.SPAWN, mergedTile));
+    public void addNewMerged(GameTile tile1, GameTile tile2, GameTile mergedTile) {;
         GameTile placeholder = tile1;
         animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.MERGE, placeholder));
+        Log.e("!", "(" + tile1.getOldX() + "," + tile1.getOldY() + ")" + "->" + "(" + tile1.getNewX() + "," + tile1.getNewY() + ")");
+        Log.e("!", "(" + tile2.getOldX() + "," + tile2.getOldY() + ")" + "->" + "(" + tile2.getNewX() + "," + tile2.getNewY() + ")");
+        Log.e("!", "(" + tile2.getOldestX() + "," + tile2.getOldestY() + ")");
+//        tile1.setOldX(tile1.getOldestX());
+//        tile1.setOldY(tile1.getOldestY());
         mergeQueue.add(new GameTile[]{tile1, tile2, mergedTile});
     }
 
@@ -51,14 +51,14 @@ public class PlayfieldTurnImpl implements PlayfieldTurn, Serializable {
         PlayfieldTurnAnimTuple anim = animationQueue.poll();
         if (anim != null && anim.type == PlayfieldTurnAnimationType.MERGE) {
             GameTile[] tiles = mergeQueue.poll();
-            animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.SAVE_REFERENCE, tiles[0]));
-            animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.SAVE_REFERENCE, tiles[1]));
-            animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.MOVE, tiles[0]));
-            animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.MOVE, tiles[1]));
-            animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.REMOVE, tiles[0]));
-            animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.REMOVE, tiles[1]));
-            animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.SPAWN, tiles[2]));
 
+            animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.REMOVE, tiles[1]));
+
+            animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.SAVE_REFERENCE, tiles[0]));
+            animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.MOVE, tiles[0]));
+
+            animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.REMOVE_REFERENCE, tiles[0]));
+            animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.SPAWN, tiles[2]));
             return animationQueue.poll();
         }
 
@@ -72,11 +72,11 @@ public class PlayfieldTurnImpl implements PlayfieldTurn, Serializable {
                 .skip(animationQueue.size() - 1)
                 .toArray()[0])).type == PlayfieldTurnAnimationType.MOVE) {
 
-//            Queue<PlayfieldTurnAnimTuple> newAnimationQueue = new PriorityQueue<>();
-//            animationQueue.stream()
-//                    .limit(animationQueue.size() - 1)
-//                    .forEach(newAnimationQueue::add);
-//            this.animationQueue = newAnimationQueue;
+            Queue<PlayfieldTurnAnimTuple> newAnimationQueue = new PriorityQueue<>();
+            animationQueue.stream()
+                    .limit(animationQueue.size() - 1)
+                    .forEach(newAnimationQueue::add);
+            this.animationQueue = newAnimationQueue;
         }
     }
 

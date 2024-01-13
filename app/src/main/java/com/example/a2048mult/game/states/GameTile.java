@@ -26,10 +26,7 @@ public interface GameTile {
         setOldY(getNewY());
     }
 
-    /**
-     * setter for old x coordinate
-     * @param x
-     */
+
     void setOldX(int x);
     /**
      * setter for old y coordinate
@@ -72,4 +69,24 @@ public interface GameTile {
      * setter for level
      */
     void setLevel(int level);
+
+
+    /**
+     * setter for oldest x coordinate
+     * @param x
+     */
+    void setOldestX(int x);
+    /**
+     * setter for oldest x coordinate
+     * @param y
+     */
+    void setOldestY(int y);
+    /**
+     * getter for oldest x coordinate
+     */
+    int getOldestX();
+    /**
+     * getter for oldest y coordinate
+     */
+    int getOldestY();
 }
