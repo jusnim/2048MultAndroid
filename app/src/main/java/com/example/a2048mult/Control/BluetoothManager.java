@@ -343,4 +343,8 @@ public class BluetoothManager {
     public void setConnectClientSocketThread(BtConnectAsClientThread connectClientSocketThread) {
         this.connectClientSocketThread = connectClientSocketThread;
     }
+
+    public BroadcastReceiver getBtBroadcastReceiver() {
+        return btBroadcastReceiver;
+    }
 }
