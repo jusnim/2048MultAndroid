@@ -16,6 +16,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -161,15 +162,38 @@ public class BluetoothManager {
         btListAdapter.updateAdapter();
 
         Log.d(LOG_TAG, "Async devices discovery...");
-        if (ActivityCompat.checkSelfPermission(app, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        bluetoothAdapter.cancelDiscovery();
-        if (ActivityCompat.checkSelfPermission(app, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        bluetoothAdapter.startDiscovery();
+        checkBTpermission("Manifest.permission.ACCESS_FINE_LOCATION");
 
+        if (ActivityCompat.checkSelfPermission(app, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+            Log.d(LOG_TAG, "Permissions not granted requesting permissions");
+            checkBTpermission("Manifest.permission.ACCESS_FINE_LOCATION");
+            checkBTpermission("Manifest.permission.ACCESS_COARSE_LOCATION");
+            checkBTpermission("Manifest.permission.BLUETOOTH_SCAN");
+        }
+        if (bluetoothAdapter.isDiscovering()){
+            bluetoothAdapter.cancelDiscovery();
+            bluetoothAdapter.startDiscovery();
+            IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+            app.registerReceiver(btBroadcastReceiver, filter);
+
+        } else {
+            bluetoothAdapter.startDiscovery();
+            IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+            app.registerReceiver(btBroadcastReceiver, filter);
+        }
+
+
+    }
+
+    public void checkBTpermission(String permission){
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP){
+            int permissionCheck = this.app.checkSelfPermission(permission);
+            if(permissionCheck != 0){
+                this.app.requestPermissions(new String[]{permission},1);
+            } else {
+                Log.d(LOG_TAG,"checkBTPermissions: No need to check permissions.");
+            }
+        }
     }
 
 

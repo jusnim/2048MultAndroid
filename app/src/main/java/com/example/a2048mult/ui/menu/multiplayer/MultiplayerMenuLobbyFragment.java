@@ -47,7 +47,6 @@ public class MultiplayerMenuLobbyFragment extends Fragment implements MenuLobbyC
     public void onStart() {
         super.onStart();
         MainActivity.getBTManagerInstance().btConnectAsServer();
-
     }
 
     @Override

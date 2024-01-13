@@ -42,8 +42,6 @@ public class MultiplayerMenuFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         MainActivity.getBTManagerInstance().findDevices();
-        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        this.getContext().registerReceiver(MainActivity.getBTManagerInstance().getBtBroadcastReceiver(), filter);
         binding = FragmentMultiplayerMenuBinding.inflate(getLayoutInflater());
 
         binding.buttonChangeUsername.setOnClickListener(
@@ -64,14 +62,14 @@ public class MultiplayerMenuFragment extends Fragment {
 
     private void updateLobbyList() {
         MainActivity.getBTManagerInstance().findDevices();
-        Set<Pair<BluetoothDevice, String>> lobbies = MainActivity.getBTManagerInstance().getDevices();
+        /*Set<Pair<BluetoothDevice, String>> lobbies = MainActivity.getBTManagerInstance().getDevices();
         lobbies.stream().forEach(
                 (lobby) -> {
                     Log.e("!", String.valueOf(lobby.first));
                     Log.e("!", String.valueOf(lobby.second));
                     addNewLobbyEntryToUI(lobby.first, lobby.second);
                 }
-        );
+        );*/
     }
 
     private void createLobby() {
