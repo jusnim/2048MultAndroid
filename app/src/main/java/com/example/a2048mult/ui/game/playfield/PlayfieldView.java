@@ -73,11 +73,11 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
      * @see PlayfieldConfig#marginBorderFloat
      */
     private void init(@NonNull Context context) {
-        HandlerThread handlerThread = new HandlerThread("handler", 0);
+        HandlerThread handlerThread = new HandlerThread("handler", 3);
         handlerThread.start();
         this.handler = new Handler(handlerThread.getLooper());
 
-        HandlerThread moveThread = new HandlerThread("moveThread", 0);
+        HandlerThread moveThread = new HandlerThread("moveThread", 3);
         moveThread.start();
         this.moveHandler = new Handler(moveThread.getLooper());
 
@@ -241,7 +241,7 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
             Runnable r2 = () -> {
                 printAllViews();
             };
-            handler.postDelayed(r2, PlayfieldConfig.animationDurationInMs + 20);
+            handler.postDelayed(r2, PlayfieldConfig.animationDurationInMs + 400);
 
         };
         this.handler.post(r);
@@ -255,10 +255,13 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
             case SPAWN:
 
                 Runnable rSpawn = () -> {
-                    addTileIfNull(animation.tile.getNewX(),animation.tile.getNewY());
-                    spawnTileAt(animation.tile.getNewX(), animation.tile.getNewY(), animation.tile.getLevel());
+                    addTileIfNull(animation.tile.getNewX(), animation.tile.getNewY());
+                    Runnable rSpawn1 = () -> {
+                        spawnTileAt(animation.tile.getNewX(), animation.tile.getNewY(), animation.tile.getLevel());
+                    };
+                    getHandler().postDelayed(rSpawn1, 20);
                 };
-                this.handler.postDelayed(rSpawn, PlayfieldConfig.animationDurationInMs *2);
+                this.handler.postDelayed(rSpawn, PlayfieldConfig.animationDurationInMs +20);
                 break;
 
             case MOVE:
@@ -271,15 +274,15 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
 //                    replaceTile(animation.tile.getNewX(), animation.tile.getNewY(), animation.tile.getLevel(), 2000);
                 };
 
-                this.handler.post(rMove);
-                this.handler.postDelayed(rAfterMove, PlayfieldConfig.animationDurationInMs);
+                this.moveHandler.post(rMove);
+                this.moveHandler.postDelayed(rAfterMove, PlayfieldConfig.animationDurationInMs);
 
                 break;
             case REMOVE:
-                Runnable rRemove= () -> {
+                Runnable rRemove = () -> {
                     removeTile(animation.tile.getNewX(), animation.tile.getNewY());
                 };
-                this.handler.postDelayed(rRemove,PlayfieldConfig.animationDurationInMs+200);
+                this.handler.postDelayed(rRemove, PlayfieldConfig.animationDurationInMs + 200);
                 break;
         }
     }
@@ -296,9 +299,6 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
 
     private ObjectAnimator moveTile(int xFrom, int yFrom, int xTo, int yTo) {
         final ObjectAnimator[] animation = new ObjectAnimator[1];
-
-
-
 
         PlayfieldTileView fromTile = playfieldViews[yFrom][xFrom];
         PlayfieldTileView toTile = backgroundViews[yTo][xTo];
@@ -321,10 +321,11 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
         return animation[0];
     }
 
-    private void addTileIfNull(int x, int y){
+    private void addTileIfNull(int x, int y) {
         if (playfieldViews[y][x] == null) {
             PlayfieldTileView playfieldTileView = new PlayfieldTileView(getContext());
             playfieldTileView.setLayoutParams(backgroundViews[y][x].getLayoutParams());
+            playfieldTileView.setLevel(-1);
             ((Activity) this.binding.getRoot().getContext()).runOnUiThread(() -> {
                 this.container.addView(playfieldTileView);
             });
@@ -363,6 +364,7 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
         for (PlayfieldTileView[] line : this.playfieldViews) {
             string += (Arrays.toString(line) + "\n");
         }
+        Log.e("!", string);
     }
 
 
