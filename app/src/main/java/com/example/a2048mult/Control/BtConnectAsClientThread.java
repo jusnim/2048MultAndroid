@@ -21,7 +21,7 @@ public class BtConnectAsClientThread extends Thread {
     public final BluetoothSocket btSocket;
     public final BluetoothDevice btDevice;
 
-    private ArrayList<UUID> candidates;
+    private ArrayList<UUID> candidates = new ArrayList<>();
 
     private int connectionCount = 0;
 

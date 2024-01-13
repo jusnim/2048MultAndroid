@@ -58,14 +58,14 @@ public class LobbyEntryView extends ConstraintLayout {
      */
     public void addLobbyDeviceConnection(BluetoothDevice device, Fragment fragment) {
         Log.e("!", String.valueOf(device));
-//        BtConnectAsClientThread Client = new BtConnectAsClientThread(MainActivity.getBTManagerInstance(), device);
-//        binding.buttonJoinLobby.setOnClickListener(v ->
-//                {
-//                    Client.start();
-//                    // TODO check if connection estabilished
-//                    NavHostFragment.findNavController(fragment)
-//                            .navigate(R.id.action_multiplayerMenu_to_multiplayerMenuLobbyFragment);
-//                }
-//        );
+        BtConnectAsClientThread Client = new BtConnectAsClientThread(MainActivity.getBTManagerInstance(), device);
+        binding.buttonJoinLobby.setOnClickListener(v ->
+                {
+                    Client.start();
+                    // TODO check if connection estabilished
+                    NavHostFragment.findNavController(fragment)
+                            .navigate(R.id.action_multiplayerMenu_to_multiplayerMenuLobbyFragment);
+                }
+        );
     }
 }
