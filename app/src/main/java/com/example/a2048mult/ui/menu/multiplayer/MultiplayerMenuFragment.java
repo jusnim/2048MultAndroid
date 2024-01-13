@@ -2,6 +2,9 @@ package com.example.a2048mult.ui.menu.multiplayer;
 
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -33,6 +36,8 @@ public class MultiplayerMenuFragment extends Fragment {
         super.onCreate(savedInstanceState);
         MainActivity.getBTManagerInstance().BTinit();
         this.username = MainActivity.getBTManagerInstance().getBtDeviceName();
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        this.getContext().registerReceiver(MainActivity.getBTManagerInstance().getBtBroadcastReceiver(), filter);
     }
 
     @Override
@@ -58,7 +63,11 @@ public class MultiplayerMenuFragment extends Fragment {
     private void updateLobbyList() {
         Set<Pair<BluetoothDevice, String>> lobbies = MainActivity.getBTManagerInstance().getDevices();
         lobbies.stream().forEach(
-                (lobby) -> addNewLobbyEntryToUI(lobby.first, lobby.second)
+                (lobby) -> {
+                    Log.e("!", String.valueOf(lobby.first));
+                    Log.e("!", String.valueOf(lobby.second));
+                    addNewLobbyEntryToUI(lobby.first, lobby.second);
+                }
         );
     }
 
@@ -73,7 +82,7 @@ public class MultiplayerMenuFragment extends Fragment {
         binding.connectList.removeView(binding.noLobbyInfo);
         LobbyEntryView lobbyEntryView = new LobbyEntryView(getContext());
         lobbyEntryView.setName(lobbyname);
-        lobbyEntryView.addLobbyDeviceConnection(device);
+        lobbyEntryView.addLobbyDeviceConnection(device, this);
     }
 
     private void changeUsername() {
@@ -97,7 +106,10 @@ public class MultiplayerMenuFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        this.getContext().unregisterReceiver(MainActivity.getBTManagerInstance().getBtBroadcastReceiver());
     }
+
+
 
 
 }

@@ -49,9 +49,6 @@
         android:id="@+id/playfield"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/shape_rounded_rectangle"
-        android:backgroundTint="@color/brown_playfield_bg"
-
         app:layout_constraintDimensionRatio="1:1"
 
         app:layout_constraintBottom_toBottomOf="parent"

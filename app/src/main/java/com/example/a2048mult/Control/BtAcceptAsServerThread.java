@@ -19,6 +19,8 @@ public class BtAcceptAsServerThread extends Thread {
     private BluetoothManager btManager;
     public BluetoothServerSocket btServerSocket;
 
+    private BluetoothSocket btSocket;
+
     private ArrayList<UUID> candidates;
 
 
@@ -56,7 +58,7 @@ public class BtAcceptAsServerThread extends Thread {
 
         this.btServerSocket = tmpSocket;
 
-        BluetoothSocket btSocket = null;
+
 
         while (true) {
             try {
@@ -97,6 +99,10 @@ public class BtAcceptAsServerThread extends Thread {
 
     public int getConnectionCount(){
         return connectionCount;
+    }
+
+    public BluetoothSocket getBtSocket(){
+        return this.btSocket;
     }
 
 

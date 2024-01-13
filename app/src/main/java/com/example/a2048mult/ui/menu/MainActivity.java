@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
+        android.os.Process.setThreadPriority(0);
         btManager = new BluetoothManager(this, new BTListAdapter(this));
     }
 }
