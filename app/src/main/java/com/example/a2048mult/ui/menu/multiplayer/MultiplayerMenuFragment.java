@@ -42,13 +42,9 @@ public class MultiplayerMenuFragment extends Fragment {
         binding.buttonChangeUsername.setOnClickListener(
                 v -> changeUsername()
         );
-        binding.buttonBluetooth.setOnClickListener(
+        binding.buttonRefresh.setOnClickListener(
                 // TODO remove test
-                v -> addNewLobby(null, "test")
-        );
-        binding.buttonBluetooth.setOnClickListener(
-                // TODO remove test
-                v -> test2()
+                v -> updateLobbyList()
         );
         binding.buttonCreateLobby.setOnClickListener(
                 v -> createLobby()
@@ -59,10 +55,10 @@ public class MultiplayerMenuFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void test2() {
+    private void updateLobbyList() {
         Set<Pair<BluetoothDevice, String>> lobbies = MainActivity.getBTManagerInstance().getDevices();
         lobbies.stream().forEach(
-                (lobby) -> addNewLobby(lobby.first, lobby.second)
+                (lobby) -> addNewLobbyEntryToUI(lobby.first, lobby.second)
         );
     }
 
@@ -73,7 +69,7 @@ public class MultiplayerMenuFragment extends Fragment {
     }
 
 
-    private void addNewLobby(BluetoothDevice device, String lobbyname) {
+    private void addNewLobbyEntryToUI(BluetoothDevice device, String lobbyname) {
         binding.connectList.removeView(binding.noLobbyInfo);
         LobbyEntryView lobbyEntryView = new LobbyEntryView(getContext());
         lobbyEntryView.setName(lobbyname);
@@ -81,7 +77,6 @@ public class MultiplayerMenuFragment extends Fragment {
     }
 
     private void changeUsername() {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("new username:");
         final EditText input = new EditText(binding.getRoot().getContext());
@@ -96,8 +91,6 @@ public class MultiplayerMenuFragment extends Fragment {
 
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
         builder.show();
-
-
     }
 
     @Override
