@@ -59,6 +59,7 @@ public class LobbyEntryView extends ConstraintLayout {
     public void addLobbyDeviceConnection(BluetoothDevice device, Fragment fragment) {
         Log.e("!", String.valueOf(device));
         BtConnectAsClientThread Client = new BtConnectAsClientThread(MainActivity.getBTManagerInstance(), device);
+        MainActivity.getBTManagerInstance().setConnectClientSocketThread(Client);
         binding.buttonJoinLobby.setOnClickListener(v ->
                 {
                     Client.start();

@@ -2,6 +2,9 @@ package com.example.a2048mult.ui.menu.multiplayer;
 
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -33,6 +36,8 @@ public class MultiplayerMenuFragment extends Fragment {
         super.onCreate(savedInstanceState);
         MainActivity.getBTManagerInstance().BTinit();
         this.username = MainActivity.getBTManagerInstance().getBtDeviceName();
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        this.getContext().registerReceiver(MainActivity.getBTManagerInstance().getBtBroadcastReceiver(), filter);
     }
 
     @Override
@@ -101,7 +106,10 @@ public class MultiplayerMenuFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        this.getContext().unregisterReceiver(MainActivity.getBTManagerInstance().getBtBroadcastReceiver());
     }
+
+
 
 
 }

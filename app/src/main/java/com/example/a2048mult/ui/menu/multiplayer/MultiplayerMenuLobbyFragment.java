@@ -47,6 +47,7 @@ public class MultiplayerMenuLobbyFragment extends Fragment implements MenuLobbyC
     public void onStart() {
         super.onStart();
         BtAcceptAsServerThread server = new BtAcceptAsServerThread(MainActivity.getBTManagerInstance());
+        MainActivity.getBTManagerInstance().setServerSocketThread(server);
         server.start();
 
     }
