@@ -20,7 +20,10 @@ import com.example.a2048mult.game.states.Player;
 import com.example.a2048mult.game.states.PlayfieldTurn;
 import com.example.a2048mult.game.states.PlayfieldTurnAnimTuple;
 
+import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Queue;
+import java.util.Stack;
 
 
 public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
@@ -28,8 +31,10 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
     private ConstraintSet constraintSet;
 
     private ConstraintLayout container;
-
     private ConstraintLayout.LayoutParams containerLayoutParams;
+
+    private Queue<PlayfieldTileView> nonUsedTiles = new ArrayDeque<>(16);
+    private Stack<PlayfieldTileView> tileReferenceStack = new Stack<>();
 
     private Handler handler;
     private Handler moveHandler;
@@ -45,6 +50,7 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
 
     // also used for determining position of new tile
     private PlayfieldTileView[][] backgroundViews;
+    private int counter = 0;
 
     public PlayfieldView(@NonNull Context context) {
         super(context);
@@ -87,8 +93,8 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
 
         this.container = binding.container;
         binding.getRoot().removeView(this.container);
-//        ((ViewGroup)this.container.getParent()).removeView(binding.container);
         this.containerLayoutParams = (LayoutParams) binding.container.getLayoutParams();
+//        ((ViewGroup)this.container.getParent()).removeView(binding.container);
 
 
         // changing marginToBorders
@@ -129,29 +135,27 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
         }
         constraintSet = new ConstraintSet();
 
-
         PlayfieldTileView newTile;
-
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                if (data[y][x] == PlayfieldConfig.invisibleTile) {
-                    continue;
-                }
                 newTile = new PlayfieldTileView(getContext());
                 newTile.setLevel(data[y][x]);
                 newTile.setLayoutParams(new LayoutParams(0, 0));
                 newTile.setId(ConstraintLayout.generateViewId());
                 newContainer.addView(newTile);
                 allViews[y][x] = newTile;
+
+                if (data[y][x] == PlayfieldConfig.invisibleTile) {
+                    this.nonUsedTiles.add(newTile);
+                }
+
             }
         }
+
 
         constraintSet.clone(newContainer);
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                if (allViews[y][x] == null) {
-                    continue;
-                }
                 if (inBackground) {
                     doConstraintsBasedOnPosition(x, y, width, height, allViews, 0);
                     continue;
@@ -197,7 +201,6 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
         }
     }
 
-
     void drawPlayfieldBackground(int width, int height) {
         int[][] bgData = new int[height][width];
         drawPlayfieldState(bgData, true);
@@ -223,8 +226,6 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
     @Override
     public void drawPlayfieldTurn(PlayfieldTurn playfieldTurn) {
 
-
-        int counter = 0;
         Runnable r = () -> {
             PlayfieldTurnAnimTuple animation;
             printAllViews();
@@ -235,8 +236,6 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
                 doAnimation(animation);
                 animation = playfieldTurn.pollNextAnimation();
             }
-            ;
-
 
             Runnable r2 = () -> {
                 printAllViews();
@@ -245,44 +244,52 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
 
         };
         this.handler.post(r);
-//        Log.e("!", "counter" + counter);
-
     }
 
     private void doAnimation(PlayfieldTurnAnimTuple animation) {
-        int delay;
         switch (animation.type) {
             case SPAWN:
-
                 Runnable rSpawn = () -> {
-                    addTileIfNull(animation.tile.getNewX(), animation.tile.getNewY());
-                    Runnable rSpawn1 = () -> {
-                        spawnTileAt(animation.tile.getNewX(), animation.tile.getNewY(), animation.tile.getLevel());
-                    };
-                    getHandler().postDelayed(rSpawn1, 20);
+                    // move next avaible invisible tile to position
+                    PlayfieldTileView playfieldTileView = this.nonUsedTiles.poll();
+                    moveTile(playfieldTileView, animation.tile.getNewX(), animation.tile.getNewY(), 0);
+                    // spawn Tile
+                    spawnTileAt(animation.tile.getNewX(), animation.tile.getNewY(), animation.tile.getLevel());
                 };
-                this.handler.postDelayed(rSpawn, PlayfieldConfig.animationDurationInMs +20);
+                this.handler.postDelayed(rSpawn, PlayfieldConfig.animationDurationInMs + 700);
                 break;
-
             case MOVE:
                 Runnable rMove = () -> {
                     moveTile(animation.tile.getOldX(), animation.tile.getOldY(), animation.tile.getNewX(), animation.tile.getNewY());
-                };
-                Runnable rAfterMove = () -> {
-                    printAllViews();
-//                    replaceTile(animation.tile.getOldX(), animation.tile.getOldY(), 10, 0);
-//                    replaceTile(animation.tile.getNewX(), animation.tile.getNewY(), animation.tile.getLevel(), 2000);
-                };
 
-                this.moveHandler.post(rMove);
-                this.moveHandler.postDelayed(rAfterMove, PlayfieldConfig.animationDurationInMs);
+                    PlayfieldTileView playfieldTileView = this.nonUsedTiles.poll();
+                    moveTile(playfieldTileView, animation.tile.getOldX(), animation.tile.getOldY(), 0);
 
+                };
+                this.moveHandler.postDelayed(rMove, 0);
                 break;
             case REMOVE:
-                Runnable rRemove = () -> {
-                    removeTile(animation.tile.getNewX(), animation.tile.getNewY());
-                };
-                this.handler.postDelayed(rRemove, PlayfieldConfig.animationDurationInMs + 200);
+
+                Runnable rRemove;
+                if (!tileReferenceStack.isEmpty()) {
+                    rRemove = () -> {
+                        PlayfieldTileView test = tileReferenceStack.pop();
+                    replaceTile(test, -1, 0);
+                        this.nonUsedTiles.add(playfieldViews[animation.tile.getOldY()][animation.tile.getOldX()]);
+                    };
+                    this.moveHandler.postDelayed(rRemove, PlayfieldConfig.animationDurationInMs + 500);
+                } else {
+                    rRemove = () -> {
+//                        binding.getRoot().removeView(playfieldViews[animation.tile.getOldY()][animation.tile.getOldX()]);
+                        replaceTile(animation.tile.getOldX(), animation.tile.getOldY(), -1, 0);
+                        this.nonUsedTiles.add(playfieldViews[animation.tile.getOldY()][animation.tile.getOldX()]);
+                    };
+                    this.handler.postDelayed(rRemove, PlayfieldConfig.animationDurationInMs + 500);
+                }
+
+                break;
+            case SAVE_REFERENCE:
+                tileReferenceStack.push(playfieldViews[animation.tile.getOldY()][animation.tile.getOldX()]);
                 break;
         }
     }
@@ -291,60 +298,70 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
         return replaceTile(x, y, level, PlayfieldConfig.animationSpawnDurationInMs);
     }
 
-    public void removeTile(int x, int y) {
-        binding.getRoot().removeView(playfieldViews[y][x]);
-        playfieldViews[y][x] = null;
-//        return replaceTile(x, y, PlayfieldConfig.invisibleTile, PlayfieldConfig.animationDurationInMs);
+    private void moveTile(PlayfieldTileView playfieldTileView, int xTo, int yTo, int duration) {
+
+        this.nonUsedTiles.add(playfieldTileView);
+
+        PlayfieldTileView fromTile = playfieldTileView;
+        PlayfieldTileView toTile = backgroundViews[yTo][xTo];
+
+        float xDiff = toTile.getX() - fromTile.getX();
+        float yDiff = toTile.getY() - fromTile.getY();
+        playfieldViews[yTo][xTo] = playfieldTileView;
+
+        Runnable rUpdateCoordinates = () -> {
+            if (xDiff != 0 || yDiff != 0) {
+                fromTile.setX(toTile.getX());
+                fromTile.setY(toTile.getY());
+            }
+        };
+
+        fromTile.animate()
+                .x(toTile.getX())
+                .y(toTile.getY())
+                .setDuration(duration)
+                .withEndAction(rUpdateCoordinates)
+                .start();
     }
 
-    private ObjectAnimator moveTile(int xFrom, int yFrom, int xTo, int yTo) {
-        final ObjectAnimator[] animation = new ObjectAnimator[1];
-
+    private void moveTile(int xFrom, int yFrom, int xTo, int yTo) {
         PlayfieldTileView fromTile = playfieldViews[yFrom][xFrom];
         PlayfieldTileView toTile = backgroundViews[yTo][xTo];
 
-        playfieldViews[yTo][xTo] = fromTile;
-        playfieldViews[yFrom][xFrom] = null;
-
         float xDiff = toTile.getX() - fromTile.getX();
-        if (xDiff != 0) {
-            animation[0] = ObjectAnimator.ofFloat(fromTile, "translationX", xDiff);
-        } else {
-            float yDiff = toTile.getY() - fromTile.getY();
-            animation[0] = ObjectAnimator.ofFloat(fromTile, "translationY", yDiff);
-        }
-
-        animation[0].setDuration(PlayfieldConfig.animationDurationInMs);
-        animation[0].start();
+        float yDiff = toTile.getY() - fromTile.getY();
 
 
-        return animation[0];
-    }
+        Runnable rUpdateCoordinates = () -> {
+            if (xDiff != 0 || yDiff != 0) {
+                fromTile.setX(toTile.getX());
+                fromTile.setY(toTile.getY());
+                playfieldViews[yTo][xTo] = fromTile;
+            }
+        };
 
-    private void addTileIfNull(int x, int y) {
-        if (playfieldViews[y][x] == null) {
-            PlayfieldTileView playfieldTileView = new PlayfieldTileView(getContext());
-            playfieldTileView.setLayoutParams(backgroundViews[y][x].getLayoutParams());
-            playfieldTileView.setLevel(-1);
-            ((Activity) this.binding.getRoot().getContext()).runOnUiThread(() -> {
-                this.container.addView(playfieldTileView);
-            });
-            playfieldViews[y][x] = playfieldTileView;
-        }
+        fromTile.animate()
+                .x(toTile.getX())
+                .y(toTile.getY())
+                .setDuration(PlayfieldConfig.animationDurationInMs)
+                .withEndAction(rUpdateCoordinates)
+                .start();
     }
 
     private ObjectAnimator replaceTile(int x, int y, int level, long animationDuration) {
-        if (playfieldViews[y][x] == null) {
-            PlayfieldTileView playfieldTileView = new PlayfieldTileView(getContext());
-            playfieldTileView.setLayoutParams(backgroundViews[y][x].getLayoutParams());
-            ((Activity) this.binding.getRoot().getContext()).runOnUiThread(() -> {
-                this.container.addView(playfieldTileView);
-            });
-            playfieldViews[y][x] = playfieldTileView;
-        }
-
         playfieldViews[y][x].setLevel(level);
         ObjectAnimator scaleUp = ObjectAnimator.ofPropertyValuesHolder(playfieldViews[y][x],
+                PropertyValuesHolder.ofFloat("scaleX", 0.2f, 1f),
+                PropertyValuesHolder.ofFloat("scaleY", 0.2f, 1f));
+        scaleUp.start();
+        scaleUp.setDuration(animationDuration);
+
+        return scaleUp;
+    }
+
+    private ObjectAnimator replaceTile(PlayfieldTileView playfieldTileView, int level, long animationDuration) {
+        playfieldTileView.setLevel(level);
+        ObjectAnimator scaleUp = ObjectAnimator.ofPropertyValuesHolder(playfieldTileView,
                 PropertyValuesHolder.ofFloat("scaleX", 0.2f, 1f),
                 PropertyValuesHolder.ofFloat("scaleY", 0.2f, 1f));
         scaleUp.start();

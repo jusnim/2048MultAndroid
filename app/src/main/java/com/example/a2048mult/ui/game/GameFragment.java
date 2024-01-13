@@ -50,7 +50,6 @@ public class GameFragment extends Fragment implements DrawGameUI {
 
             for (int i = 0; i < players.length; i++) {
                 this.playfieldUIs[i] = new PlayfieldWithPlayerView(getContext());
-                this.playfieldUIs[i].initPlayer(players[i]);
             }
 
             switch (players.length) {

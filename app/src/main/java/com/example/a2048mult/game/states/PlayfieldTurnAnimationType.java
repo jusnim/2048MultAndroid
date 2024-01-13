@@ -1,5 +1,5 @@
 package com.example.a2048mult.game.states;
 
 public enum PlayfieldTurnAnimationType {
-    MOVE, REMOVE, SPAWN
+    SAVE_REFERENCE,MOVE, REMOVE, SPAWN, MERGE
 }

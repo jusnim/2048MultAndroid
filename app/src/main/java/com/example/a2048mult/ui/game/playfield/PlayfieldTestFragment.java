@@ -54,12 +54,12 @@ public class PlayfieldTestFragment extends Fragment {
 
             @Override
             public void onUp() {
-                protoSpawnTilesPlayfield(4, 4);
+
             }
 
             @Override
             public void onRight() {
-                protoRemovePlayfield(4, 4);
+
             }
         });
         binding.getRoot().setOnClickListener(new View.OnClickListener() {
@@ -72,25 +72,6 @@ public class PlayfieldTestFragment extends Fragment {
         return binding.getRoot();
     }
 
-
-
-    private void protoRemovePlayfield(int width, int height) {
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                this.playfield.removeTile(x, y);
-            }
-        }
-    }
-
-    private void protoSpawnTilesPlayfield(int width, int height) {
-        int level = 1;
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                this.playfield.spawnTileAt(x, y, level);
-                level++;
-            }
-        }
-    }
 
 
 }

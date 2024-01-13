@@ -2,6 +2,7 @@ package com.example.a2048mult.ui.game.playfield;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -52,6 +53,7 @@ public class PlayfieldWithPlayerView extends ConstraintLayout implements DrawPla
 
     @Override
     public void initPlayer(Player player) {
+        Log.e("!","call");
         this.playfieldView.initPlayer(player);
         binding.name.setText(player.getName().toString());
     }

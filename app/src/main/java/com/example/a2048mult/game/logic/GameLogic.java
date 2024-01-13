@@ -50,11 +50,13 @@ public class GameLogic implements InGameControl, ReceiveListener, GameMenuContro
 //                            new GameTileImpl(3, 0, 3, 0, 1),
 //                            new GameTileImpl(3, 0, 2));
 
-                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMove(
-                            new GameTileImpl(0, 0, 2, 0, 1));
-
-                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewSpawned(
-                            new GameTileImpl(1,0,1));
+//                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMove(
+//                            new GameTileImpl(0, 0, 2, 0, 1));
+//
+//                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewSpawned(
+//                            new GameTileImpl(1,0,1));
+//                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewSpawned(
+//                            new GameTileImpl(0,0,1));
                     /////////////////////
 
 //                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMerged(
@@ -79,9 +81,9 @@ public class GameLogic implements InGameControl, ReceiveListener, GameMenuContro
 
 
 //                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMove(new GameTileImpl(1,1,3, 1, 1));
-//                    for (Player player : gameState.getAllPlayer()) {
-//                        GameRules.moveUp(player);
-//                    }
+                    for (Player player : gameState.getAllPlayer()) {
+                        GameRules.moveUp(player);
+                    }
                     break;
                 case DOWN:
                     for (Player player : gameState.getAllPlayer()) {
