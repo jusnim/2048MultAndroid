@@ -175,8 +175,8 @@ public class BluetoothManager {
 
     public void btGetKnownDevices() {
         // Clear views
-        btListAdapter.clear();
-        btListAdapter.updateAdapter();
+        //
+        //btListAdapter.updateAdapter();
 
         // Querying paired devices
         if (ActivityCompat.checkSelfPermission(app, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
