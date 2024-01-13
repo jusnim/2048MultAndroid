@@ -103,8 +103,8 @@ public class BluetoothManager {
 
 
         //Register the BroadcastReceiver
-        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        app.registerReceiver(btBroadcastReceiver, filter);
+        /*IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        app.registerReceiver(btBroadcastReceiver, filter);*/
 
         //Init Bluetooth and start server socket
         //BluetoothDevice btdevice = null;
@@ -129,44 +129,32 @@ public class BluetoothManager {
             //device doesnt support Bluetooth
         } else {
             if (!bluetoothAdapter.isEnabled()) {
-                ActivityCompat.requestPermissions(this.app, new String[]{"Manifest.permission.BLUETOOTH_CONNECT"}, 1);
                 Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(app, enableIntent, REQUEST_ENABLE_BT, null);
             } else {
                 btOKCallback();
             }
         }
-        btListAdapter.clear();
-        btListAdapter.updateAdapter();
 
-        Log.d(LOG_TAG, "Async devices discovery...");
-        if (ActivityCompat.checkSelfPermission(app, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(app, new String[]{"Manifest.permission.BLUETOOTH_SCAN"},1);
-        }
-        bluetoothAdapter.cancelDiscovery();
-        if (ActivityCompat.checkSelfPermission(app, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(app, new String[]{"Manifest.permission.BLUETOOTH_SCAN"},1);
-        }
-        bluetoothAdapter.startDiscovery();
     }
 
     public Set<Pair<BluetoothDevice, String>> getDevices() {
-        findDevices();
+
         Set tmp = new HashSet<Pair<BluetoothDevice, String>>();
 
         for (BluetoothDevice i : this.btListAdapter.getDevices()) {
             if (ActivityCompat.checkSelfPermission(app, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-
-                return null;
+                ActivityCompat.requestPermissions(app, new String[]{"Manifest.permission.BLUETOOTH_CONNECT"}, 1);
             }
             Pair<BluetoothDevice, String> temp = new Pair<>(i, i.getName());
             tmp.add(temp);
 
         }
-        Log.e("!","return");
+        Log.e("!", "return");
         return tmp;
 
     }
+
     public void findDevices() {
         btListAdapter.clear();
         btListAdapter.updateAdapter();
@@ -219,11 +207,11 @@ public class BluetoothManager {
 
     public void btManageConnection(BluetoothSocket btSocket) {
         // Start receiver thread
-        messageReceiverThread = new BtMessageReceiverThread(this,btSocket);
+        messageReceiverThread = new BtMessageReceiverThread(this, btSocket);
         messageReceiverThread.start();
         Log.d(LOG_TAG, "Message Receiver starts receiving");
         // Init sender object
-        messageSender = new BtMessageSender(this,btSocket);
+        messageSender = new BtMessageSender(this, btSocket);
         Log.d(LOG_TAG, "Sender OK");
     }
 
@@ -246,13 +234,16 @@ public class BluetoothManager {
                 connectClientSocketThread.cancel();
                 connectClientSocketThread.interrupt();
             }
-            connectClientSocketThread = new BtConnectAsClientThread(this,btDevice);
+            connectClientSocketThread = new BtConnectAsClientThread(this, btDevice);
             connectClientSocketThread.start();
         }
     }
 
-    @SuppressLint("MissingPermission")
+
     public String getBtDeviceName() {
+        if (ActivityCompat.checkSelfPermission(app, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(app, new String[]{"Manifest.permission.BLUETOOTH_CONNECT"},1);
+        }
         return bluetoothAdapter.getName();
     }
 
