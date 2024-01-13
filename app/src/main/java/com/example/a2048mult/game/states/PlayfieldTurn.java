@@ -39,6 +39,6 @@ public interface PlayfieldTurn {
      */
     PlayfieldTurnAnimTuple pollNextAnimation();
 
-    void removeLastAnimation();
+    void removeLastMoveAnimation();
 
 }

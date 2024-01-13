@@ -15,8 +15,8 @@ public class GameRules {
 
     // merge two tiles in memory and queue all necessary animations
     private static void internalMerge(GameTile tile_view, int x_new, int y_new, Player player) {
-        player.getPlayfieldTurn().removeLastAnimation();
-        // TODO remove last regular move - can happen that after merge comes merge, maybe seperate merge queues
+//        player.getPlayfieldTurn().removeLastMoveAnimation();
+        // TODO seems to not worked
 
         GameTile tile_merge_old;
         GameTile tile_merge_new;
