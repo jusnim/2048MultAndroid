@@ -43,63 +43,24 @@ public class GameLogic implements InGameControl, ReceiveListener, GameMenuContro
     @Override
     public void swipe(MoveType move) {
         Runnable r = () -> {
-            switch (move) {
-                case UP:
-//                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMerged(
-//                            new GameTileImpl(2, 0, 3, 0, 1),
-//                            new GameTileImpl(3, 0, 3, 0, 1),
-//                            new GameTileImpl(3, 0, 2));
-
-//                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMove(
-//                            new GameTileImpl(0, 0, 2, 0, 1));
-//
-//                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewSpawned(
-//                            new GameTileImpl(1,0,1));
-//                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewSpawned(
-//                            new GameTileImpl(0,0,1));
-                    /////////////////////
-
-//                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMerged(
-//                            new GameTileImpl(2, 1, 3, 1, 1),
-//                            new GameTileImpl(3, 1, 3, 1, 1),
-//                            new GameTileImpl(3, 1, 2));
-//
-//                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMove(
-//                            new GameTileImpl(1, 1, 2, 1, 1));
-//
-//                    ///////////////////////////
-//
-//                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMerged(
-//                            new GameTileImpl(2, 2, 3, 2, 1),
-//                            new GameTileImpl(3, 2, 3, 2, 1),
-//                            new GameTileImpl(3, 2, 2));
-//
-//                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMerged(
-//                            new GameTileImpl(0, 2, 2, 2, 1),
-//                            new GameTileImpl(1, 2, 2, 2, 1),
-//                            new GameTileImpl( 2, 2, 2));
-
-
-//                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMove(new GameTileImpl(1,1,3, 1, 1));
-                    for (Player player : gameState.getAllPlayer()) {
+            for (Player player : gameState.getAllPlayer()) {
+                switch (move) {
+                    case UP:
                         GameRules.moveUp(player);
-                    }
-                    break;
-                case DOWN:
-                    for (Player player : gameState.getAllPlayer()) {
+                        break;
+                    case DOWN:
                         GameRules.moveDown(player);
-                    }
-                    break;
-                case LEFT:
-                    for (Player player : gameState.getAllPlayer()) {
+                        break;
+                    case LEFT:
                         GameRules.moveLeft(player);
-                    }
-                    break;
-                case RIGHT:
-                    for (Player player : gameState.getAllPlayer()) {
+
+                        break;
+                    case RIGHT:
+
                         GameRules.moveRight(player);
-                    }
-                    break;
+                        break;
+                }
+                GameRules.spawnTile(player);
             }
             gameUI.drawGameState(GameLogic.this.gameState);
         };
@@ -156,15 +117,15 @@ public class GameLogic implements InGameControl, ReceiveListener, GameMenuContro
 
     @Override
     public void onReceivedPaket(PDU pdu) {
-        if(pdu.getPDUType() == null){
+        if (pdu.getPDUType() == null) {
             return;
         }
-        switch (pdu.getPDUType()){
+        switch (pdu.getPDUType()) {
             case LobbySettingsPDU:
                 GameLogic.getInstance().setLobbySettings(((LobbySettingsPDU) pdu).getData());
                 break;
             case GameStatePDU:
-                this.gameState = ((GameStatePDU)pdu).getData();
+                this.gameState = ((GameStatePDU) pdu).getData();
                 break;
         }
 

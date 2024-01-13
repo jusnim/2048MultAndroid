@@ -218,7 +218,7 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
     @Override
     public void drawPlayfieldTurn(PlayfieldTurn playfieldTurn) {
 
-        HandlerThread handlerThread = new HandlerThread("handler", 0);
+        HandlerThread handlerThread = new HandlerThread("mainHandler", 0);
         handlerThread.start();
         this.handler = new Handler(handlerThread.getLooper());
 
