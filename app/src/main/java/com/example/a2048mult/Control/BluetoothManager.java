@@ -168,6 +168,8 @@ public class BluetoothManager {
             return;
         }
         bluetoothAdapter.startDiscovery();
+        Intent search = new Intent(BluetoothDevice.ACTION_FOUND);
+        btBroadcastReceiver.onReceive(app,search);
         btGetKnownDevices();
 
     }
