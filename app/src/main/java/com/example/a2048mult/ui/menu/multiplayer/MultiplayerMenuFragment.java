@@ -43,6 +43,9 @@ public class MultiplayerMenuFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         MainActivity.getBTManagerInstance().findDevices();
+        for(BluetoothDevice i : MainActivity.getBTManagerInstance().getBtListAdapter().getDevices()){
+            System.out.print(i);
+        }
         binding = FragmentMultiplayerMenuBinding.inflate(getLayoutInflater());
 
         binding.buttonChangeUsername.setOnClickListener(
