@@ -18,8 +18,8 @@ public class BtConnectAsClientThread extends Thread {
 
     private BluetoothManager btManager;
 
-    public final BluetoothSocket btSocket;
-    public final BluetoothDevice btDevice;
+    private final BluetoothSocket btSocket;
+    private final BluetoothDevice btDevice;
 
     private ArrayList<UUID> candidates = new ArrayList<>();
 
@@ -104,6 +104,11 @@ public class BtConnectAsClientThread extends Thread {
             Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] Close exception");
         }
     }
+
+    public BluetoothSocket getBtSocket(){
+        return this.btSocket;
+    }
+
 
 
 }

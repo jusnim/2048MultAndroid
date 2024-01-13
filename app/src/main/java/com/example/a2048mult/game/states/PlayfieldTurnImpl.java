@@ -26,7 +26,7 @@ public class PlayfieldTurnImpl implements PlayfieldTurn, Serializable {
         animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.MOVE, tile2));
 //        animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.REMOVE,tile1));
 //        animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.REMOVE, tile2));
-//        animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.SPAWN, mergedTile));
+        animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.SPAWN, mergedTile));
 //        animationQueue.add(new PlayfieldTurnAnimTuple<>(PlayfieldTurnAnimationType.MERGE, new GameTile[]{tile1,tile2,mergedTile}));
     }
 

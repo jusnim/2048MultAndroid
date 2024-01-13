@@ -45,25 +45,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/textTitle2048"
             app:layout_constraintTop_toTopOf="parent" />
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:fontFamily="@font/poppins_semibold"-->
-<!--            android:includeFontPadding="false"-->
-<!--            android:maxLines="1"-->
-<!--            android:text="2048"-->
-<!--            android:textAlignment="center"-->
-<!--            android:textSize="60sp" />-->
-
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:fontFamily="@font/poppins"-->
-<!--            android:includeFontPadding="false"-->
-<!--            android:text="+ Multiplayer"-->
-<!--            android:textAlignment="center"-->
-
-<!--            android:textSize="40sp" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -52,7 +52,7 @@ public class SinglePlayerMenuFragment extends Fragment implements MenuLobbyChang
                         {0, 0, 0, 0},
                 }
         );
-        Player player = new PlayerImpl("cICH HABE KEInsad Ahnug was ich HIER mache", 0, playfieldState);
+        Player player = new PlayerImpl("", 0, playfieldState);
 //        this.lobbySettings.setPlayFieldSize(binding.chooseView.getSelectedPlayfieldSize());
 
         this.lobbySettings.addPlayer(player);

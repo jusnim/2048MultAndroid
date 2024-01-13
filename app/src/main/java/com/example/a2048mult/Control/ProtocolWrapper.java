@@ -19,7 +19,14 @@ public class ProtocolWrapper implements HandlePackets {
     public ProtocolWrapper(){
         this.receiveListener = GameLogic.getInstance();
         this.bluetoothManager = MainActivity.getBTManagerInstance();
-        //outputStream = BtMessageSender.; //TODO Outputstream aus BtMessageSender bekommen
+
+        BtMessageSender btMessageSender;
+        if(bluetoothManager.getConnectionType() == ConnectionType.Server){
+            btMessageSender = new BtMessageSender(bluetoothManager, bluetoothManager.getServerSocketThread().getBtSocket());
+        }else {
+            btMessageSender = new BtMessageSender(bluetoothManager, bluetoothManager.getConnectClientSocketThread().getBtSocket());
+        }
+        outputStream = btMessageSender.btOStream;
     }
     @Override
     public void recievedataPackets(InputStream inputStream) {
@@ -47,12 +54,10 @@ public class ProtocolWrapper implements HandlePackets {
     }
 
     private void senddataPackets(PDU pdu){
-        /*try {
-            if(bluetoothManager.getConnectionType() == ConnectionType.Client){
-                Serializer.serializePDU(pdu, outputStream);
-            }else if()
+        try {
+            Serializer.serializePDU(pdu, outputStream);
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }*/
+        }
     }
 }

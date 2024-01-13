@@ -50,8 +50,8 @@ public class GameLogic implements InGameControl, ReceiveListener, GameMenuContro
 //                            new GameTileImpl(3, 0, 3, 0, 1),
 //                            new GameTileImpl(3, 0, 2));
 
-//                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMove(
-//                            new GameTileImpl(0, 0, 2, 0, 1));
+                    this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewMove(
+                            new GameTileImpl(0, 0, 2, 0, 1));
 
                     this.gameState.getAllPlayer()[0].getPlayfieldTurn().addNewSpawned(
                             new GameTileImpl(1,0,1));
