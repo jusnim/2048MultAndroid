@@ -153,6 +153,7 @@ public class BluetoothManager {
             tmp.add(temp);
 
         }
+        Log.e("!","return");
         return tmp;
 
     }
