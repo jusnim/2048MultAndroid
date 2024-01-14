@@ -27,7 +27,7 @@ public class PlayerImpl implements Player {
 
     @Override
     public void addScore(long points) {
-
+        score += points;
     }
 
     @Override

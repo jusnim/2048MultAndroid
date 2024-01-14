@@ -1,6 +1,7 @@
 package com.example.a2048mult;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -12,7 +13,10 @@ import com.example.a2048mult.game.states.LobbySettings;
 import com.example.a2048mult.game.states.OperateOnGameState;
 import com.example.a2048mult.game.states.Player;
 import com.example.a2048mult.game.states.PlayerImpl;
+import com.example.a2048mult.game.states.PlayfieldState;
 import com.example.a2048mult.game.states.PlayfieldStateImpl;
+import com.example.a2048mult.game.states.PlayfieldTurn;
+import com.example.a2048mult.game.states.PlayfieldTurnImpl;
 
 import org.junit.Test;
 
@@ -128,5 +132,52 @@ public class GameStateTests {
 
         assertEquals(p1, state.getPlayerPlaying()[0]);
         assertEquals(p2, state.getPlayerPlaying()[1]);
+    }
+
+    @Test
+    public void playerTest(){
+        PlayfieldState pfs = new PlayfieldStateImpl();
+        Player p1 = new PlayerImpl("00", 42000, pfs);
+
+        assertEquals("00", p1.getName());
+        assertEquals(42000, p1.getScore());
+
+        p1.addScore(69);
+
+        assertEquals(42069, p1.getScore());
+        assertEquals(pfs, p1.getPlayfieldState());
+
+        p1.setPlayfieldSize(42);
+
+        assertEquals(42, p1.getPlayfieldState().getFieldSizeX());
+        assertEquals(42, p1.getPlayfieldState().getFieldSizeY());
+
+        PlayfieldTurn pft = new PlayfieldTurnImpl();
+        p1.setPlayfieldTurn(pft);
+
+        assertEquals(pft, p1.getPlayfieldTurn());
+    }
+
+    @Test
+    public void playfieldTest(){
+        PlayfieldState pfs = new PlayfieldStateImpl(187);
+
+        assertEquals(187, pfs.getFieldSizeX());
+        assertEquals(187, pfs.getFieldSizeY());
+
+        pfs.setTile(0,0,42);
+
+        assertEquals(42, pfs.getTile(0,0));
+
+        pfs.setTile(0,0,43);
+
+        assertEquals(43, pfs.getTile(0,0));
+
+        assertEquals(43, pfs.getField()[0][0]);
+
+        int[][] field = new int[187][187];
+        pfs.setField(field);
+
+        assertEquals(field[123][45], pfs.getField()[123][45]);
     }
 }

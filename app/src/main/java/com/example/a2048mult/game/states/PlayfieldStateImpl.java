@@ -2,6 +2,10 @@ package com.example.a2048mult.game.states;
 
 import android.util.Log;
 import java.util.Arrays;
+/**
+ * The GameState class which provides the playing field.
+ * @author Niklas Paggel
+ */
 
 public class PlayfieldStateImpl implements PlayfieldState {
     @Override
@@ -13,10 +17,6 @@ public class PlayfieldStateImpl implements PlayfieldState {
         Log.e("!", string);
     }
 
-    /**
-     * The GameState class which provides the playing field.
-     * @author Niklas Paggel
-     */
     /**
      * field[x][y] startet bei 0, 0
      */
