@@ -7,12 +7,13 @@
         <deviceKey>
           <Key>
             <type value="SERIAL_NUMBER" />
-            <value value="RF8M328LCAF" />
+            <value value="ce12160cf3c984830c" />
           </Key>
         </deviceKey>
       </Target>
     </runningDeviceTargetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2024-01-14T03:07:54.958409300Z" />
+    <timeTargetWasSelectedWithDropDown value="2024-01-14T16:50:50.578517900Z" />
+    <multipleDevicesSelectedInDropDown value="true" />
     <runningDeviceTargetsSelectedWithDialog>
       <Target>
         <type value="RUNNING_DEVICE_TARGET" />
