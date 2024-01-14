@@ -123,7 +123,7 @@ public class GameStateTests {
         assertEquals(p1, state.getAllPlayer()[0]);
         assertEquals(p2, state.getAllPlayer()[1]);
 
-        assertNull(state.getQuittedPlayer());
-        assertNull(state.getPlayerLost());
+        assertEquals(0, state.getQuittedPlayer().length);
+        assertEquals(0, state.getPlayerLost().length);
     }
 }

@@ -16,6 +16,12 @@ public class GameState implements OperateOnGameState {
 
     public GameState(Player[] playerList){
         this.playerList = playerList;
+        onlineStatusPlayer = new boolean[playerList.length];
+        playingPlayer = new boolean[playerList.length];
+        for (int i = 0; i < playerList.length; i++) {
+            onlineStatusPlayer[i] = true;
+            playingPlayer[i] = true;
+        }
     }
 
     private int currentPlayerIndex = 0;
@@ -42,7 +48,7 @@ public class GameState implements OperateOnGameState {
 
     @Override
     public void nextPlayer() {
-        currentPlayerIndex++;
+        currentPlayerIndex = (currentPlayerIndex + 1) % playerList.length;
         if (!onlineStatusPlayer[currentPlayerIndex] || !playingPlayer[currentPlayerIndex] ) {
             nextPlayer();
         }
@@ -51,15 +57,19 @@ public class GameState implements OperateOnGameState {
     @Override
     public Player[] getQuittedPlayer() {
         Player[] disconnectedPlayer = new Player[playerList.length];
-
+        int counter = 0;
         for (int i = 0; i < onlineStatusPlayer.length; i++){
             if (! onlineStatusPlayer[i]){
                 disconnectedPlayer[i] = playerList[i];
+                counter++;
             }
         }
         // trim array, so no null values are there
-        disconnectedPlayer = (Player[]) Arrays.asList(disconnectedPlayer).stream().filter(Objects::nonNull).toArray();
-        return disconnectedPlayer;
+        Player[] output = new Player[counter];
+        for(int i = 0; i < counter; i++){
+            output[i] = disconnectedPlayer[i];
+        }
+        return output;
     }
 
     @Override
@@ -70,15 +80,19 @@ public class GameState implements OperateOnGameState {
     @Override
     public Player[] getPlayerLost() {
         Player[] lostPlayer = new Player[playerList.length];
-
+        int counter = 0;
         for (int i = 0; i < playingPlayer.length; i++){
             if (! playingPlayer[i]){
                 lostPlayer[i] = playerList[i];
+                counter++;
             }
         }
         // trim array, so no null values are there
-        lostPlayer = (Player[]) Arrays.asList(lostPlayer).stream().filter(Objects::nonNull).toArray();
-        return lostPlayer;
+        Player[] output = new Player[counter];
+        for(int i = 0; i < counter; i++){
+            output[i] = lostPlayer[i];
+        }
+        return output;
     }
 
     @Override
