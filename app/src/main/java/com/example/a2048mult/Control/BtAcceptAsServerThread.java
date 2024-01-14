@@ -50,7 +50,7 @@ public class BtAcceptAsServerThread extends Thread {
 
                 ActivityCompat.requestPermissions(btManager.app, new String[]{"Manifest.permission.BLUETOOTH_CONNECT"}, 1);
             }
-            tmpSocket = btManager.getBluetoothAdapter().listenUsingRfcommWithServiceRecord(btManager.getSERVICE_NAME(), candidates.get(connectionCount));
+            tmpSocket = btManager.getBluetoothAdapter().listenUsingRfcommWithServiceRecord(btManager.getSERVICE_NAME(), btManager.getSERVICE_UUID1());
             Log.d(btManager.getLOG_TAG(), "ServerSocket created");
         } catch (IOException e) {
             Log.d(btManager.getLOG_TAG(), "[BtAcceptAsServerThread] IOException on BluetoothServerSocket creation");

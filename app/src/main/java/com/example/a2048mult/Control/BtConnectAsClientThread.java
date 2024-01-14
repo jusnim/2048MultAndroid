@@ -27,9 +27,6 @@ public class BtConnectAsClientThread extends Thread {
 
 
     public BtConnectAsClientThread(BluetoothManager btManager, BluetoothDevice device) {
-        candidates.add(btManager.getSERVICE_UUID1());
-        candidates.add(btManager.getSERVICE_UUID2());
-        candidates.add(btManager.getSERVICE_UUID3());
         this.btManager = btManager;
         BluetoothSocket tmpSocket = null;
         btDevice = device;
@@ -42,7 +39,7 @@ public class BtConnectAsClientThread extends Thread {
             Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] Get a BluetoothSocket for connection with the given device");
 
 
-            tmpSocket = btDevice.createRfcommSocketToServiceRecord(candidates.get(connectionCount));
+            tmpSocket = btDevice.createRfcommSocketToServiceRecord(btManager.getSERVICE_UUID1());
         } catch (IOException e) {
             Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] IOException occurred on socket creation");
             throw new RuntimeException();
