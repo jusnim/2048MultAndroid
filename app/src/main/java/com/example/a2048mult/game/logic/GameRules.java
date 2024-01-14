@@ -118,12 +118,12 @@ public class GameRules {
         // obtain field state
         field_state = player.getPlayfieldState();
 
-        field_state.printField();
+        //field_state.printField();
 
         // move or merge
         GameRules.internalMoveUp(field_state, player);
 
-        field_state.printField();
+        //field_state.printField();
     }
 
     private static void internalMoveDown(PlayfieldState field_state, Player player) {
@@ -198,12 +198,12 @@ public class GameRules {
         // obtain field state
         field_state = player.getPlayfieldState();
 
-        field_state.printField();
+        //field_state.printField();
 
         // move or merge
         GameRules.internalMoveDown(field_state, player);
 
-        field_state.printField();
+        //field_state.printField();
     }
 
     private static void internalMoveLeft(PlayfieldState field_state, Player player) {
@@ -272,12 +272,12 @@ public class GameRules {
         // obtain field state
         field_state = player.getPlayfieldState();
 
-        field_state.printField();
+        //field_state.printField();
 
         // move or merge
         GameRules.internalMoveLeft(field_state, player);
 
-        field_state.printField();
+        //field_state.printField();
     }
 
     private static void internalMoveRight(PlayfieldState field_state, Player player) {
@@ -348,12 +348,12 @@ public class GameRules {
         // obtain field state
         field_state = player.getPlayfieldState();
 
-        field_state.printField();
+        //field_state.printField();
 
         // move or merge
         GameRules.internalMoveRight(field_state, player);
 
-        field_state.printField();
+        //field_state.printField();
     }
 
     public static boolean spawnTile(Player player) {
@@ -387,47 +387,50 @@ public class GameRules {
 //        player.getPlayfieldTurn().addNewSpawned(new GameTileImpl(freeSpaces[rmdPos][0], freeSpaces[rmdPos][1], tileValue));
         // TODO change
 
-//        player.getPlayfieldTurn().addNewSpawned(new GameTileImpl(0, 0, tileValue));
+        player.getPlayfieldTurn().addNewSpawned(new GameTileImpl(0, 0, tileValue));
         player.getPlayfieldState().setTile(freeSpaces[rmdPos][0], freeSpaces[rmdPos][1], tileValue);
+        player.getPlayfieldState().printField();
         return true;
     }
 
-//    public static boolean spawnTile2(Player player) {
-//        double[][] random = new double[game.getFieldSizeX()][game.getFieldSizeY()];
-//        int[] highest = new int[2];
-//        double highestValue = 0;
-//        for (int i = 0; i < game.getFieldSizeX(); i++) {
-//            for (int j = 0; j < game.getFieldSizeY(); j++) {
-//                random[i][j] = Math.random();
-//                if (random[i][j] > highestValue) {
-//                    highestValue = random[i][j];
-//                    highest[0] = i;
-//                    highest[1] = j;
-//                }
-//            }
-//        }
-//
-//        while (game.getTile(highest[0], highest[1]) != 0) {
-//            random[highest[0]][highest[1]] = 0;
-//            highestValue = 0;
-//            for (int i = 0; i < game.getFieldSizeX(); i++) {
-//                for (int j = 0; j < game.getFieldSizeY(); j++) {
-//                    if (random[i][j] > highestValue) {
-//                        highestValue = random[i][j];
-//                        highest[0] = i;
-//                        highest[1] = j;
-//                    }
-//                }
-//            }
-//        }
-//        if (highestValue == 0)
-//            return false; //spiel verloren
-//        int tileValue = 1;
-//        if (Math.random() > 0.8)
-//            tileValue = 2;
-//        game.setTile(highest[0], highest[1], tileValue);
-//        return true;
-//    }
+    public static boolean spawnTile2(Player player) {
+        double[][] random = new double[player.getPlayfieldState().getFieldSizeX()][player.getPlayfieldState().getFieldSizeY()];
+        int[] highest = new int[2];
+        double highestValue = 0;
+        for (int i = 0; i < player.getPlayfieldState().getFieldSizeX(); i++) {
+
+            for (int j = 0; j < player.getPlayfieldState().getFieldSizeY(); j++) {
+                random[i][j] = Math.random();
+                if (random[i][j] > highestValue) {
+                    highestValue = random[i][j];
+                    highest[0] = i;
+                    highest[1] = j;
+                }
+            }
+        }
+
+        while (player.getPlayfieldState().getTile(highest[0], highest[1]) != 0) {
+            random[highest[0]][highest[1]] = 0;
+            highestValue = 0;
+            for (int i = 0; i < player.getPlayfieldState().getFieldSizeX(); i++) {
+                for (int j = 0; j < player.getPlayfieldState().getFieldSizeY(); j++) {
+                    if (random[i][j] > highestValue) {
+                        highestValue = random[i][j];
+                        highest[0] = i;
+                        highest[1] = j;
+                    }
+                }
+            }
+        }
+        if (highestValue == 0)
+            return false; //spiel verloren
+        int tileValue = 1;
+        if (Math.random() > 0.8)
+            tileValue = 2;
+        player.getPlayfieldState().setTile(highest[0], highest[1], tileValue);
+        player.getPlayfieldTurn().addNewSpawned(new GameTileImpl(highest[0], highest[1], tileValue));
+        return true;
+    }
 
     private static void move(Player player) {    //move links als standard
         int[][] neueListe = new int[player.getPlayfieldState().getFieldSizeX()][player.getPlayfieldState().getFieldSizeY()];

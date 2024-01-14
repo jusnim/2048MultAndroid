@@ -1,4 +1,4 @@
-package com.example.a2048mult.Control;
+package com.example.a2048mult.Control.wifi;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;

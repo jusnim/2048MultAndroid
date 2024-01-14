@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.text.InputType;
 import android.util.Log;
 import android.util.Pair;
@@ -26,6 +28,7 @@ import com.example.a2048mult.R;
 import com.example.a2048mult.databinding.FragmentMultiplayerMenuBinding;
 import com.example.a2048mult.ui.menu.MainActivity;
 
+import java.util.Arrays;
 import java.util.Set;
 
 public class MultiplayerMenuFragment extends Fragment {
@@ -55,6 +58,14 @@ public class MultiplayerMenuFragment extends Fragment {
                 // TODO remove test
                 v -> updateLobbyList()
         );
+        binding.buttonWiFiDirect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateLobbyListWiFi();
+
+            }
+        });
+
         binding.buttonCreateLobby.setOnClickListener(
                 v -> createLobby()
         );
@@ -64,6 +75,21 @@ public class MultiplayerMenuFragment extends Fragment {
         return binding.getRoot();
     }
 
+    private void updateLobbyListWiFi(){
+        MainActivity.getWifiManagerInstance().startDiscovery();
+        Runnable r = () ->{
+            Log.e("!", Arrays.toString(MainActivity.getWifiManagerInstance().getWifiDevices()));
+
+        };
+
+        HandlerThread handlerThread = new HandlerThread("thread", 3);
+        handlerThread.start();
+        Handler handler = new Handler( handlerThread.getLooper());
+        handler.postDelayed(r, 2000);
+
+
+
+    }
     private void updateLobbyList() {
         MainActivity.getBTManagerInstance().findDevices();
         /*Set<Pair<BluetoothDevice, String>> lobbies = MainActivity.getBTManagerInstance().getDevices();

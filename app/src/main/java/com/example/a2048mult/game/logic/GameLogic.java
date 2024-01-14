@@ -2,6 +2,7 @@ package com.example.a2048mult.game.logic;
 
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.util.Log;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
@@ -9,11 +10,9 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.a2048mult.Control.GameStatePDU;
 import com.example.a2048mult.Control.LobbySettingsPDU;
 import com.example.a2048mult.Control.PDU;
-import com.example.a2048mult.Control.PDUType;
 import com.example.a2048mult.game.currentlyNotUsed.ReceiveListener;
 import com.example.a2048mult.game.states.ChangeLobbyConfigurations;
 import com.example.a2048mult.game.states.GameState;
-import com.example.a2048mult.game.states.GameTileImpl;
 import com.example.a2048mult.game.states.MoveType;
 import com.example.a2048mult.game.states.OperateOnGameState;
 import com.example.a2048mult.game.states.Player;
@@ -42,7 +41,7 @@ public class GameLogic implements InGameControl, ReceiveListener, GameMenuContro
 
     @Override
     public void swipe(MoveType move) {
-        Runnable r = () -> {
+//        Runnable r = () -> {
             for (Player player : gameState.getAllPlayer()) {
                 switch (move) {
                     case UP:
@@ -53,22 +52,22 @@ public class GameLogic implements InGameControl, ReceiveListener, GameMenuContro
                         break;
                     case LEFT:
                         GameRules.moveLeft(player);
-
                         break;
                     case RIGHT:
-
                         GameRules.moveRight(player);
                         break;
                 }
-                GameRules.spawnTile(player);
+                GameRules.spawnTile2(player);
+                player.getPlayfieldState().printField();
             }
+            Log.e("!","sdfsdf");
             gameUI.drawGameState(GameLogic.this.gameState);
-        };
-
-        HandlerThread handlerThread = new HandlerThread("handleMove", 0);
-        handlerThread.start();
-        Handler handler = new Handler(handlerThread.getLooper());
-        handler.post(r);
+//        };
+//
+//        HandlerThread handlerThread = new HandlerThread("handleMove", 0);
+//        handlerThread.start();
+//        Handler handler = new Handler(handlerThread.getLooper());
+//        handler.post(r);
 
     }
 
@@ -91,7 +90,7 @@ public class GameLogic implements InGameControl, ReceiveListener, GameMenuContro
         }
 
         // for updating all Players on given Playfieldsize
-//        this.lobbySettings.setPlayFieldSize(this.lobbySettings.getPlayFieldSize());
+        this.lobbySettings.setPlayFieldSize(this.lobbySettings.getPlayFieldSize());
         this.gameState = new GameState(this.lobbySettings.getAllPlayer());
         this.gameStarted = true;
 
@@ -99,7 +98,7 @@ public class GameLogic implements InGameControl, ReceiveListener, GameMenuContro
 
         Runnable r = () -> {
             for (Player player : gameState.getAllPlayer()) {
-//            GameRules.initGame(player);
+                GameRules.initGame(player);
             }
 //
 //

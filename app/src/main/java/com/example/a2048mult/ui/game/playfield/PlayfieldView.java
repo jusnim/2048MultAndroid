@@ -138,6 +138,7 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
                 allViews[y][x] = newTile;
 
                 if (data[y][x] == PlayfieldConfig.invisibleTile) {
+                    allViews[y][x]=null;
                     this.nonUsedTiles.add(newTile);
                 }
 
@@ -150,6 +151,9 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
             for (int x = 0; x < width; x++) {
                 if (inBackground) {
                     doConstraintsBasedOnPosition(x, y, width, height, allViews, 0);
+                    continue;
+                }
+                if (data[y][x] == PlayfieldConfig.invisibleTile) {
                     continue;
                 }
                 doConstraintsBasedOnPosition(x, y, width, height, allViews, PlayfieldConfig.marginTileInDP);
@@ -233,25 +237,17 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
         }
     }
 
+    private void ifTileNull(int x, int y){
+        PlayfieldTileView playfieldTileView2 = this.nonUsedTiles.poll();
+        moveTile(playfieldTileView2, x, y, 0);
+    }
+
     private void doAnimation(PlayfieldTurnAnimTuple animation) {
         int delay = 10;
         switch (animation.type) {
             case SPAWN:
-                // move next avaible invisible tile to position
-                PlayfieldTileView playfieldTileView2 = this.nonUsedTiles.poll();
-
-                for (int y = 0; y < playfieldViews.length; y++) {
-                    for (int x = 0; x < playfieldViews.length; x++) {
-                        if (playfieldViews[y][x] == playfieldTileView2) {
-                            playfieldViews[y][x] = null;
-                            break;
-                        }
-                    }
-                }
-                moveTile(playfieldTileView2, animation.tile.getNewX(), animation.tile.getNewY(), 0);
-
                 Runnable rSpawn = () -> {
-//                    // spawn Tile
+                   // spawn Tile
                     spawnTileAt(animation.tile.getNewX(), animation.tile.getNewY(), animation.tile.getLevel());
 
                     Log.e("!", "     SPAWN");
@@ -327,6 +323,10 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
     }
 
     private void moveTile(int xFrom, int yFrom, int xTo, int yTo) {
+        if (playfieldViews[yFrom][xFrom] == null) {
+            ifTileNull(xFrom, yFrom);
+        }
+
         PlayfieldTileView fromTile = playfieldViews[yFrom][xFrom];
         PlayfieldTileView toTile = backgroundViews[yTo][xTo];
         playfieldViews[yTo][xTo] = fromTile;
@@ -351,7 +351,13 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
     }
 
     private ObjectAnimator replaceTile(int x, int y, int level, long animationDuration) {
-        playfieldViews[y][x].setLevel(level);
+        if (playfieldViews[y][x] == null) {
+            ifTileNull(x, y);
+        }
+        ((Activity)getContext()).runOnUiThread(
+                () -> playfieldViews[y][x].setLevel(level)
+        );
+
         ObjectAnimator scaleUp = ObjectAnimator.ofPropertyValuesHolder(playfieldViews[y][x],
                 PropertyValuesHolder.ofFloat("scaleX", 0.2f, 1f),
                 PropertyValuesHolder.ofFloat("scaleY", 0.2f, 1f));
@@ -362,7 +368,9 @@ public class PlayfieldView extends ConstraintLayout implements DrawPlayfieldUI {
     }
 
     private ObjectAnimator replaceTile(PlayfieldTileView playfieldTileView, int level, long animationDuration) {
-        playfieldTileView.setLevel(level);
+        ((Activity)getContext()).runOnUiThread(
+                () -> playfieldTileView.setLevel(level)
+        );
         ObjectAnimator scaleUp = ObjectAnimator.ofPropertyValuesHolder(playfieldTileView,
                 PropertyValuesHolder.ofFloat("scaleX", 0.2f, 1f),
                 PropertyValuesHolder.ofFloat("scaleY", 0.2f, 1f));

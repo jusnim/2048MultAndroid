@@ -1,6 +1,9 @@
 package com.example.a2048mult.ui.game.playfield;
 
+import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,36 +41,6 @@ public class PlayfieldTestFragment extends Fragment {
         lm = new LinearLayout(binding.getRoot().getContext());
 
 //        Toast.makeText(binding.getRoot().getContext(), "lol", Toast.LENGTH_SHORT).show();
-
-
-        // TODO change no anonym inputlistener
-        binding.getRoot().setOnTouchListener(new InputListener(binding.getRoot().getContext()) {
-            @Override
-            public void onLeft() {
-//                playfield.mergeTile(3, 0, 1, 0, 3);
-            }
-
-            @Override
-            public void onDown() {
-//                playfield.mergeTile(0, 0, 0, 2, 6);
-            }
-
-            @Override
-            public void onUp() {
-
-            }
-
-            @Override
-            public void onRight() {
-
-            }
-        });
-        binding.getRoot().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
 
         return binding.getRoot();
     }

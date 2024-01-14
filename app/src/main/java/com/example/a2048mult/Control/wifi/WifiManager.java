@@ -1,12 +1,10 @@
-package com.example.a2048mult.Control;
+package com.example.a2048mult.Control.wifi;
 
 import static android.os.Looper.getMainLooper;
-import static androidx.core.content.ContextCompat.getSystemService;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.wifi.p2p.WifiP2pConfig;
@@ -16,21 +14,12 @@ import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.Settings;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import androidx.core.app.ActivityCompat;
 
-import com.example.a2048mult.R;
 import com.example.a2048mult.ui.menu.MainActivity;
-import com.example.a2048mult.ui.menu.multiplayer.MultiplayerMenuFragment;
-import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -80,69 +69,58 @@ public class WifiManager {
 
         //wifiButton = MultiplayerMenuFragment.getWifiButton();TODO
 
-        exqListener();
+        // TODO start
+//        exqListener();
     }
-    private void exqListener() {
-        /*wifiButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(context, android.Manifest.permission.NEARBY_WIFI_DEVICES) != PackageManager.PERMISSION_GRANTED) {
-                    // T ODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
-                manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
-                    @SuppressLint("SetTextI18n")
-                    @Override
-                    public void onSuccess() {
-                        textView.setText("Discovery started");
-                    }
 
-                    @SuppressLint("SetTextI18n")
-                    @Override
-                    public void onFailure(int reason) {
-                        textView.setText("Discovery not started");
-                    }
-                });
+    public void startDiscovery(){
+        if (ActivityCompat.checkSelfPermission(context,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(context, android.Manifest.permission.NEARBY_WIFI_DEVICES)
+                != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onSuccess() {
+                Log.i("!","Discovery started");
+            }
+
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onFailure(int reason) {
+               Log.i("!", "Discovery failed");
             }
         });
+    }
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    public WifiP2pDevice[] getWifiDevices(){
+        return this.deviceArray;
+    };
+
+    public void connectToDevice(WifiP2pDevice device){
+        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(context, android.Manifest.permission.NEARBY_WIFI_DEVICES) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        WifiP2pConfig config = new WifiP2pConfig();
+        config.deviceAddress = device.deviceAddress;
+
+        manager.connect(channel, config, new WifiP2pManager.ActionListener() {
+            @SuppressLint("SetTextI18n")
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final WifiP2pDevice device = deviceArray[position];
-                WifiP2pConfig config = new WifiP2pConfig();
-                config.deviceAddress = device.deviceAddress;
-                if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(context, android.Manifest.permission.NEARBY_WIFI_DEVICES) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
-                manager.connect(channel, config, new WifiP2pManager.ActionListener() {
-                    @SuppressLint("SetTextI18n")
-                    @Override
-                    public void onSuccess() {
-                        textView.setText("Connected" + device.deviceName);
-                    }
-
-                    @SuppressLint("SetTextI18n")
-                    @Override
-                    public void onFailure(int reason) {
-                        textView.setText("Not Connected");
-                    }
-                });
+            public void onSuccess() {
+                Log.i("!", "Connected" + device.deviceName);
+//                textView.setText("Connected" + device.deviceName);
             }
-        });*/
+
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onFailure(int reason) {
+                Log.e("!","not connected");
+//                textView.setText("Not Connected");
+            }
+        });
     }
 
     WifiP2pManager.PeerListListener peerListListener = new WifiP2pManager.PeerListListener() {

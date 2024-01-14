@@ -1,7 +1,5 @@
 package com.example.a2048mult.ui.menu;
 
-import static androidx.core.content.ContextCompat.getSystemService;
-
 import android.content.Context;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
@@ -10,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.a2048mult.Control.BTListAdapter;
 import com.example.a2048mult.Control.BluetoothManager;
-import com.example.a2048mult.Control.WifiManager;
+import com.example.a2048mult.Control.wifi.WifiManager;
 import com.example.a2048mult.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,11 +16,14 @@ public class MainActivity extends AppCompatActivity {
     private static BluetoothManager btManager;
     // TODO meilenstein4 uml gamestate
 
-    private WifiManager wifiManager;
+    private static WifiManager wifiManager;
     private ActivityMainBinding binding;
 
     public static BluetoothManager getBTManagerInstance() {
         return btManager;
+    }
+    public static  WifiManager getWifiManagerInstance() {
+        return wifiManager;
     }
 
     @Override
@@ -40,4 +41,5 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         unregisterReceiver(btManager.getBtBroadcastReceiver());
     }
+
 }

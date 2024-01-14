@@ -8,8 +8,9 @@ public class PlayfieldStateImpl implements PlayfieldState {
     public void printField() {
         String string = "";
         for (int[] line : this.field) {
-            string += (Arrays.toString(line) + "\n");
+            string += ("    " + Arrays.toString(line) + "\n");
         }
+        Log.e("!", string);
     }
 
     /**
