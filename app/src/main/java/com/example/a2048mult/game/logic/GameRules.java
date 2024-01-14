@@ -41,7 +41,7 @@ public class GameRules {
         // add turn to queue
         player.getPlayfieldTurn().addNewMerged(tile_view, tile_merge_old, tile_merge_new);
 
-        Log.e("!", "MERGED");
+//        Log.e("!", "MERGED"); wegen test
     }
 
     private static void internalMoveUp(PlayfieldState field_state, Player player) {
@@ -102,12 +102,12 @@ public class GameRules {
                 playfield_turn = player.getPlayfieldTurn();
                 playfield_turn.addNewMove(tile_view);
 
-                Log.e("!", "MOVED ("
-                        + Integer.toString(x) + " | "
-                        + Integer.toString(y) + ") to ("
-                        + Integer.toString(x) + " | "
-                        + Integer.toString(yy) + ")"
-                );
+//                Log.e("!", "MOVED ("
+//                        + Integer.toString(x) + " | "
+//                        + Integer.toString(y) + ") to ("
+//                        + Integer.toString(x) + " | "
+//                        + Integer.toString(yy) + ")"
+//                ); wegen test
             }
         }
     }
@@ -182,12 +182,12 @@ public class GameRules {
                 playfield_turn = player.getPlayfieldTurn();
                 playfield_turn.addNewMove(tile_view);
 
-                Log.e("!", "MOVED ("
-                        + Integer.toString(x) + " | "
-                        + Integer.toString(y) + ") to ("
-                        + Integer.toString(x) + " | "
-                        + Integer.toString(yy) + ")"
-                );
+//                Log.e("!", "MOVED ("
+//                        + Integer.toString(x) + " | "
+//                        + Integer.toString(y) + ") to ("
+//                        + Integer.toString(x) + " | "
+//                        + Integer.toString(yy) + ")"
+//                ); wegen test
             }
         }
     }
@@ -311,7 +311,7 @@ public class GameRules {
                     }
                 }
 
-                Log.e("!", "Tile could be moved to " + xx + " " + y);
+//                Log.e("!", "Tile could be moved to " + xx + " " + y); wegen test
 
                 // create a tile with the old x and y
                 tile_view = new GameTileImpl(x, y, tile);

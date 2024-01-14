@@ -32,9 +32,9 @@ public class PlayfieldTurnImpl implements PlayfieldTurn, Serializable {
     public void addNewMerged(GameTile tile1, GameTile tile2, GameTile mergedTile) {;
         GameTile placeholder = tile1;
         animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.MERGE, placeholder));
-        Log.e("!", "(" + tile1.getOldX() + "," + tile1.getOldY() + ")" + "->" + "(" + tile1.getNewX() + "," + tile1.getNewY() + ")");
-        Log.e("!", "(" + tile2.getOldX() + "," + tile2.getOldY() + ")" + "->" + "(" + tile2.getNewX() + "," + tile2.getNewY() + ")");
-        Log.e("!", "(" + tile2.getOldestX() + "," + tile2.getOldestY() + ")");
+//        Log.e("!", "(" + tile1.getOldX() + "," + tile1.getOldY() + ")" + "->" + "(" + tile1.getNewX() + "," + tile1.getNewY() + ")");
+//        Log.e("!", "(" + tile2.getOldX() + "," + tile2.getOldY() + ")" + "->" + "(" + tile2.getNewX() + "," + tile2.getNewY() + ")");
+//        Log.e("!", "(" + tile2.getOldestX() + "," + tile2.getOldestY() + ")"); wegen test
 //        tile1.setOldX(tile1.getOldestX());
 //        tile1.setOldY(tile1.getOldestY());
         mergeQueue.add(new GameTile[]{tile1, tile2, mergedTile});
