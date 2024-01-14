@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="70sp"
+    android:layout_height="60sp"
     android:scaleX="0.95"
     android:scaleY="0.95"
     android:padding="10dp"
-    android:background="@drawable/shape_rounded_rectangle"
-    android:backgroundTint="@color/level12"
+    android:background="@drawable/shape_rounded_rectangle2"
+    android:backgroundTint="@color/lobbyView_bg"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
         android:id="@+id/lobbyName"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:textColor="#ffffff"
+
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,12 +21,12 @@
         android:includeFontPadding="false"
         android:text="customName"
 
-        android:autoSizeMaxTextSize="30sp"
+        android:autoSizeMaxTextSize="25sp"
         android:autoSizeMinTextSize="1sp"
         android:autoSizeStepGranularity="1dp"
         android:autoSizeTextType="uniform"
         android:maxLines="1"
-        android:gravity="center"
+        android:gravity="center_vertical"
         />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -51,7 +51,7 @@
             android:includeFontPadding="false"
             android:gravity="center"
 
-            android:textColor="#ffffff"
+
             android:maxLines="1"
             android:text="1/4"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -63,6 +63,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonJoinLobby"
             style="@style/ButtonTheme"
+            android:paddingTop="7sp"
 
             android:layout_width="0dp"
             android:layout_height="wrap_content"
