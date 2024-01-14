@@ -62,6 +62,7 @@ public class BluetoothManager {
     public Activity app;
 
     private final String SERVICE_NAME = "BT_2048";
+//    private final UUID SERVICE_UUID1 = UUID.fromString("0000112f-0000-1000-8000-00805f9b34fb");
     private final UUID SERVICE_UUID1 = UUID.fromString("f193cb8f-9353-48d9-b074-da3db1c21f64");
     private final UUID SERVICE_UUID2 = UUID.fromString("26be7207-966e-4512-bb1f-5f53a32d6a81");
     private final UUID SERVICE_UUID3 = UUID.fromString("f0d7cf88-18c2-486c-81a0-0b5d5d91f000");

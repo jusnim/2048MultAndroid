@@ -63,6 +63,7 @@ public class WifiManagerTry {
     }
 
     public void discoverPeers() {
+        Log.e("!", "discove started");
         if (ActivityCompat.checkSelfPermission(
                 context, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
@@ -70,6 +71,7 @@ public class WifiManagerTry {
                 android.Manifest.permission.NEARBY_WIFI_DEVICES)
                 != PackageManager.PERMISSION_GRANTED) {
 
+            Log.e("!", "permissions are fucked up");
             return;
         }
         manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {

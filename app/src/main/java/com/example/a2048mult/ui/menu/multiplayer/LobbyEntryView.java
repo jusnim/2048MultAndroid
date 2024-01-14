@@ -1,7 +1,9 @@
 package com.example.a2048mult.ui.menu.multiplayer;
 
+import android.Manifest;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,13 +11,13 @@ import android.view.LayoutInflater;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.a2048mult.Control.BtConnectAsClientThread;
-import com.example.a2048mult.R;
 import com.example.a2048mult.databinding.ViewLobbyEntryBinding;
 import com.example.a2048mult.ui.menu.MainActivity;
+
+import java.util.Arrays;
 
 
 public class LobbyEntryView extends ConstraintLayout {
@@ -59,13 +61,7 @@ public class LobbyEntryView extends ConstraintLayout {
     public void addLobbyDeviceConnection(BluetoothDevice device, Fragment fragment) {
         binding.buttonJoinLobby.setOnClickListener(v ->
                 {
-                    if(device != null){
-                        MainActivity.getBTManagerInstance().btConnectAsClient(device);
-                    }
-
-                    // TODO check if connection estabilished
-//                    NavHostFragment.findNavController(fragment)
-//                            .navigate(R.id.action_multiplayerMenu_to_multiplayerMenuLobbyFragment);
+                    MainActivity.getBTManagerInstance().btConnectAsClient(device);
                 }
         );
     }
