@@ -71,8 +71,6 @@ public class BluetoothManager {
     private BluetoothAdapter bluetoothAdapter;
     private BTListAdapter btListAdapter;
     private final BroadcastReceiver btBroadcastReceiver = new BroadcastReceiver() {
-
-
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -80,14 +78,10 @@ public class BluetoothManager {
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 // Get Bluetooth devices from the Intent
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                if(device == null){
-                    return;
-                }
                 // Add the name and the address to an array adapter and update it
                 if (ActivityCompat.checkSelfPermission(app, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
                     Log.d(LOG_TAG, "Permission not granted");
                     ActivityCompat.requestPermissions(app, new String[]{"Manifest.permission.BLUETOOTH_CONNECT"}, 1);
-
                 }
                 Log.d(LOG_TAG, device.getName() + ": " + device.getAddress());
                 Log.d(LOG_TAG, "Adding Device to Device List");
@@ -166,6 +160,7 @@ public class BluetoothManager {
     public void findDevices() {
         btListAdapter.clear();
         btListAdapter.updateAdapter();
+        ActivityCompat.requestPermissions(app, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
 
 
         if (ActivityCompat.checkSelfPermission(app, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
@@ -173,20 +168,14 @@ public class BluetoothManager {
         }
         if (bluetoothAdapter.isDiscovering()) {
             bluetoothAdapter.cancelDiscovery();
-            bluetoothAdapter.startDiscovery();
-            if(bluetoothAdapter.isDiscovering()){
-                Log.d(LOG_TAG, "Disovery started successfully");
-            }
             IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
             app.registerReceiver(btBroadcastReceiver, filter);
-
-
+            bluetoothAdapter.startDiscovery();
         } else {
+            IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+            app.registerReceiver(btBroadcastReceiver, filter);
             bluetoothAdapter.startDiscovery();
             Log.d(LOG_TAG, "Discovery started");
-            IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-            app.registerReceiver(btBroadcastReceiver, filter);
-
         }
 
 
