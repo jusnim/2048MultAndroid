@@ -80,6 +80,9 @@ public class BluetoothManager {
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 // Get Bluetooth devices from the Intent
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                if(device == null){
+                    return;
+                }
                 // Add the name and the address to an array adapter and update it
                 if (ActivityCompat.checkSelfPermission(app, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(app, new String[]{"Manifest.permission.BLUETOOTH_CONNECT"}, 1);
@@ -174,12 +177,16 @@ public class BluetoothManager {
             }
             IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
             app.registerReceiver(btBroadcastReceiver, filter);
+            Intent Found = new Intent(BluetoothDevice.ACTION_FOUND);
+            btBroadcastReceiver.onReceive(app,Found);
 
         } else {
             bluetoothAdapter.startDiscovery();
             Log.d(LOG_TAG, "Discovery started");
             IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
             app.registerReceiver(btBroadcastReceiver, filter);
+            Intent Found = new Intent(BluetoothDevice.ACTION_FOUND);
+            btBroadcastReceiver.onReceive(app,Found);
         }
 
 
