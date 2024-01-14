@@ -7,6 +7,9 @@ import java.io.Serializable;
  */
 public interface PlayfieldState extends Serializable {
 
+    /**
+     * for debugging
+     */
     void printField();
 
     /**
@@ -38,6 +41,4 @@ public interface PlayfieldState extends Serializable {
      * setter for field
      */
     void setField(int[][] field);
-
-
 }

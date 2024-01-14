@@ -20,9 +20,9 @@ public interface PlayfieldTurn {
 
     /**
      * adds a merging of two tile to the object
-     * @param tile1 - alte und neue Koordinaten + alter Wert
-     * @param tile2 - alte und neue Koordinaten + alter Wert
-     * @param mergedTile - hat NUR neue Koordinaten + neuer Wert
+     * @param tile1
+     * @param tile2
+     * @param mergedTile
      */
     void addNewMerged(GameTile tile1, GameTile tile2, GameTile mergedTile);
 

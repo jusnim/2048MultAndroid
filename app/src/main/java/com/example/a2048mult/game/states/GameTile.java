@@ -69,24 +69,4 @@ public interface GameTile {
      * setter for level
      */
     void setLevel(int level);
-
-
-    /**
-     * setter for oldest x coordinate
-     * @param x
-     */
-    void setOldestX(int x);
-    /**
-     * setter for oldest x coordinate
-     * @param y
-     */
-    void setOldestY(int y);
-    /**
-     * getter for oldest x coordinate
-     */
-    int getOldestX();
-    /**
-     * getter for oldest y coordinate
-     */
-    int getOldestY();
 }

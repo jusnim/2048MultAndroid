@@ -8,15 +8,21 @@ import java.util.ArrayList;
 public interface ManageConnections {
 
     /**
-     * hands over the List of over Bluetooth found Devices
-     * @return BluetoothDevice List for MenuView to display
+     * sets the connection type for future Multiplayer
+     * @param type - true, represents Bluetooth, false represents Wi-Fi-Direct
      */
-    ArrayList<BluetoothDevice> getDevices();
+    void setConnectionType(Boolean type);
 
     /**
-     * set the clickedDevice inside the BluetoothConnectionManager to the actually clicked on Devics in MenuView
-     * @param bluetoothDevice the the clicked on Device with wich the connection is supposed to be established
+     * hands over the List of over found Devices
+     * @return Device List for MenuView to display
      */
-    void setclickedDevice(BluetoothDevice bluetoothDevice);
+    ArrayList<ConnectionDevice> getDevices();
+
+    /**
+     * connect to the given ConnectionDevice
+     * @param connectionDevice
+     */
+    void connectToDevice(ConnectionDevice connectionDevice);
 
 }
