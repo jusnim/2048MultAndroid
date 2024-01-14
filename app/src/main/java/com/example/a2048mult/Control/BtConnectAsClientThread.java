@@ -43,7 +43,6 @@ public class BtConnectAsClientThread extends Thread {
 
 
             tmpSocket = btDevice.createRfcommSocketToServiceRecord(candidates.get(connectionCount));
-            connectionCount++;
         } catch (IOException e) {
             Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] IOException occurred on socket creation");
             throw new RuntimeException();
@@ -79,7 +78,6 @@ public class BtConnectAsClientThread extends Thread {
             try {
                 Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] IOException connectExp, Close the socket");
                 btSocket.close();
-                connectionCount--;
             } catch (IOException closeExp) {
                 Log.d(btManager.getLOG_TAG(), "[BtConnectAsClientThread] IOException closeExp, Close exception");
             }

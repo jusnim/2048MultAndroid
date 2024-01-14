@@ -64,7 +64,6 @@ public class BtAcceptAsServerThread extends Thread {
             try {
                 Log.d(btManager.getLOG_TAG(), "[BtAcceptAsServerThread] Listening and waiting for socket...");
                 btSocket = btServerSocket.accept();
-                connectionCount += 1;
             } catch (IOException e) {
                 Log.d(btManager.getLOG_TAG(), "[BtAcceptAsServerThread] IOException");
                 break;
