@@ -28,13 +28,16 @@ import com.example.a2048mult.R;
 import com.example.a2048mult.databinding.FragmentMultiplayerMenuBinding;
 import com.example.a2048mult.ui.menu.MainActivity;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 public class MultiplayerMenuFragment extends Fragment {
 
     private FragmentMultiplayerMenuBinding binding;
     private String username = "coolerGamer";
+    private List<LobbyEntryView> lobbyEntryViewList = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,17 +94,25 @@ public class MultiplayerMenuFragment extends Fragment {
 
     }
     private void updateLobbyList() {
-        MainActivity.getBTManagerInstance().findDevices();
-        /*Set<Pair<BluetoothDevice, String>> lobbies = MainActivity.getBTManagerInstance().getDevices();
+//        MainActivity.getBTManagerInstance().findDevices();
+        deleteLobbiesFromUI();
+        Set<Pair<BluetoothDevice, String>> lobbies = MainActivity.getBTManagerInstance().getDevices();
         lobbies.stream().forEach(
                 (lobby) -> {
-                    Log.e("!", String.valueOf(lobby.first));
-                    Log.e("!", String.valueOf(lobby.second));
-                    addNewLobbyEntryToUI(lobby.first, lobby.second);
+                    if(lobby.first != null){
+                        addNewLobbyEntryToUI(lobby.first, lobby.second);
+                    }
                 }
-        );*/
+        );
     }
 
+    private void deleteLobbiesFromUI(){
+        lobbyEntryViewList.forEach(
+                (lobby) ->binding.connectList.removeView(lobby)
+        );
+        lobbyEntryViewList = new ArrayList<>();
+
+    }
     private void createLobby() {
         Log.e("!", "test");
         NavHostFragment.findNavController(this).navigate(R.id.action_multiplayerMenu_to_multiplayerMenuLobbyFragment);
@@ -111,9 +122,17 @@ public class MultiplayerMenuFragment extends Fragment {
 
     private void addNewLobbyEntryToUI(BluetoothDevice device, String lobbyname) {
         binding.connectList.removeView(binding.noLobbyInfo);
+
+        Log.e("!", "    " + String.valueOf(device));
+        if (lobbyname.length() < 1 || lobbyname == null){
+            lobbyname = String.valueOf(device);
+        }
         LobbyEntryView lobbyEntryView = new LobbyEntryView(getContext());
         lobbyEntryView.setName(lobbyname);
         lobbyEntryView.addLobbyDeviceConnection(device, this);
+
+        binding.connectList.addView(lobbyEntryView);
+        lobbyEntryViewList.add(lobbyEntryView);
     }
 
     private void changeUsername() {

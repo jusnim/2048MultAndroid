@@ -57,14 +57,15 @@ public class LobbyEntryView extends ConstraintLayout {
      * adds the reference for the join button to the corressponding device
      */
     public void addLobbyDeviceConnection(BluetoothDevice device, Fragment fragment) {
-        Log.e("!", String.valueOf(device));
-
         binding.buttonJoinLobby.setOnClickListener(v ->
                 {
-                    MainActivity.getBTManagerInstance().btConnectAsClient(device);
+                    if(device != null){
+                        MainActivity.getBTManagerInstance().btConnectAsClient(device);
+                    }
+
                     // TODO check if connection estabilished
-                    NavHostFragment.findNavController(fragment)
-                            .navigate(R.id.action_multiplayerMenu_to_multiplayerMenuLobbyFragment);
+//                    NavHostFragment.findNavController(fragment)
+//                            .navigate(R.id.action_multiplayerMenu_to_multiplayerMenuLobbyFragment);
                 }
         );
     }
