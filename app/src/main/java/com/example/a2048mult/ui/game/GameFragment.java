@@ -123,6 +123,7 @@ public class GameFragment extends Fragment implements DrawGameUI {
         playfield.setLayoutParams(new ConstraintLayout.LayoutParams(0, 0));
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(binding.playfieldContainer);
+        constraintSet.setDimensionRatio(playfield.getId(),"90:100");
         constraintSet.connect(playfield.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 0);
         constraintSet.connect(playfield.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 0);
         constraintSet.connect(playfield.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
