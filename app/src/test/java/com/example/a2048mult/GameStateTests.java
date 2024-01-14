@@ -16,6 +16,8 @@ import com.example.a2048mult.game.states.PlayerImpl;
 import com.example.a2048mult.game.states.PlayfieldState;
 import com.example.a2048mult.game.states.PlayfieldStateImpl;
 import com.example.a2048mult.game.states.PlayfieldTurn;
+import com.example.a2048mult.game.states.PlayfieldTurnAnimTuple;
+import com.example.a2048mult.game.states.PlayfieldTurnAnimationType;
 import com.example.a2048mult.game.states.PlayfieldTurnImpl;
 
 import org.junit.Test;
@@ -179,5 +181,27 @@ public class GameStateTests {
         pfs.setField(field);
 
         assertEquals(field[123][45], pfs.getField()[123][45]);
+    }
+
+    @Test
+    public void playfieldTurnTest(){
+        PlayfieldTurn pft = new PlayfieldTurnImpl();
+
+        GameTile tile = new GameTileImpl(0,0,42);
+
+        pft.addNewMove(tile);
+
+        PlayfieldTurnAnimTuple pftat = pft.pollNextAnimation();
+
+        assertEquals(PlayfieldTurnAnimationType.MOVE, pftat.type);
+        assertEquals(tile, pftat.tile);
+
+        assertNull(pft.pollNextAnimation());
+
+        pft.addNewSpawned(tile);
+        assertEquals(PlayfieldTurnAnimationType.SPAWN, pft.pollNextAnimation().type);
+
+        pft.addRemoved(tile);
+        assertEquals(PlayfieldTurnAnimationType.REMOVE, pft.pollNextAnimation().type);
     }
 }

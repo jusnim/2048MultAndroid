@@ -65,21 +65,4 @@ public class PlayfieldTurnImpl implements PlayfieldTurn, Serializable {
 
         return anim;
     }
-
-    @Override
-    public void removeLastMoveAnimation() {
-        if (animationQueue.size() > 0
-                && ((PlayfieldTurnAnimTuple) (animationQueue.stream()
-                .skip(animationQueue.size() - 1)
-                .toArray()[0])).type == PlayfieldTurnAnimationType.MOVE) {
-
-            Queue<PlayfieldTurnAnimTuple> newAnimationQueue = new PriorityQueue<>();
-            animationQueue.stream()
-                    .limit(animationQueue.size() - 1)
-                    .forEach(newAnimationQueue::add);
-            this.animationQueue = newAnimationQueue;
-        }
-    }
-
-
 }
