@@ -85,7 +85,9 @@ public class BluetoothManager {
                 }
                 // Add the name and the address to an array adapter and update it
                 if (ActivityCompat.checkSelfPermission(app, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                    Log.d(LOG_TAG, "Permission not granted");
                     ActivityCompat.requestPermissions(app, new String[]{"Manifest.permission.BLUETOOTH_CONNECT"}, 1);
+
                 }
                 Log.d(LOG_TAG, device.getName() + ": " + device.getAddress());
                 Log.d(LOG_TAG, "Adding Device to Device List");
@@ -177,16 +179,14 @@ public class BluetoothManager {
             }
             IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
             app.registerReceiver(btBroadcastReceiver, filter);
-            Intent Found = new Intent(BluetoothDevice.ACTION_FOUND);
-            btBroadcastReceiver.onReceive(app,Found);
+
 
         } else {
             bluetoothAdapter.startDiscovery();
             Log.d(LOG_TAG, "Discovery started");
             IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
             app.registerReceiver(btBroadcastReceiver, filter);
-            Intent Found = new Intent(BluetoothDevice.ACTION_FOUND);
-            btBroadcastReceiver.onReceive(app,Found);
+
         }
 
 
