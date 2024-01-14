@@ -76,9 +76,9 @@ public class MultiplayerMenuFragment extends Fragment {
     }
 
     private void updateLobbyListWiFi(){
-        MainActivity.getWifiManagerInstance().startDiscovery();
+        MainActivity.getWifiManagerInstance().discoverPeers();
         Runnable r = () ->{
-            Log.e("!", Arrays.toString(MainActivity.getWifiManagerInstance().getWifiDevices()));
+            Log.e("!", Arrays.toString(MainActivity.getWifiManagerInstance().getDeviceList()));
 
         };
 

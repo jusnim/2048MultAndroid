@@ -78,6 +78,7 @@ public class WifiManager {
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(context, android.Manifest.permission.NEARBY_WIFI_DEVICES)
                 != PackageManager.PERMISSION_GRANTED) {
+            Log.e("!", "whattf");
             return;
         }
         manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
