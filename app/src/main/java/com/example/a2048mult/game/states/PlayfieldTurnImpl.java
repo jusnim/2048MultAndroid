@@ -52,6 +52,7 @@ public class PlayfieldTurnImpl implements PlayfieldTurn, Serializable {
         if (anim != null && anim.type == PlayfieldTurnAnimationType.MERGE) {
             GameTile[] tiles = mergeQueue.poll();
 
+            // TODO adding at the end of the queue can be error -> maybe change
             animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.REMOVE, tiles[1]));
 
             animationQueue.add(new PlayfieldTurnAnimTuple(PlayfieldTurnAnimationType.SAVE_REFERENCE, tiles[0]));
