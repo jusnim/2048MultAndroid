@@ -2,10 +2,6 @@ package com.example.a2048mult.ui.menu.multiplayer;
 
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -49,7 +45,7 @@ public class MultiplayerMenuFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         MainActivity.getBTManagerInstance().findDevices();
-        for(BluetoothDevice i : MainActivity.getBTManagerInstance().getBtListAdapter().getDevices()){
+        for (BluetoothDevice i : MainActivity.getBTManagerInstance().getBtListAdapter().getDevices()) {
             System.out.print(i);
         }
         binding = FragmentMultiplayerMenuBinding.inflate(getLayoutInflater());
@@ -75,56 +71,65 @@ public class MultiplayerMenuFragment extends Fragment {
 
         binding.usernameInput.setText(this.username);
 
+//        String[] Permissions = new String[]{
+//
+//        }
+//        this.requestPermissions();
+
         return binding.getRoot();
     }
 
-    private void updateLobbyListWiFi(){
+    private void updateLobbyListWiFi() {
         MainActivity.getWifiManagerInstance().discoverPeers();
-        Runnable r = () ->{
+        Runnable r = () -> {
             Log.e("!", Arrays.toString(MainActivity.getWifiManagerInstance().getDeviceList()));
-
         };
 
         HandlerThread handlerThread = new HandlerThread("thread", 3);
         handlerThread.start();
-        Handler handler = new Handler( handlerThread.getLooper());
+        Handler handler = new Handler(handlerThread.getLooper());
         handler.postDelayed(r, 2000);
 
 
-
     }
+
     private void updateLobbyList() {
 //        MainActivity.getBTManagerInstance().findDevices();
         deleteLobbiesFromUI();
         Set<Pair<BluetoothDevice, String>> lobbies = MainActivity.getBTManagerInstance().getDevices();
         lobbies.stream().forEach(
                 (lobby) -> {
-                    if(lobby.first != null){
+                    if (lobby.first != null) {
+
                         addNewLobbyEntryToUI(lobby.first, lobby.second);
                     }
                 }
         );
     }
 
-    private void deleteLobbiesFromUI(){
+    private void deleteLobbiesFromUI() {
         lobbyEntryViewList.forEach(
-                (lobby) ->binding.connectList.removeView(lobby)
+                (lobby) -> binding.connectList.removeView(lobby)
         );
         lobbyEntryViewList = new ArrayList<>();
 
     }
+
     private void createLobby() {
         Log.e("!", "test");
         NavHostFragment.findNavController(this).navigate(R.id.action_multiplayerMenu_to_multiplayerMenuLobbyFragment);
         MainActivity.getBTManagerInstance().setConnectionType(ConnectionType.Server);
     }
 
+    public void switchUIToLobby() {
+        NavHostFragment.findNavController(this).navigate(R.id.action_multiplayerMenu_to_multiplayerMenuLobbyFragment);
+    }
+
 
     private void addNewLobbyEntryToUI(BluetoothDevice device, String lobbyname) {
         binding.connectList.removeView(binding.noLobbyInfo);
 
-        Log.e("!", "    " + String.valueOf(device));
-        if (lobbyname.length() < 1 || lobbyname == null){
+        if (lobbyname == null || lobbyname.length() < 1) {
             lobbyname = String.valueOf(device);
         }
         LobbyEntryView lobbyEntryView = new LobbyEntryView(getContext());
@@ -159,7 +164,7 @@ public class MultiplayerMenuFragment extends Fragment {
 
     }
 
-    public Button getWifiButton(){
+    public Button getWifiButton() {
         return (Button) binding.getRoot().getViewById(R.id.buttonWiFiDirect);
     }
 

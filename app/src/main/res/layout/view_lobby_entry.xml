@@ -21,7 +21,7 @@
         android:includeFontPadding="false"
         android:text="customName"
 
-        android:autoSizeMaxTextSize="40sp"
+        android:autoSizeMaxTextSize="30sp"
         android:autoSizeMinTextSize="1sp"
         android:autoSizeStepGranularity="1dp"
         android:autoSizeTextType="uniform"
@@ -44,7 +44,7 @@
             android:id="@+id/lobbyCapacity"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:autoSizeMaxTextSize="40sp"
+            android:autoSizeMaxTextSize="30sp"
             android:autoSizeMinTextSize="1sp"
             android:autoSizeStepGranularity="1dp"
             android:autoSizeTextType="uniform"
@@ -68,6 +68,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/button_shape2"
             android:includeFontPadding="false"
+            android:elevation="20sp"
             android:text="join"
 
             app:layout_constraintBottom_toBottomOf="parent"
