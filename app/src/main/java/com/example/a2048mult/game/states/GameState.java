@@ -98,14 +98,18 @@ public class GameState implements OperateOnGameState {
     @Override
     public Player[] getPlayerPlaying() {
         Player[] playingPlayerx = new Player[playerList.length];
-
+        int counter = 0;
         for (int i = 0; i < playingPlayer.length; i++){
             if (playingPlayer[i]){
                 playingPlayerx[i] = playerList[i];
+                counter++;
             }
         }
         // trim array, so no null values are there
-        playingPlayerx = (Player[]) Arrays.asList(playingPlayerx).stream().filter(Objects::nonNull).toArray();
-        return playingPlayerx;
+        Player[] output = new Player[counter];
+        for(int i = 0; i < counter; i++){
+            output[i] = playingPlayerx[i];
+        }
+        return output;
     }
 }

@@ -125,5 +125,8 @@ public class GameStateTests {
 
         assertEquals(0, state.getQuittedPlayer().length);
         assertEquals(0, state.getPlayerLost().length);
+
+        assertEquals(p1, state.getPlayerPlaying()[0]);
+        assertEquals(p2, state.getPlayerPlaying()[1]);
     }
 }
