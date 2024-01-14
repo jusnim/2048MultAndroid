@@ -5,7 +5,11 @@
 
     <uses-permission      android:required="true"  android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission       android:required="true" android:name="android.permission.BLUETOOTH" />
-
+    <uses-permission       android:required="true" android:name="android.permission.ACCESS_FINE_LOCATION " />
+    <uses-permission       android:required="true" android:name="android.permission.ACCESS_BACKGROUND_LOCATION  " />
+    <uses-permission android:required="true" android:name="android.permission.BLUETOOTH_ADVERTISE" />
+    <uses-permission android:required="true" android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-feature android:name="android.hardware.bluetooth" android:required="true"/>
 
 
 <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
